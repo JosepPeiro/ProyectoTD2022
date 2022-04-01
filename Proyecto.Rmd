@@ -140,8 +140,28 @@ download.file(url13, destfile = "./data/DoctorSerrano21.csv")
 
 url14<- "https://opendata.vlci.valencia.es/datastore/dump/3b2fe345-08fc-49d7-85c8-8cccf6a7e814?format=csv&bom=true"
 download.file(url14, destfile = "./data/GeneralPrim.csv")
+```
 
+
+```{r}
+# Importamos los datos 
+
+SuecaEsqDenia <- read_csv("./data/SuecaEsqDenia.csv") 
+Cadiz16 <- read_csv("./data/Cadiz16.csv") 
+Cadiz3 <- read_csv("./data/Cadiz3.csv") 
+Cuba3 <- read_csv("./data/Cuba3.csv") 
+Sueca2 <- read_csv("./data/Sueca2.csv")
+Sueca61 <- read_csv("./data/Sueca61.csv")
+Sueca32 <- read_csv("./data/Sueca32.csv")
+CarlesCervera <- read_csv("./data/CarlesCervera.csv")
+SalvadorAbril <- read_csv("./data/SalvadorAbril.csv")
+Vivons <- read_csv("./data/Vivons.csv")
+CarlesCervera34 <- read_csv("./data/CarlesCervera34.csv")
+PuertoRico21 <- read_csv("./data/PuertoRico21.csv")
+DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
+GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 
 
 ```
+
 
