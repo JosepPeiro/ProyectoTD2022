@@ -94,3 +94,54 @@ package.check <- lapply(packages, FUN = function(x) {
 print("Introduccion")
 ```
 
+
+```{r, eval=FALSE}
+# descargamos y almacenamos los datos en la carpeta data
+dir.create("data")
+
+url <- "https://opendata.vlci.valencia.es/datastore/dump/a54fb175-8013-460a-a2f0-22de7a210d7a?format=csv&bom=true"
+download.file(url, destfile = "./data/SuecaEsqDenia.csv")
+
+url2 <- "https://opendata.vlci.valencia.es/datastore/dump/75a878a9-2bd9-4619-98ec-3224be867c65?format=csv&bom=true"
+download.file(url2, destfile = "./data/Cadiz16.csv")
+
+url3 <- "https://opendata.vlci.valencia.es/datastore/dump/6fa5210b-f9c7-47c8-9d1f-ddb7568f62de?format=csv&bom=true"
+download.file(url3, destfile = "./data/Cadiz3.csv")
+
+url4 <- "https://opendata.vlci.valencia.es/datastore/dump/5a050cef-1107-4b3b-8e61-5daf5cfb2ca4?format=csv&bom=true"
+download.file(url4, destfile = "./data/Cuba3.csv")
+
+url5 <- "https://opendata.vlci.valencia.es/datastore/dump/e580f492-a2f6-4305-af24-f4c4d05b911c?format=csv&bom=true"
+download.file(url5, destfile = "./data/Sueca2.csv")
+
+url6 <- "https://opendata.vlci.valencia.es/datastore/dump/8058f1a5-c605-4baa-afff-2f638efb767f?format=csv&bom=true"
+download.file(url6, destfile = "./data/Sueca61.csv")
+
+url7 <- "https://opendata.vlci.valencia.es/datastore/dump/d842601d-35b4-4b88-96f7-42e8f68e1b74?format=csv&bom=true"
+download.file(url7, destfile = "./data/Sueca32.csv")
+
+url8<- "https://opendata.vlci.valencia.es/datastore/dump/ea008906-e06a-4c72-9fe6-3238e212aae4?format=csv&bom=true"
+download.file(url8, destfile = "./data/CarlesCervera.csv")
+
+url9<- "https://opendata.vlci.valencia.es/datastore/dump/64e4b7b4-e633-4753-b0ef-a57d785076f8?format=csv&bom=true"
+download.file(url9, destfile = "./data/SalvadorAbril.csv")
+
+url10<- "https://opendata.vlci.valencia.es/datastore/dump/ff8678b6-748e-4908-ab5b-9c7ff567da61?format=csv&bom=true"
+download.file(url10, destfile = "./data/Vivons.csv")
+
+url11<- "https://opendata.vlci.valencia.es/datastore/dump/b26d42ae-2be9-481a-9b79-71392d9e80bd?format=csv&bom=true"
+download.file(url11, destfile = "./data/CarlesCervera34.csv")
+
+url12<- "https://opendata.vlci.valencia.es/datastore/dump/1b41d86b-3939-488b-9035-92d851245924?format=csv&bom=true"
+download.file(url12, destfile = "./data/PuertoRico21.csv")
+
+url13<- "https://opendata.vlci.valencia.es/datastore/dump/784f4732-abc5-41b1-857b-42decb306643?format=csv&bom=true"
+download.file(url13, destfile = "./data/DoctorSerrano21.csv")
+
+url14<- "https://opendata.vlci.valencia.es/datastore/dump/3b2fe345-08fc-49d7-85c8-8cccf6a7e814?format=csv&bom=true"
+download.file(url14, destfile = "./data/GeneralPrim.csv")
+
+
+
+```
+
