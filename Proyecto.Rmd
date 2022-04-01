@@ -1,0 +1,18 @@
+---
+title: "Ruido en Ruzafa"
+author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño, Javier Montaner"
+date: "01/04/2022"
+output: 
+  html_document:
+    toc: true 
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Inicio del trabajo
+
