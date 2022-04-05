@@ -164,7 +164,8 @@ GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
 ```
 
-
+### Primera inspeccion
+#### Todos los dataframes al mismo tiempo
 ```{r, Inspeccionar dataframes}
 library(purrr)
 
@@ -189,6 +190,27 @@ all(unlist(map(calles, function(x){all(is.na(x)==F)}))==T)
 ```
 
 Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
+
+
+#### Caracteristicas de los dataframes
+```{r}
+#Vamos a conocer el tipo de cada variable de un solo dataframe, y luego comprobaremos si el resto de dataframes cumplen las mismas caracteristicas
+
+colnames(SuecaEsqDenia)
+glimpse(SuecaEsqDenia)
+
+clases_calle = unlist(lapply(SuecaEsqDenia, class))
+clases_calle
+
+todas_las_clases=map(calles, function(x){unlist(lapply(SuecaEsqDenia, class))})
+comprobar_clases = c()
+for (c in todas_las_clases){
+  clase = (c == clases_calle)
+  comprobar_clases = c(comprobar_clases, clase)
+  print(comprobar_clases)
+}
+all(setNames(comprobar_clases, NULL)==T)
+```
 
 ```{r}
 
