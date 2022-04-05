@@ -95,7 +95,7 @@ print("Introduccion")
 ```
 
 
-```{r, eval=FALSE}
+```{r, echo=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
 
@@ -140,6 +140,7 @@ download.file(url13, destfile = "./data/DoctorSerrano21.csv")
 
 url14<- "https://opendata.vlci.valencia.es/datastore/dump/3b2fe345-08fc-49d7-85c8-8cccf6a7e814?format=csv&bom=true"
 download.file(url14, destfile = "./data/GeneralPrim.csv")
+
 ```
 
 
