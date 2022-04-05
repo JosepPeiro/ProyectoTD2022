@@ -192,12 +192,13 @@ all(unlist(map(calles, function(x){all(is.na(x)==F)}))==T)
 Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
 
 
-#### Caracteristicas de los dataframes
+#### Tipos de variables
 ```{r}
 #Vamos a conocer el tipo de cada variable de un solo dataframe, y luego comprobaremos si el resto de dataframes cumplen las mismas caracteristicas
 
 colnames(SuecaEsqDenia)
 glimpse(SuecaEsqDenia)
+#Podemos apreciar que el tipo de cada variable corresponde con lo que nos gustaria que fuera
 
 clases_calle = unlist(lapply(SuecaEsqDenia, class))
 clases_calle
