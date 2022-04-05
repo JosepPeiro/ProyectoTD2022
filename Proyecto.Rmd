@@ -70,7 +70,7 @@ knit_hooks$set(inline = function(x) {
 
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -87,15 +87,10 @@ package.check <- lapply(packages, FUN = function(x) {
 
 ```
 
-## Inicio del trabajo
+## Analisis
 
-### Introduccion
-```{r}
-print("Introduccion")
-```
-
-
-```{r, echo=FALSE}
+### Descarga ficheros
+```{r, Descarga datos de internet, echo=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
 
@@ -144,8 +139,10 @@ download.file(url14, destfile = "./data/GeneralPrim.csv")
 ```
 
 
-```{r}
+```{r, Leer dataframe,  echo=FALSE}
 # Importamos los datos 
+
+library(readr)
 
 SuecaEsqDenia <- read_csv("./data/SuecaEsqDenia.csv") 
 Cadiz16 <- read_csv("./data/Cadiz16.csv") 
@@ -161,8 +158,39 @@ CarlesCervera34 <- read_csv("./data/CarlesCervera34.csv")
 PuertoRico21 <- read_csv("./data/PuertoRico21.csv")
 DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
-
-
 ```
 
+```{r, Crear lista de dataframes}
+calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
+```
+
+
+```{r, Inspeccionar dataframes}
+library(purrr)
+
+#Averiguamos si las dimensiones de los dataframes son siempre las mismas
+numero_columnas=unlist(map(calles, ncol), use.names = F)
+numero_columnas
+numero_filas=unlist(map(calles, nrow), use.names = F)
+numero_filas
+
+#Ahora comprobamos si todos los dataframes tienen de hecho, las mismas variables
+#Para ello vamos a comprobar que los nombres de las variables sean siempre 
+#las mismas
+comprobar_colnames = c()
+for (a in map(calles, colnames)){
+  nombres = (a == colnames(SuecaEsqDenia))
+  comprobar_colnames = c(comprobar_colnames, nombres)
+}
+all(comprobar_colnames==T)
+
+#Y aqui averiguamos si algun dataframe tiene datos faltantes
+all(unlist(map(calles, function(x){all(is.na(x)==F)}))==T)
+```
+
+Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
+
+```{r}
+
+```
 
