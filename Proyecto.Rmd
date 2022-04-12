@@ -162,6 +162,7 @@ GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
+names(calles)=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
 ```
 
 ### Primera inspeccion
@@ -203,7 +204,7 @@ glimpse(SuecaEsqDenia)
 clases_calle = unlist(lapply(SuecaEsqDenia, class))
 clases_calle
 
-todas_las_clases=map(calles, function(x){unlist(lapply(SuecaEsqDenia, class))})
+todas_las_clases=map(calles, function(x){unlist(lapply(x, class))})
 comprobar_clases = c()
 for (c in todas_las_clases){
   clase = (c == clases_calle)
@@ -212,15 +213,49 @@ for (c in todas_las_clases){
 all(setNames(comprobar_clases, NULL)==T)
 ```
 
+###Sacar estadisticos
 ```{r}
-columna anyo=map(calles, function(x){unlist(lapply(SuecaEsqDenia, class))})
-SuecaEsqDenia %>% mutate(year = year(dateObserved))
-```
-
-
-```{r}
-tidy = function(x){
-  x = gather()
+estadisticos = function(x){
+  minimo = round(min(x, na.rm=T),2)
+  percentil_25 = round(quantile(x, 0.25, na.rm=T),2)
+  mediana = round(median(x, na.rm=T),2)
+  media = round(mean(x, na.rm=T),2)
+  desviacion_tipica = round(sd(x, na.rm=T),2)
+  percentil_75 = round(quantile(x, 0.75, na.rm=T),2)
+  maximo = round(max(x, na.rm=T),2)
+  vector = c(minimo, percentil_25, mediana, media, desviacion_tipica, percentil_75, maximo)
+  return (vector)
 }
 ```
 
+```{r}
+for (e in calles){
+  matriz_estadisticos=matrix(ncol=7)
+  for (f in e[,6:10]){
+    g = estadisticos(f)
+    matriz_estadisticos = rbind(matriz_estadisticos, g)
+  }
+  matriz_estadisticos = matriz_estadisticos[2:6,]
+  colnames(matriz_estadisticos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
+  rownames(matriz_estadisticos)=c("a", "b", "c", "d", "f")
+  #Recordar cambiar el nombre de las lineas
+  print(matriz_estadisticos)
+}
+```
+
+
+### Diferenciar años
+```{r}
+#columna_anyo=map(calles, function(x){unlist(x=x %>% mutate(year = year(dateObserved)))})
+#SuecaEsqDenia %>% mutate(year = year(dateObserved))
+
+calles2 = list()
+for (d in calles){
+  d = d %>% mutate(year = year(dateObserved))
+  calles2[[length(calles2) + 1]] = d
+}
+names(calles2) = c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+calles2
+```
+
+Creamos una columna año que despues utilizaremos para los facets
