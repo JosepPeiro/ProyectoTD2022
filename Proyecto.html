@@ -280,11 +280,47 @@ pre {
   background-color: #F8F8FF;
 }
 </style>
-<div id="inicio-del-trabajo" class="section level2">
-<h2>Inicio del trabajo</h2>
-<div id="introduccion" class="section level3">
-<h3>Introduccion</h3>
-<pre><code>[1] &quot;Introduccion&quot;</code></pre>
+<div id="analisis" class="section level2">
+<h2>Analisis</h2>
+<div id="descarga-ficheros" class="section level3">
+<h3>Descarga ficheros</h3>
+</div>
+<div id="primera-inspeccion" class="section level3">
+<h3>Primera inspeccion</h3>
+<div id="todos-los-dataframes-al-mismo-tiempo" class="section level4">
+<h4>Todos los dataframes al mismo tiempo</h4>
+<pre><code> [1] 11 11 11 11 11 11 11 11 11 11 11 11 11 11</code></pre>
+<pre><code> [1] 464 470 471 442 327 474 449 459 455 471 482 460 483 478</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<p>Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes</p>
+</div>
+<div id="tipos-de-variables" class="section level4">
+<h4>Tipos de variables</h4>
+<pre><code> [1] &quot;_id&quot;               &quot;recvTime&quot;          &quot;fiwareServicePath&quot; &quot;entityType&quot;       
+ [5] &quot;entityId&quot;          &quot;LAeq&quot;              &quot;LAeq_d&quot;            &quot;LAeq_den&quot;         
+ [9] &quot;LAeq_e&quot;            &quot;LAeq_n&quot;            &quot;dateObserved&quot;     </code></pre>
+<pre><code>Rows: 464
+Columns: 11
+$ `_id`             &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 2~
+$ recvTime          &lt;dttm&gt; 2020-11-18 13:40:52, 2020-11-19 00:00:44, 2020-11-20 00:00:21, 2020-11-~
+$ fiwareServicePath &lt;chr&gt; &quot;/sonometros&quot;, &quot;/sonometros&quot;, &quot;/sonometros&quot;, &quot;/sonometros&quot;, &quot;/sonometros~
+$ entityType        &lt;chr&gt; &quot;NoiseLevelObserved&quot;, &quot;NoiseLevelObserved&quot;, &quot;NoiseLevelObserved&quot;, &quot;Noise~
+$ entityId          &lt;chr&gt; &quot;T248652-daily&quot;, &quot;T248652-daily&quot;, &quot;T248652-daily&quot;, &quot;T248652-daily&quot;, &quot;T24~
+$ LAeq              &lt;dbl&gt; 62.4, 58.9, 59.3, 59.4, 58.9, 56.9, 58.2, 58.3, 58.5, 58.9, 59.9, 58.9, ~
+$ LAeq_d            &lt;dbl&gt; 64.4, 60.5, 60.6, 60.4, 60.2, 58.2, 59.9, 59.8, 59.9, 60.1, 60.2, 58.5, ~
+$ LAeq_den          &lt;dbl&gt; 63.7, 61.3, 62.5, 62.7, 62.0, 60.8, 60.9, 61.0, 61.5, 61.9, 64.7, 64.3, ~
+$ LAeq_e            &lt;dbl&gt; 58.7, 59.7, 60.9, 62.4, 60.3, 56.5, 56.6, 58.5, 59.2, 61.7, 63.7, 63.8, ~
+$ LAeq_n            &lt;dbl&gt; 51.9, 51.3, 53.7, 53.7, 53.1, 53.3, 52.1, 52.0, 52.8, 52.3, 57.1, 56.9, ~
+$ dateObserved      &lt;date&gt; 2020-11-17, 2020-11-18, 2020-11-19, 2020-11-20, 2020-11-21, 2020-11-22,~</code></pre>
+<pre><code>              _id         recvTime1         recvTime2 fiwareServicePath        entityType 
+        &quot;numeric&quot;         &quot;POSIXct&quot;          &quot;POSIXt&quot;       &quot;character&quot;       &quot;character&quot; 
+         entityId              LAeq            LAeq_d          LAeq_den            LAeq_e 
+      &quot;character&quot;         &quot;numeric&quot;         &quot;numeric&quot;         &quot;numeric&quot;         &quot;numeric&quot; 
+           LAeq_n      dateObserved 
+        &quot;numeric&quot;            &quot;Date&quot; </code></pre>
+<pre><code>[1] TRUE</code></pre>
+</div>
 </div>
 </div>
 

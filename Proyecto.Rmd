@@ -208,12 +208,19 @@ comprobar_clases = c()
 for (c in todas_las_clases){
   clase = (c == clases_calle)
   comprobar_clases = c(comprobar_clases, clase)
-  print(comprobar_clases)
 }
 all(setNames(comprobar_clases, NULL)==T)
 ```
 
 ```{r}
+columna anyo=map(calles, function(x){unlist(lapply(SuecaEsqDenia, class))})
+SuecaEsqDenia %>% mutate(year = year(dateObserved))
+```
 
+
+```{r}
+tidy = function(x){
+  x = gather()
+}
 ```
 
