@@ -266,7 +266,7 @@ Creamos una columna año que despues utilizaremos para los facets
 ### Unir dataframes
 ```{r}
 #Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
-datos = 
+datos2 = 
   Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16")%>% 
   full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3")
             , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
@@ -295,7 +295,7 @@ datos =
 ```
 
 ```{r}
-datos2 = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
+datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
                Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
                CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
                CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34"),
@@ -314,7 +314,7 @@ datos2 = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
 ### Estadisticos de todo el dataframe
 ```{r}
 estadisticos_conjuntos=matrix(ncol=7)
-for (h in datos2[,2:6]){
+for (h in datos[,2:6]){
     i = estadisticos(h)
     estadisticos_conjuntos = rbind(estadisticos_conjuntos, i)
 }
@@ -322,5 +322,9 @@ estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(estadisticos_conjuntos)=c("a", "b", "c", "d", "f")
 estadisticos_conjuntos
+```
+
+```{r}
+
 ```
 
