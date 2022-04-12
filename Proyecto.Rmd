@@ -213,7 +213,7 @@ for (c in todas_las_clases){
 all(setNames(comprobar_clases, NULL)==T)
 ```
 
-###Sacar estadisticos
+### Estadisticos
 ```{r}
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
@@ -224,11 +224,13 @@ estadisticos = function(x){
   percentil_75 = round(quantile(x, 0.75, na.rm=T),2)
   maximo = round(max(x, na.rm=T),2)
   vector = c(minimo, percentil_25, mediana, media, desviacion_tipica, percentil_75, maximo)
+  names(vector)=NULL
   return (vector)
 }
 ```
 
 ```{r}
+lista_estadisticos = list()
 for (e in calles){
   matriz_estadisticos=matrix(ncol=7)
   for (f in e[,6:10]){
@@ -239,10 +241,12 @@ for (e in calles){
   colnames(matriz_estadisticos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
   rownames(matriz_estadisticos)=c("a", "b", "c", "d", "f")
   #Recordar cambiar el nombre de las lineas
-  print(matriz_estadisticos)
+  #print(matriz_estadisticos)
+  lista_estadisticos[[length(lista_estadisticos) + 1]] = matriz_estadisticos
 }
+names(lista_estadisticos)=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+print(lista_estadisticos)
 ```
-
 
 ### Diferenciar años
 ```{r}
@@ -257,5 +261,66 @@ for (d in calles){
 names(calles2) = c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
 calles2
 ```
-
 Creamos una columna año que despues utilizaremos para los facets
+
+### Unir dataframes
+```{r}
+#Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
+datos = 
+  Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16")%>% 
+  full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3")
+            , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
+  full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera")
+            , by="dateObserved", suffix=c("_Cadiz3", "")) %>% 
+  full_join(CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34")
+            , by="dateObserved", suffix=c("_CarlesCerCh", "")) %>%
+  full_join(Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3")
+            , by="dateObserved", suffix=c("_CarlesCer34", "")) %>% 
+  full_join(DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21")
+            , by="dateObserved", suffix=c("_Cuba3", "")) %>% 
+  full_join(GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim")
+            , by="dateObserved", suffix=c("_Serrano21", "")) %>% 
+  full_join(PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21")
+            , by="dateObserved", suffix=c("_GenPrim", "")) %>% 
+  full_join(SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril")
+            , by="dateObserved", suffix=c("_PuertoRico21", "")) %>% 
+  full_join(Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2")
+            , by="dateObserved", suffix=c("_SalvadorAbril", "")) %>% 
+  full_join(Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32")
+            , by="dateObserved", suffix=c("_Sueca2", "")) %>% 
+  full_join(Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61")
+            , by="dateObserved", suffix=c("_Sueca32", "")) %>% 
+  full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
+            , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
+```
+
+```{r}
+datos2 = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
+               Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
+               CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
+               CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34"),
+               Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3"),
+               DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21"),
+               GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim"),
+               PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21"),
+               SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril"),
+               Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2"),
+               Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32"),
+               Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61"),
+               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
+               )
+```
+
+### Estadisticos de todo el dataframe
+```{r}
+estadisticos_conjuntos=matrix(ncol=7)
+for (h in datos2[,2:6]){
+    i = estadisticos(h)
+    estadisticos_conjuntos = rbind(estadisticos_conjuntos, i)
+}
+estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
+colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
+rownames(estadisticos_conjuntos)=c("a", "b", "c", "d", "f")
+estadisticos_conjuntos
+```
+
