@@ -44,7 +44,7 @@ pre {
 </style>
 
 
-```{r}
+```{r, echo=F}
 #rm(list=ls())
 ```
 
@@ -55,7 +55,7 @@ library(knitr)
 options(width = 100)
 
 # Opciones generales de los chucks. Se utilizarán salvo cambios en el chunk
-opts_chunk$set(echo=F, message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
+opts_chunk$set(echo=T, message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
 
 # Opciones generales de dígitos cuando se incluyen tablas
 #options(xtable.type = 'html')
@@ -70,8 +70,7 @@ knit_hooks$set(inline = function(x) {
 #knit_hooks$set(plot = knitr:::hook_plot_html)
 ```
 
-```{r}
-
+```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
 packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr")
@@ -196,16 +195,27 @@ all(unlist(map(calles, function(x){all(!is.na(x))}))==T)
 
 Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
 
+### Infinitos
 Vamos a ver si puede ser que haya valores infinitos
 ```{r}
 busqueda_infinitos=c()
 conjuntos_datos_infinitos = list()
+
+dataframes_con_infinito = c()
+columnas_con_infinito = c()
+
+encontrar_dataframe=0
 for (j in calles){
+  encontrar_dataframe = encontrar_dataframe+1
+  numero_columna=0
   for (k in j){
+    numero_columna=numero_columna+1
     l = all(!is.infinite(k)) #Devuelve FALSE si encuentra infinito
     busqueda_infinitos=c(busqueda_infinitos, l)
     if (!l){
       conjuntos_datos_infinitos[[length(conjuntos_datos_infinitos) + 1]] = k
+      print(names(calles)[encontrar_dataframe])
+      print(names(j)[numero_columna])
     }
   }
 }
@@ -220,14 +230,23 @@ for (m in 1:length(conjuntos_datos_infinitos)){
   print(n)
   print(conjuntos_datos_infinitos[[m]][(n-5):(n+5)])
 }
-#No vemos un motivo aparente por los que los valores son erroneos. Los tomaremos como datos completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes
 ```
+No vemos un motivo aparente por los que los valores son erroneos con relacion a los datos cercanos suyos
+
+Hemos averiguado los dataframes de donde provienen los errores, y las columnas, vamos a ver si puede haber relacion entre otras variables
+```{r}
+rbind(
+Cadiz16 %>% filter(LAeq_e==Inf),
+SalvadorAbril %>% filter(LAeq_d==Inf)
+)
+```
+Los tomaremos como datos completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes
 
 ```{r}
-valores_infinito = data.frame()
-for (m in calles){
-  n = m %>% filter()
-}
+Cadiz16=Cadiz16 %>% filter(!LAeq_e==Inf)
+SalvadorAbril=SalvadorAbril %>% filter(!LAeq_d==Inf)
+calles$Cadiz16=Cadiz16
+calles$SalvadorAbril=SalvadorAbril
 ```
 
 
@@ -297,7 +316,6 @@ for (d in calles){
   calles2[[length(calles2) + 1]] = d
 }
 names(calles2) = c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
-calles2
 ```
 Creamos una columna año que despues utilizaremos para los facets
 
@@ -360,10 +378,6 @@ estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(estadisticos_conjuntos)=c("a", "b", "c", "d", "f")
 estadisticos_conjuntos
-```
-
-```{r}
-datos %>% filter(is.infinite(LAeq_e)|is.infinite(LAeq_d))
 ```
 
 ```{r}
