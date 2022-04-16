@@ -84,6 +84,10 @@ tabla_estadisticos
 ```
 
 ```{r}
+datos_2020 = datos_2020 %>% select(-year) %>% gather("noise", "value", 2:6)
+```
 
+```{r}
+ggplot(datos_2020, aes(noise, value))+geom_boxplot()
 ```
 
