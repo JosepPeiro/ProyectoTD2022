@@ -44,6 +44,10 @@ pre {
 </style>
 
 
+```{r}
+#rm(list=ls())
+```
+
 ```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
@@ -90,7 +94,7 @@ package.check <- lapply(packages, FUN = function(x) {
 ## Analisis
 
 ### Descarga ficheros
-```{r, Descarga datos de internet, echo=FALSE}
+```{r, Descarga datos de internet, echo=FALSE, message=FALSE, warning=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
 
@@ -139,7 +143,7 @@ download.file(url14, destfile = "./data/GeneralPrim.csv")
 ```
 
 
-```{r, Leer dataframe,  echo=FALSE}
+```{r, Leer dataframe,  echo=FALSE, message=FALSE}
 # Importamos los datos 
 
 library(readr)
@@ -187,10 +191,44 @@ for (a in map(calles, colnames)){
 all(comprobar_colnames==T)
 
 #Y aqui averiguamos si algun dataframe tiene datos faltantes
-all(unlist(map(calles, function(x){all(is.na(x)==F)}))==T)
+all(unlist(map(calles, function(x){all(!is.na(x))}))==T)
 ```
 
 Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
+
+Vamos a ver si puede ser que haya valores infinitos
+```{r}
+busqueda_infinitos=c()
+conjuntos_datos_infinitos = list()
+for (j in calles){
+  for (k in j){
+    l = all(!is.infinite(k)) #Devuelve FALSE si encuentra infinito
+    busqueda_infinitos=c(busqueda_infinitos, l)
+    if (!l){
+      conjuntos_datos_infinitos[[length(conjuntos_datos_infinitos) + 1]] = k
+    }
+  }
+}
+all(busqueda_infinitos)
+#Si que hay valores que valen infinito
+#Tendremos que tratar con ellos
+```
+
+```{r}
+for (m in 1:length(conjuntos_datos_infinitos)){
+  n = which(conjuntos_datos_infinitos[[m]]==Inf)
+  print(n)
+  print(conjuntos_datos_infinitos[[m]][(n-5):(n+5)])
+}
+#No vemos un motivo aparente por los que los valores son erroneos. Los tomaremos como datos completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes
+```
+
+```{r}
+valores_infinito = data.frame()
+for (m in calles){
+  n = m %>% filter()
+}
+```
 
 
 #### Tipos de variables
@@ -267,7 +305,7 @@ Creamos una columna año que despues utilizaremos para los facets
 ```{r}
 #Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
 datos2 = 
-  Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16")%>% 
+  Cadiz16 %>% dplyr::select(1, 6:11) %>% mutate(Calle="Cadiz16")%>% 
   full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3")
             , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
   full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera")
@@ -325,6 +363,11 @@ estadisticos_conjuntos
 ```
 
 ```{r}
+datos %>% filter(is.infinite(LAeq_e)|is.infinite(LAeq_d))
+```
 
+```{r}
+ggplot(SalvadorAbril %>% filter(year(dateObserved)==2021), aes(dateObserved, LAeq_d))+geom_line()+geom_vline(xintercept=ymd("2021-03-03"), color="grey2", linetype=3)
+#geom_vline(xintercept = ymd("2021-03-03"), color = "grey", linetype = 3)
 ```
 

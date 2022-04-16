@@ -465,3 +465,7 @@
 976,2022-04-10T00:00:30.931Z,/sonometros,NoiseLevelObserved,T248672-daily,60.7,61.2,65.2,64.4,57.4,2022-04-09
 977,2022-04-11T00:00:33.254Z,/sonometros,NoiseLevelObserved,T248672-daily,57.4,57.0,63.7,59.6,57.3,2022-04-10
 978,2022-04-12T00:00:35.605Z,/sonometros,NoiseLevelObserved,T248672-daily,58.7,59.7,62.8,59.8,55.2,2022-04-11
+979,2022-04-13T00:00:37.896Z,/sonometros,NoiseLevelObserved,T248672-daily,57.3,58.8,60.0,59.1,50.2,2022-04-12
+980,2022-04-14T00:00:41.373Z,/sonometros,NoiseLevelObserved,T248672-daily,58.1,59.2,61.2,61.1,51.8,2022-04-13
+981,2022-04-15T00:00:42.711Z,/sonometros,NoiseLevelObserved,T248672-daily,66.0,58.7,75.5,62.5,70.1,2022-04-14
+982,2022-04-16T00:00:45.104Z,/sonometros,NoiseLevelObserved,T248672-daily,56.8,57.1,61.7,60.6,54.2,2022-04-15
