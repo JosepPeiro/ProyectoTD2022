@@ -84,39 +84,45 @@ rownames(tabla_estadisticos)=colnames(datos[,2:6])
 tabla_estadisticos
 ```
 
+## Estudio outliers
 ```{r}
 outliers = function(x, method="3sigma"){
+  media = mean(x)
+  sigma = sd(x)
+  mediana = median(x)
+  q1 = quantile(x, 0.25)
+  q3 = quantile(x, 0.75)
+  iqr = IQR(x)
   if (method == "3sigma"){
-    media = mean(x)
-    sigma = sd(x)
     lowLim = media-3*sigma
     upLim = media+3*sigma
   } 
   if(method=="percentil"){
-    media = mean(x)
-    sigma = sd(x)
     lowLim=quantile(x, 0.05)
     upLim=quantile(x, 0.95)
   }
   if(method=="boxplot"){
-    media = mean(x)
-    sigma = sd(x)
-    q1 = quantile(x, 0.25)
-    q3 = quantile(x, 0.75)
-    iqr = IQR(x)
     lowLim=q1-1.5*iqr
     upLim=q3+1.5*iqr
+  }
+  if (method == "hampel"){
+    medabdev = mad(x)
+    lowLim=mediana-3*medabdev
+    upLim=mediana+3*medabdev
   }
   nOut = length(which(x<lowLim|x>upLim))
   minIn = min(x[which(x>lowLim)])
   maxOut = max(x[which(x<lowLim)])
   maxIn = max(x[which(x<upLim)])
   minOut = min(x[which(x>upLim)])
-  resultado = cbind(nOut, lowLim, upLim, minIn, maxOut, maxIn, minOut)
+  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut)
   rownames(resultado)=NULL
   return (resultado)
 }
+```
 
+
+```{r}
 out_3sigma = data.frame()
 for (c in datos[,2:6]){
   resultado = outliers(c)
@@ -137,6 +143,13 @@ for (c in datos[,2:6]){
   out_boxplot=rbind(out_boxplot, resultado)
 }
 out_boxplot
+
+out_hampel = data.frame()
+for (c in datos[,2:6]){
+  resultado = outliers(c, "hampel")
+  out_hampel=rbind(out_hampel, resultado)
+}
+out_hampel
 ```
 
 ```{r}
