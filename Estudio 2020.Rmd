@@ -52,6 +52,7 @@ Este sera el Rmd donde trabajaremos con los datos de 2020
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2020.Rdata")
+datos = datos_2020
 ```
 
 ## Estudio estadistico
@@ -73,21 +74,80 @@ estadisticos = function(x){
 ```{r}
 tabla_estadisticos = data.frame()
 
-for (a in datos_2020[,2:6]){
+for (a in datos[,2:6]){
   b = estadisticos(a)
   tabla_estadisticos=rbind(tabla_estadisticos, b)
 }
 
 colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos_2020[,2:6])
+rownames(tabla_estadisticos)=colnames(datos[,2:6])
 tabla_estadisticos
 ```
 
 ```{r}
-datos_2020 = datos_2020 %>% select(-year) %>% gather("noise", "value", 2:6)
+outliers = function(x, method="3sigma"){
+  if (method == "3sigma"){
+    media = mean(x)
+    sigma = sd(x)
+    lowLim = media-3*sigma
+    upLim = media+3*sigma
+  } 
+  if(method=="percentil"){
+    media = mean(x)
+    sigma = sd(x)
+    lowLim=quantile(x, 0.05)
+    upLim=quantile(x, 0.95)
+  }
+  if(method=="boxplot"){
+    media = mean(x)
+    sigma = sd(x)
+    q1 = quantile(x, 0.25)
+    q3 = quantile(x, 0.75)
+    iqr = IQR(x)
+    lowLim=q1-1.5*iqr
+    upLim=q3+1.5*iqr
+  }
+  nOut = length(which(x<lowLim|x>upLim))
+  minIn = min(x[which(x>lowLim)])
+  maxOut = max(x[which(x<lowLim)])
+  maxIn = max(x[which(x<upLim)])
+  minOut = min(x[which(x>upLim)])
+  resultado = cbind(nOut, lowLim, upLim, minIn, maxOut, maxIn, minOut)
+  rownames(resultado)=NULL
+  return (resultado)
+}
+
+out_3sigma = data.frame()
+for (c in datos[,2:6]){
+  resultado = outliers(c)
+  out_3sigma=rbind(out_3sigma, resultado)
+}
+out_3sigma
+
+out_percentil = data.frame()
+for (c in datos[,2:6]){
+  resultado = outliers(c, "percentil")
+  out_percentil=rbind(out_percentil, resultado)
+}
+out_percentil
+
+out_boxplot = data.frame()
+for (c in datos[,2:6]){
+  resultado = outliers(c, "boxplot")
+  out_boxplot=rbind(out_boxplot, resultado)
+}
+out_boxplot
 ```
 
 ```{r}
-ggplot(datos_2020, aes(noise, value))+geom_boxplot()
+datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
+```
+
+```{r}
+ggplot(datos, aes(noise, value))+geom_boxplot()
+```
+
+```{r}
+
 ```
 
