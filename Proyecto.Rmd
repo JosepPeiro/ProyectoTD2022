@@ -306,6 +306,7 @@ print(lista_estadisticos)
 ```
 
 ### Diferenciar años
+
 ```{r}
 #columna_anyo=map(calles, function(x){unlist(x=x %>% mutate(year = year(dateObserved)))})
 #SuecaEsqDenia %>% mutate(year = year(dateObserved))
@@ -316,10 +317,28 @@ for (d in calles){
   calles2[[length(calles2) + 1]] = d
 }
 names(calles2) = c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+#Es posible que eliminemos este chunk porque no sirve para nada
 ```
 Creamos una columna año que despues utilizaremos para los facets
 
 ### Unir dataframes
+```{r}
+datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
+               Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
+               CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
+               CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34"),
+               Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3"),
+               DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21"),
+               GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim"),
+               PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21"),
+               SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril"),
+               Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2"),
+               Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32"),
+               Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61"),
+               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
+               )
+```
+
 ```{r}
 #Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
 datos2 = 
@@ -350,23 +369,6 @@ datos2 =
             , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
 ```
 
-```{r}
-datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
-               Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
-               CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
-               CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34"),
-               Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3"),
-               DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21"),
-               GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim"),
-               PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21"),
-               SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril"),
-               Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2"),
-               Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32"),
-               Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61"),
-               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
-               )
-```
-
 ### Estadisticos de todo el dataframe
 ```{r}
 estadisticos_conjuntos=matrix(ncol=7)
@@ -374,6 +376,7 @@ for (h in datos[,2:6]){
     i = estadisticos(h)
     estadisticos_conjuntos = rbind(estadisticos_conjuntos, i)
 }
+
 estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(estadisticos_conjuntos)=c("a", "b", "c", "d", "f")
@@ -381,7 +384,24 @@ estadisticos_conjuntos
 ```
 
 ```{r}
-ggplot(SalvadorAbril %>% filter(year(dateObserved)==2021), aes(dateObserved, LAeq_d))+geom_line()+geom_vline(xintercept=ymd("2021-03-03"), color="grey2", linetype=3)
+#Este grafico hay que eliminarlo, que servia para ver el infinito, pero ya no esta
+
+#ggplot(SalvadorAbril %>% filter(year(dateObserved)==2021), aes(dateObserved, LAeq_d))+geom_line()+geom_vline(xintercept=ymd("2021-03-03"), color="grey2", linetype=3)
 #geom_vline(xintercept = ymd("2021-03-03"), color = "grey", linetype = 3)
 ```
 
+```{r}
+datos = datos %>% mutate(year = year(dateObserved))
+unique(datos$year)
+datos_2020 = datos %>% filter(year==2020)
+datos_2021 = datos %>% filter(year==2021)
+datos_2022 = datos %>% filter(year==2022)
+```
+
+```{r}
+dir.create("dataframes")
+
+save(datos_2020, file="./dataframes/datos_2020.Rdata")
+save(datos_2021, file="./dataframes/datos_2021.Rdata")
+save(datos_2022, file="./dataframes/datos_2022.Rdata")
+```
