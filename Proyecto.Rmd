@@ -390,19 +390,19 @@ all(numero_niveles==1)
 
 
 ```{r}
-datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
-               Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
-               CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
-               CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34"),
-               Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3"),
-               DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21"),
-               GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim"),
-               PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21"),
-               SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril"),
-               Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2"),
-               Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32"),
-               Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61"),
-               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
+datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
+               Cadiz3 %>% select(1, 6:11) %>% mutate(Street="Cadiz3"),
+               CarlesCervera %>% select(1, 6:11) %>% mutate(Street="CarlesCervera"),
+               CarlesCervera34 %>% select(1, 6:11) %>% mutate(Street="CarlesCervera34"),
+               Cuba3 %>% select(1, 6:11) %>% mutate(Street="Cuba3"),
+               DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Street="DoctorSerrano21"),
+               GeneralPrim %>% select(1, 6:11) %>% mutate(Street="GeneralPrim"),
+               PuertoRico21 %>% select(1, 6:11) %>% mutate(Street="PuertoRico21"),
+               SalvadorAbril %>% select(1, 6:11) %>% mutate(Street="SalvadorAbril"),
+               Sueca2 %>% select(1, 6:11) %>% mutate(Street="Sueca2"),
+               Sueca32 %>% select(1, 6:11) %>% mutate(Street="Sueca32"),
+               Sueca61 %>% select(1, 6:11) %>% mutate(Street="Sueca61"),
+               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
                ) %>% rename("noise_min" = LAeq, 
                             "noise_morning"=LAeq_d, 
                             "noise_all"=LAeq_den,
@@ -413,30 +413,30 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
 ```{r}
 #Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
 datos2 = 
-  Cadiz16 %>% dplyr::select(1, 6:11) %>% mutate(Calle="Cadiz16")%>% 
-  full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3")
+  Cadiz16 %>% dplyr::select(1, 6:11) %>% mutate(Street="Cadiz16")%>% 
+  full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Street="Cadiz3")
             , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
-  full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera")
+  full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Street="CarlesCervera")
             , by="dateObserved", suffix=c("_Cadiz3", "")) %>% 
-  full_join(CarlesCervera34 %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera34")
+  full_join(CarlesCervera34 %>% select(1, 6:11) %>% mutate(Street="CarlesCervera34")
             , by="dateObserved", suffix=c("_CarlesCerCh", "")) %>%
-  full_join(Cuba3 %>% select(1, 6:11) %>% mutate(Calle="Cuba3")
+  full_join(Cuba3 %>% select(1, 6:11) %>% mutate(Street="Cuba3")
             , by="dateObserved", suffix=c("_CarlesCer34", "")) %>% 
-  full_join(DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Calle="DoctorSerrano21")
+  full_join(DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Street="DoctorSerrano21")
             , by="dateObserved", suffix=c("_Cuba3", "")) %>% 
-  full_join(GeneralPrim %>% select(1, 6:11) %>% mutate(Calle="GeneralPrim")
+  full_join(GeneralPrim %>% select(1, 6:11) %>% mutate(Street="GeneralPrim")
             , by="dateObserved", suffix=c("_Serrano21", "")) %>% 
-  full_join(PuertoRico21 %>% select(1, 6:11) %>% mutate(Calle="PuertoRico21")
+  full_join(PuertoRico21 %>% select(1, 6:11) %>% mutate(Street="PuertoRico21")
             , by="dateObserved", suffix=c("_GenPrim", "")) %>% 
-  full_join(SalvadorAbril %>% select(1, 6:11) %>% mutate(Calle="SalvadorAbril")
+  full_join(SalvadorAbril %>% select(1, 6:11) %>% mutate(Street="SalvadorAbril")
             , by="dateObserved", suffix=c("_PuertoRico21", "")) %>% 
-  full_join(Sueca2 %>% select(1, 6:11) %>% mutate(Calle="Sueca2")
+  full_join(Sueca2 %>% select(1, 6:11) %>% mutate(Street="Sueca2")
             , by="dateObserved", suffix=c("_SalvadorAbril", "")) %>% 
-  full_join(Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32")
+  full_join(Sueca32 %>% select(1, 6:11) %>% mutate(Street="Sueca32")
             , by="dateObserved", suffix=c("_Sueca2", "")) %>% 
-  full_join(Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61")
+  full_join(Sueca61 %>% select(1, 6:11) %>% mutate(Street="Sueca61")
             , by="dateObserved", suffix=c("_Sueca32", "")) %>% 
-  full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
+  full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
             , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
 ```
 

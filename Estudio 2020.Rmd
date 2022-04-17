@@ -152,7 +152,7 @@ for (c in datos[,2:6]){
 out_hampel
 ```
 
-## Estudio de las matrices de correlación y covarianza
+## Estudio correlación y covarianza
 
 ```{r}
 
@@ -165,12 +165,13 @@ cov(select(datos,starts_with("noise")),method = 'spearman')
 cat('\nCorrelación Spearman\n')
 cor(select(datos,starts_with("noise")),method = 'spearman')
 
+GGally::ggpairs(select(datos,starts_with("noise")))
 chart.Correlation(select(datos,starts_with("noise")))
-
 ```
 
 ```{r}
-datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6)
+datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column)
+head(datos_tidy)
 ```
 
 ```{r}
