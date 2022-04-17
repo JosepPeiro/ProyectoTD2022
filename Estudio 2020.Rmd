@@ -170,7 +170,7 @@ chart.Correlation(select(datos,starts_with("noise")))
 ```
 
 ```{r}
-datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
+datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6)
 ```
 
 ```{r}
@@ -213,8 +213,8 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 ```{r}
-gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
-gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+gd1 = ggplot(datos_tidy, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 multiplot(gd1, gd2, cols=2)
 ```
 
