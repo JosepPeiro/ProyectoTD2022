@@ -157,15 +157,15 @@ out_hampel
 ```{r}
 
 cat('Covarianza Pearson\n')
-cov(select(datos,starts_with("LAeq")))
+cov(select(datos,starts_with("noise")))
 cat('\nCorrelación Pearson\n')
-cor(select(datos,starts_with("LAeq")))
+cor(select(datos,starts_with("noise")))
 cat('\nCovarianza Spearman\n')
-cov(select(datos,starts_with("LAeq")),method = 'spearman')
+cov(select(datos,starts_with("noise")),method = 'spearman')
 cat('\nCorrelación Spearman\n')
-cor(select(datos,starts_with("LAeq")),method = 'spearman')
+cor(select(datos,starts_with("noise")),method = 'spearman')
 
-chart.Correlation(select(datos,starts_with("LAeq")))
+chart.Correlation(select(datos,starts_with("noise")))
 
 ```
 
