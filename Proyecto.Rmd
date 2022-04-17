@@ -169,6 +169,20 @@ names(calles)=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca6
 ```
 
 ### Primera inspeccion
+
+### Definición de variables
+
+- RecvTime: Fecha en la que se insertó el dato en la plataforma.
+- FiwareServicePath: Servicio de la plataforma VLCi al que pertenece el sensor.
+- EntityType: Tipo de entidad del sensor en la plataforma VLCi.
+- EntityId: Identificador único del sensor en la plataforma VLCi.
+- LAeq: Nivel sonoro continuo equivalente. El período establecido para este sensor es de 1 minuto.
+- LAeq_d: Es un indicador de ruido asociado al día, donde al día le corresponden 12 horas, en el período que se extiende desde las 7 hasta las 19 horas.
+- LAeq_den: índice de ruido día-tarde-noche, es utilizado para determinar la molestia vinculada a la exposición al ruido.
+- LAeq_e: Es un indicador del nivel sonoro durante la tarde, donde a la tarde le corresponden 4 horas, en el período que se extiende desde las 19 hasta las 23 horas.
+- LAeq_n: Es un indicador del nivel sonoro durante la noche, donde a la noche le corresponden 8 horas, en el período que se extiende desde las 23 hasta las 7 horas.
+- Dateobserved: Día al que se refieren las medidas.
+
 #### Todos los dataframes al mismo tiempo
 ```{r, Inspeccionar dataframes}
 library(purrr)
@@ -323,6 +337,24 @@ Creamos una columna año que despues utilizaremos para los facets
 
 ### Unir dataframes
 ```{r}
+# comprobamos usando unique que columnas tienen una misma observación en todo el df
+
+length(unique(SuecaEsqDenia$fiwareServicePath)) 
+length(unique(SuecaEsqDenia$entityType)) 
+length(unique(SuecaEsqDenia$entityId))
+
+# vemos que las columnas 3,4,5 no son importantes porque siempre es la misma observación
+
+
+# INTENTO DE BUCLE NO FUNCIONA
+# for (a in map(calles, colnames)){
+#   for (i in 1:length(a)){
+#     if(length(unique(calles$a[i])) == 1){
+#   print(a[i])
+#   }
+# }
+# }
+
 datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
                Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
                CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
