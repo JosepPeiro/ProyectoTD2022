@@ -165,7 +165,9 @@ GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
-names(calles)=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+
+nombre_calles=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+names(calles)=nombre_calles
 ```
 
 ### Primera inspeccion
@@ -284,6 +286,22 @@ for (c in todas_las_clases){
 all(setNames(comprobar_clases, NULL)==T)
 ```
 
+### Cambiar nombre variables
+```{r}
+calles_renombradas = list()
+for (r in calles){
+  s = r %>% rename("noise_min" = LAeq, 
+                   "noise_morning"=LAeq_d, 
+                   "noise_all"=LAeq_den,
+                   "noise_afternoon"=LAeq_e,
+                   "noise_night"=LAeq_n)
+  calles_renombradas[[length(calles_renombradas) + 1]] = s
+}
+names(calles_renombradas)=nombre_calles
+calles = calles_renombradas
+```
+
+
 ### Estadisticos
 ```{r}
 estadisticos = function(x){
@@ -310,12 +328,12 @@ for (e in calles){
   }
   matriz_estadisticos = matriz_estadisticos[2:6,]
   colnames(matriz_estadisticos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-  rownames(matriz_estadisticos)=c("a", "b", "c", "d", "f")
+  rownames(matriz_estadisticos)=colnames(e[,6:10])
   #Recordar cambiar el nombre de las lineas
   #print(matriz_estadisticos)
   lista_estadisticos[[length(lista_estadisticos) + 1]] = matriz_estadisticos
 }
-names(lista_estadisticos)=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+names(lista_estadisticos)=nombre_calles
 print(lista_estadisticos)
 ```
 
@@ -330,13 +348,15 @@ for (d in calles){
   d = d %>% mutate(year = year(dateObserved))
   calles2[[length(calles2) + 1]] = d
 }
-names(calles2) = c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+names(calles2) = nombre_calles
 #Es posible que eliminemos este chunk porque no sirve para nada
 ```
 Creamos una columna año que despues utilizaremos para los facets
 
 ### Unir dataframes
 ```{r}
+#Puede que eliminemos este chunk tambien
+#Comprobamos si algunas columnas nos son completamente inutiles, para poder eliminarlas
 # comprobamos usando unique que columnas tienen una misma observación en todo el df
 
 length(unique(SuecaEsqDenia$fiwareServicePath)) 
@@ -354,7 +374,22 @@ length(unique(SuecaEsqDenia$entityId))
 #   }
 # }
 # }
+```
 
+```{r}
+numero_niveles=c()
+for (o in calles){
+  for (p in o[,3:5]){
+    q=length(unique(p))
+    numero_niveles = c(numero_niveles, q)
+  }
+}
+all(numero_niveles==1)
+#Las variables que repiten todo el tiempo el mismo valor no nos interesan, la eliminamos
+```
+
+
+```{r}
 datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
                Cadiz3 %>% select(1, 6:11) %>% mutate(Calle="Cadiz3"),
                CarlesCervera %>% select(1, 6:11) %>% mutate(Calle="CarlesCervera"),
@@ -368,7 +403,11 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Calle="Cadiz16"),
                Sueca32 %>% select(1, 6:11) %>% mutate(Calle="Sueca32"),
                Sueca61 %>% select(1, 6:11) %>% mutate(Calle="Sueca61"),
                SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Calle="SuecaEsqDenia")
-               )
+               ) %>% rename("noise_min" = LAeq, 
+                            "noise_morning"=LAeq_d, 
+                            "noise_all"=LAeq_den,
+                            "noise_afternoon"=LAeq_e,
+                            "noise_night"=LAeq_n)
 ```
 
 ```{r}
@@ -411,7 +450,7 @@ for (h in datos[,2:6]){
 
 estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(estadisticos_conjuntos)=c("a", "b", "c", "d", "f")
+rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
 estadisticos_conjuntos
 ```
 
