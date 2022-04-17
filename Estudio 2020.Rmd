@@ -30,7 +30,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -174,6 +174,47 @@ datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
 ```
 
 ```{r}
-ggplot(datos, aes(noise, value))+geom_boxplot()
+library(grid)
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+```{r}
+gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+multiplot(gd1, gd2, cols=2)
 ```
 
