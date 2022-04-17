@@ -30,7 +30,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -152,6 +152,23 @@ for (c in datos[,2:6]){
 out_hampel
 ```
 
+## Estudio de las matrices de correlación y covarianza
+
+```{r}
+
+cat('Covarianza Pearson\n')
+cov(select(datos,starts_with("LAeq")))
+cat('\nCorrelación Pearson\n')
+cor(select(datos,starts_with("LAeq")))
+cat('\nCovarianza Spearman\n')
+cov(select(datos,starts_with("LAeq")),method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(select(datos,starts_with("LAeq")),method = 'spearman')
+
+chart.Correlation(select(datos,starts_with("LAeq")))
+
+```
+
 ```{r}
 datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
 ```
@@ -159,3 +176,4 @@ datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
 ```{r}
 ggplot(datos, aes(noise, value))+geom_boxplot()
 ```
+
