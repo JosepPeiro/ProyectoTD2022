@@ -1,5 +1,5 @@
 ---
-title: "Estudio datos 2020"
+title: "Estudio datos 2021"
 author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño & Javier Montaner"
 date: "16/4/2022"
 output: html_document
@@ -47,12 +47,11 @@ package.check <- lapply(packages, FUN = function(x) {
 
 ```
 
-Este sera el Rmd donde trabajaremos con los datos de 2020
+Este sera el Rmd donde trabajaremos con los datos de 2021
 
 ## Carga de datos
 ```{r}
-load("./dataframes/datos_2020.Rdata")
-datos = datos_2020
+load("./dataframes/datos_2021.Rdata")
 ```
 
 ## Estudio estadistico
@@ -74,88 +73,21 @@ estadisticos = function(x){
 ```{r}
 tabla_estadisticos = data.frame()
 
-for (a in datos[,2:6]){
+for (a in datos_2021[,2:6]){
   b = estadisticos(a)
   tabla_estadisticos=rbind(tabla_estadisticos, b)
 }
 
 colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos[,2:6])
+rownames(tabla_estadisticos)=colnames(datos_2021[,2:6])
 tabla_estadisticos
 ```
 
-## Estudio outliers
 ```{r}
-outliers = function(x, method="3sigma"){
-  media = mean(x)
-  sigma = sd(x)
-  mediana = median(x)
-  q1 = quantile(x, 0.25)
-  q3 = quantile(x, 0.75)
-  iqr = IQR(x)
-  if (method == "3sigma"){
-    lowLim = media-3*sigma
-    upLim = media+3*sigma
-  } 
-  if(method=="percentil"){
-    lowLim=quantile(x, 0.05)
-    upLim=quantile(x, 0.95)
-  }
-  if(method=="boxplot"){
-    lowLim=q1-1.5*iqr
-    upLim=q3+1.5*iqr
-  }
-  if (method == "hampel"){
-    medabdev = mad(x)
-    lowLim=mediana-3*medabdev
-    upLim=mediana+3*medabdev
-  }
-  nOut = length(which(x<lowLim|x>upLim))
-  minIn = min(x[which(x>lowLim)])
-  maxOut = max(x[which(x<lowLim)])
-  maxIn = max(x[which(x<upLim)])
-  minOut = min(x[which(x>upLim)])
-  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut)
-  rownames(resultado)=NULL
-  return (resultado)
-}
-```
-
-
-```{r}
-out_3sigma = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c)
-  out_3sigma=rbind(out_3sigma, resultado)
-}
-out_3sigma
-
-out_percentil = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "percentil")
-  out_percentil=rbind(out_percentil, resultado)
-}
-out_percentil
-
-out_boxplot = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "boxplot")
-  out_boxplot=rbind(out_boxplot, resultado)
-}
-out_boxplot
-
-out_hampel = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "hampel")
-  out_hampel=rbind(out_hampel, resultado)
-}
-out_hampel
+datos_2021 = datos_2021 %>% select(-year) %>% gather("noise", "value", 2:6)
 ```
 
 ```{r}
-datos = datos %>% select(-year) %>% gather("noise", "value", 2:6)
+ggplot(datos_2021, aes(noise, value))+geom_boxplot()
 ```
 
-```{r}
-ggplot(datos, aes(noise, value))+geom_boxplot()
-```
