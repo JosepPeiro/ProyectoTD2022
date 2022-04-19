@@ -219,3 +219,12 @@ gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(ax
 multiplot(gd1, gd2, cols=2)
 ```
 
+Ideas de graficos:
+- Histograma faceteado por tipo de ruido (tdr)
+- Diagrama de densidad
+- Grafico de lineas coloreado por tdr
+- Añadir lineas en los puntos mas importantes y fechas relevantes
+- Igual ver las posibilidades que nos ofrecen los graficos de dispersion, pero no se exactamente el qué
+- Añadirle el smooth al sactter plot
+- Igual puede servirnos el case_when para crear nuevas variables y agrupar segun valores
+- Hacer graficos para ver correlaciones
