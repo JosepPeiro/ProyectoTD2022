@@ -91,3 +91,8 @@ datos_2021 = datos_2021 %>% select(-year) %>% gather("noise", "value", 2:6)
 ggplot(datos_2021, aes(noise, value))+geom_boxplot()
 ```
 
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_line() + facet_wrap(~Street)
+```
+
