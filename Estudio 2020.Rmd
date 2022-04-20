@@ -220,7 +220,7 @@ multiplot(gd1, gd2, cols=2)
 ```
 
 Ideas de graficos:
-- Histograma faceteado por tipo de ruido (tdr)
+- Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos
 - Diagrama de densidad
 - Grafico de lineas coloreado por tdr
 - Añadir lineas en los puntos mas importantes y fechas relevantes
