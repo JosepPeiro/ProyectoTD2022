@@ -219,6 +219,8 @@ gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(ax
 multiplot(gd1, gd2, cols=2)
 ```
 
+<<<<<<< HEAD
+=======
 ```{r}
 gh1=ggplot(datos_tidy, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5)
 gh2=ggplot(datos_tidy, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none")
@@ -226,7 +228,40 @@ gh3=ggplot(datos_tidy, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 multiplot(gh1, gh2,gh3, layout=layout)
 ```
+<<<<<<< HEAD
+=======
 
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_line() + facet_wrap(~Street)
+
+```
+>>>>>>> 57aac3dc3ab2bd1a8d237e5442eb1bac207d8895
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+```
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
+```
+
+```{r}
+ggplot(datos_tidy, aes(x=Street, y=value, fill=Street)) + 
+    geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+```{r}
+ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +  
+    guides(colour = guide_legend(override.aes = list(size=10))) +
+    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
+```
+    
 Ideas de graficos:
 - Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos OK
 - Diagrama de densidad OK
