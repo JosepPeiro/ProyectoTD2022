@@ -218,9 +218,34 @@ gd1 = ggplot(datos_tidy, aes(noise, value, fill=noise))+geom_violin()+theme(axis
 gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 multiplot(gd1, gd2, cols=2)
 
-print("prueba")
 ```
 
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_line() + facet_wrap(~Street)
+
+```
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
+```
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
+```
+```{r}
+
+ggplot(datos_tidy, aes(x=Street, y=value, fill=Street)) + 
+    geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+```{r}
+ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +  
+    guides(colour = guide_legend(override.aes = list(size=10))) +
+    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
+```
+    
 Ideas de graficos:
 - Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos
 - Diagrama de densidad
