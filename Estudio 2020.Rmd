@@ -217,14 +217,18 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 gd1 = ggplot(datos_tidy, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 multiplot(gd1, gd2, cols=2)
+```
 
-print("prueba")
+```{r}
+gh1=ggplot(datos_tidy, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5)
+gh2=ggplot(datos_tidy, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none")
+multiplot(gh1, gh2, cols=2)
 ```
 
 Ideas de graficos:
 - Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos
 - Diagrama de densidad
-- Grafico de lineas coloreado por tdr
+- Grafico de lineas coloreado por tdr a traves del tiempo
 - Añadir lineas en los puntos mas importantes y fechas relevantes
 - Igual ver las posibilidades que nos ofrecen los graficos de dispersion, pero no se exactamente el qué
 - Añadirle el smooth al sactter plot
