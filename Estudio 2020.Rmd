@@ -226,8 +226,6 @@ gh3=ggplot(datos_tidy, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 multiplot(gh1, gh2,gh3, layout=layout)
 ```
-```{r}
-```
 
 Ideas de graficos:
 - Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos OK
