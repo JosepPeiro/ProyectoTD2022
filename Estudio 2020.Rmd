@@ -30,7 +30,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -170,7 +170,7 @@ chart.Correlation(select(datos,starts_with("noise")))
 ```
 
 ```{r}
-datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column)
+datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
 head(datos_tidy)
 ```
 
@@ -222,12 +222,16 @@ multiplot(gd1, gd2, cols=2)
 ```{r}
 gh1=ggplot(datos_tidy, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5)
 gh2=ggplot(datos_tidy, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none")
-multiplot(gh1, gh2, cols=2)
+gh3=ggplot(datos_tidy, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none")
+layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
+multiplot(gh1, gh2,gh3, layout=layout)
+```
+```{r}
 ```
 
 Ideas de graficos:
-- Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos
-- Diagrama de densidad
+- Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos OK
+- Diagrama de densidad OK
 - Grafico de lineas coloreado por tdr a traves del tiempo
 - Añadir lineas en los puntos mas importantes y fechas relevantes
 - Igual ver las posibilidades que nos ofrecen los graficos de dispersion, pero no se exactamente el qué
