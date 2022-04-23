@@ -228,25 +228,28 @@ gh3=ggplot(datos_tidy, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 multiplot(gh1, gh2,gh3, layout=layout)
 ```
-<<<<<<< HEAD
-=======
-
 
 ```{r}
- ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
-  geom_line() + facet_wrap(~Street)
-
+ggplot(datos_tidy %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+ggplot(datos_tidy %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=3)
+ggplot(datos_tidy %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=3)
+ggplot(datos_tidy %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=3)
+ggplot(datos_tidy %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=3)
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
+  geom_line() + facet_wrap(~Street, nrow=3)
 ```
->>>>>>> 57aac3dc3ab2bd1a8d237e5442eb1bac207d8895
 
 ```{r}
-<<<<<<< HEAD
+
 ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
-=======
  ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
->>>>>>> 115846a2457d4981a0a2c99d8da3df048702e64b
 ```
 
 ```{r}
@@ -269,16 +272,17 @@ ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
 ```
 
 ```{r}
- ggplot(datos_tidy, aes(x=Street,y=value,fill=Street))+
+ggplot(datos_tidy, aes(x=Street,y=value,fill=Street))+
           geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-
+ggplot(datos_tidy, aes(x=Street,y=mean(value),fill=Street))+
+          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 ```{r}
 ggplot(datos_tidy, aes(x = Street, y = value)) + 
   geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
   geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
-  theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 ```
 
 
