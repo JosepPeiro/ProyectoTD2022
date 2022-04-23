@@ -233,25 +233,31 @@ multiplot(gh1, gh2,gh3, layout=layout)
 
 
 ```{r}
-ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+ ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_line() + facet_wrap(~Street)
 
 ```
 >>>>>>> 57aac3dc3ab2bd1a8d237e5442eb1bac207d8895
 
 ```{r}
+<<<<<<< HEAD
 ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+=======
+ ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
+>>>>>>> 115846a2457d4981a0a2c99d8da3df048702e64b
 ```
 
 ```{r}
-ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+ ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
 ```
 
 ```{r}
 ggplot(datos_tidy, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 ```
 
 
@@ -261,6 +267,21 @@ ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
     theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
 ```
+
+```{r}
+ ggplot(datos_tidy, aes(x=Street,y=value,fill=Street))+
+          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+ggplot(datos_tidy, aes(x = Street, y = value)) + 
+  geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
+  geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
+  theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
     
 Ideas de graficos:
 - Histograma faceteado por tipo de ruido (tdr) especial atencion en que los breaks sean siempre los mismos OK
