@@ -162,14 +162,7 @@ PuertoRico21 <- read_csv("./data/PuertoRico21.csv")
 DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 ```
-![Barrio de Ruzafa, (fuente: Google Maps)](images/RUZAFA DELIMITADO.png)
-<div>
-<p style = 'text-align:center;'>
-<img src="images/RUZAFA DELIMITADO RECORTADO.png" alt="JuveYell" width="300px"
- alt="La cabeza y el torso de un esqueleto de dinosaurio;
-           tiene una cabeza grande con dientes largos y afilados">
-</p>
-</div>
+![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO.png)
 
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
@@ -410,7 +403,8 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
                Sueca2 %>% select(1, 6:11) %>% mutate(Street="Sueca2"),
                Sueca32 %>% select(1, 6:11) %>% mutate(Street="Sueca32"),
                Sueca61 %>% select(1, 6:11) %>% mutate(Street="Sueca61"),
-               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
+               SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia"),
+               Vivons %>% select(1, 6:11) %>% mutate(Street="Vivons")
                ) %>% rename("noise_min" = LAeq, 
                             "noise_morning"=LAeq_d, 
                             "noise_all"=LAeq_den,
