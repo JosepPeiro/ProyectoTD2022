@@ -285,6 +285,15 @@ ggplot(datos_tidy, aes(x = Street, y = value)) +
   theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 ```
 
+```{r}
+lv1=datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value)) %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))
+lv2=datos_tidy %>% group_by(Street) %>% summarise(long, median_val=median(value)) %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))
+layout=matrix(c(1,1,2,2), 2,2)
+multiplot(lv1, lv2, layout=layout)
+lv3=datos_tidy %>% group_by(Street) %>% summarise(long, max_val=max(value)) %>% ggplot(aes(long, max_val))+geom_point()
+lv4=datos_tidy %>% group_by(Street) %>% summarise(long, min_val=min(value)) %>% ggplot(aes(long, min_val))+geom_point()
+multiplot(lv3, lv4, layout=layout)
+```
 
     
 Ideas de graficos:
