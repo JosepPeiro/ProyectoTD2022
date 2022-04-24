@@ -73,7 +73,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "stringr")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -440,6 +440,22 @@ datos2 =
             , by="dateObserved", suffix=c("_Sueca32", "")) %>% 
   full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
             , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
+```
+
+```{r}
+datos %>% mutate(longitud = case_when(
+  str_detect(Street, "Cadiz")~692,
+  str_detect(Street,"CarlesCervera")~282,
+  Street=="DoctorSerrano21"~180,
+  Street=="SuecaEsqDenia"~mean(c(572, 682)),
+  str_detect(Street,"Sueca")~682,
+  Street=="SalvadorAbril"~548,
+  Street=="PuertoRico21"~419,
+  Street=="Cuba3"~715,
+  Street=="Vivons"~193,
+  Street=="GeneralPrim"~219,
+  TRUE~0
+))
 ```
 
 ### Estadisticos de todo el dataframe
