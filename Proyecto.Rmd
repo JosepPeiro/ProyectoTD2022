@@ -443,7 +443,8 @@ datos2 =
 ```
 
 ```{r}
-datos %>% mutate(longitud = case_when(
+#Datos obtenidos de https://www.foro-ciudad.com
+datos=datos %>% mutate(length = case_when(
   str_detect(Street, "Cadiz")~692,
   str_detect(Street,"CarlesCervera")~282,
   Street=="DoctorSerrano21"~180,
