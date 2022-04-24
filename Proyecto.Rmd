@@ -162,7 +162,7 @@ PuertoRico21 <- read_csv("./data/PuertoRico21.csv")
 DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 ```
-![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO.png)
+![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO BUENO.png)
 
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
@@ -444,7 +444,7 @@ datos2 =
 
 ```{r}
 #Datos obtenidos de https://www.foro-ciudad.com
-datos=datos %>% mutate(length = case_when(
+datos=datos %>% mutate(long = case_when(
   str_detect(Street, "Cadiz")~692,
   str_detect(Street,"CarlesCervera")~282,
   Street=="DoctorSerrano21"~180,
