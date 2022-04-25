@@ -363,6 +363,5 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 GGally::ggpairs(datos_estadisticos %>% select(-Street))
 chart.Correlation(datos_estadisticos %>% select(-Street))
 datos_estadisticos %>% select(long, mean_val, median_val)
-colnames(datos_estadisticos)
 ```
 
