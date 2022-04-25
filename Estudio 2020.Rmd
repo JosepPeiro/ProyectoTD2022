@@ -2,7 +2,12 @@
 title: "Estudio datos 2020"
 author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño & Javier Montaner"
 date: "16/4/2022"
-output: html_document
+output: 
+  html_document:
+    toc: true 
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
 ---
 
 <style>
@@ -63,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -293,21 +298,16 @@ ggplot(datos_tidy, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
 Como si los hacemos por juntos queda feisimo, vamos a probar a hacerlos todos por separado
 
 ```{r, echo=FALSE, fig.align='center', out.width="70%"}
-a1=ggplot(datos_tidy %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
+ggplot(datos_tidy %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4)
-a2=ggplot(datos_tidy %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
+ggplot(datos_tidy %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4)
-a3=ggplot(datos_tidy %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
+ggplot(datos_tidy %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4)
-a4=ggplot(datos_tidy %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
+ggplot(datos_tidy %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4)
-a5=ggplot(datos_tidy %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
+ggplot(datos_tidy %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4)
-a1
-a2
-a3
-a4
-a5
 ```
 
 ```{r}
@@ -338,16 +338,8 @@ ggplot(datos_tidy, aes(x=Street,y=mean(value),fill=Street))+
           geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none")
 ```
 
-```{r}
-
-```
-
 ```{r, message=FALSE}
-
-```
-
-```{r}
-datos_estadisticos = datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value))
+datos_estadisticos = datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value)) %>% ungroup()
 
 lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))
 lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))
@@ -359,12 +351,19 @@ lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()
 lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()
 
 multiplot(lv3, lv4, layout=layout)
+
+lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="")
+
+layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
+multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
 
 ```{r}
-lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "none")
-
-layout=matrix(c(1,3,2,4,5,5),2,3)
-multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
+GGally::ggpairs(datos_estadisticos %>% select(-Street))
+chart.Correlation(datos_estadisticos %>% select(-Street))
+datos_estadisticos %>% select(long, mean_val, median_val)
+a2=datos_estadisticos
+a2 %>% select(-Street)
+colnames(datos_estadisticos)
 ```
 
