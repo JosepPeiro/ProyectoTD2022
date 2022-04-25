@@ -363,5 +363,15 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 GGally::ggpairs(datos_estadisticos %>% select(-Street))
 chart.Correlation(datos_estadisticos %>% select(-Street))
 datos_estadisticos %>% select(long, mean_val, median_val)
+
+# Josep te refieres a esto?? 
+cat('Covarianza Pearson\n')
+cov(select(datos_estadisticos,-Street))
+cat('\nCorrelación Pearson\n')
+cor(select(datos_estadisticos,-Street))
+cat('\nCovarianza Spearman\n')
+cov(select(datos_estadisticos,-Street),method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(select(datos_estadisticos,-Street),method = 'spearman')
 ```
 
