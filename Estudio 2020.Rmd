@@ -359,11 +359,10 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
 
 ```{r}
+#Esto queda mal, hay que hacer directamente la relacion con cov y cor entre long y todos los estadisticos 1 por 1
 GGally::ggpairs(datos_estadisticos %>% select(-Street))
 chart.Correlation(datos_estadisticos %>% select(-Street))
 datos_estadisticos %>% select(long, mean_val, median_val)
-a2=datos_estadisticos
-a2 %>% select(-Street)
 colnames(datos_estadisticos)
 ```
 
