@@ -5,6 +5,39 @@ date: "16/4/2022"
 output: html_document
 ---
 
+<style>
+#TOC {
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708091;
+}
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+}
+h4.author{
+  color: #708090;
+  font-family: Calibri;
+}
+h4.date{
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px;
+  background-color: #F5F5F5;
+}
+body {
+  color: #708090;
+  font-family: Calibri;
+  background-color: #F5F5F5;
+}
+pre {
+  color: #708090;
+  background-color: #F8F8FF;
+}
+</style>
+
 ```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
@@ -46,7 +79,7 @@ package.check <- lapply(packages, FUN = function(x) {
 #search()
 
 ```
-
+# Trabajo 2020
 Este sera el Rmd donde trabajaremos con los datos de 2020
 
 ## Carga de datos
@@ -216,45 +249,17 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```{r}
 gd1 = ggplot(datos_tidy, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
 gd2 = ggplot(datos_tidy, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+
 multiplot(gd1, gd2, cols=2)
 ```
 
-<<<<<<< HEAD
-=======
 ```{r}
 gh1=ggplot(datos_tidy, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5)
 gh2=ggplot(datos_tidy, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none")
 gh3=ggplot(datos_tidy, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none")
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
+
 multiplot(gh1, gh2,gh3, layout=layout)
-```
-
-```{r}
-ggplot(datos_tidy %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-ggplot(datos_tidy %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-ggplot(datos_tidy %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-ggplot(datos_tidy %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-ggplot(datos_tidy %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-ggplot(datos_tidy, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
-  geom_line() + facet_wrap(~Street, nrow=4)
-```
-
-```{r}
-
-ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
- ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
-```
-
-```{r}
- ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
 ```
 
 ```{r}
@@ -280,6 +285,45 @@ multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 ```
 
 ```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+```
+
+#### Pequeño problemo
+Como si los hacemos por juntos queda feisimo, vamos a probar a hacerlos todos por separado
+
+```{r, echo=FALSE, fig.align='center', out.width="70%"}
+a1=ggplot(datos_tidy %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+a2=ggplot(datos_tidy %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+a3=ggplot(datos_tidy %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+a4=ggplot(datos_tidy %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+a5=ggplot(datos_tidy %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)
+a1
+a2
+a3
+a4
+a5
+```
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
+```
+
+```{r}
+ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
+```
+
+```{r}
 ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
@@ -289,6 +333,7 @@ ggplot(data = datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
 ```{r}
 ggplot(datos_tidy, aes(x=Street,y=value,fill=Street))+
           geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none")
+
 ggplot(datos_tidy, aes(x=Street,y=mean(value),fill=Street))+
           geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none")
 ```
@@ -298,10 +343,12 @@ ggplot(datos_tidy, aes(x=Street,y=mean(value),fill=Street))+
 ```
 
 ```{r, message=FALSE}
-datos_estadisticos = datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value))
+
 ```
 
 ```{r}
+datos_estadisticos = datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value))
+
 lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))
 lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))
 
