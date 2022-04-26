@@ -359,19 +359,9 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
 
 ```{r}
-#Esto queda mal, hay que hacer directamente la relacion con cov y cor entre long y todos los estadisticos 1 por 1
-GGally::ggpairs(datos_estadisticos %>% select(-Street))
-chart.Correlation(datos_estadisticos %>% select(-Street))
-datos_estadisticos %>% select(long, mean_val, median_val)
-
-# Josep te refieres a esto?? 
-cat('Covarianza Pearson\n')
-cov(select(datos_estadisticos,-Street))
-cat('\nCorrelación Pearson\n')
-cor(select(datos_estadisticos,-Street))
-cat('\nCovarianza Spearman\n')
-cov(select(datos_estadisticos,-Street),method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(select(datos_estadisticos,-Street),method = 'spearman')
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
 ```
 
