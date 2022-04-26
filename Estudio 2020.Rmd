@@ -371,4 +371,3 @@ cor(datos_tidy$long, datos_tidy$value)
 cov(datos_tidy$long, datos_tidy$value,method = 'spearman')
 cor(datos_tidy$long, datos_tidy$value,method = 'spearman')
 ```
-
