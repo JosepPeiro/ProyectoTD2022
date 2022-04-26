@@ -345,14 +345,14 @@ lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_cont
 lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))
 
 layout=matrix(c(1,1,2,2), 2,2)
-multiplot(lv1, lv2, layout=layout)
+#multiplot(lv1, lv2, layout=layout)
 
 lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()
 lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()
 
-multiplot(lv3, lv4, layout=layout)
+#multiplot(lv3, lv4, layout=layout)
 
-lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="")
+lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
@@ -363,5 +363,12 @@ cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
 cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
 cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
 cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
+```
+
+```{r}
+cov(datos_tidy$long, datos_tidy$value)
+cor(datos_tidy$long, datos_tidy$value)
+cov(datos_tidy$long, datos_tidy$value,method = 'spearman')
+cor(datos_tidy$long, datos_tidy$value,method = 'spearman')
 ```
 
