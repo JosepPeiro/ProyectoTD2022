@@ -289,6 +289,7 @@ all(setNames(comprobar_clases, NULL)==T)
 ```
 
 ### Cambiar nombre variables
+Como algunos nombres no quedan muy claros vamos a cambiarle los nombres para que se vea mas claro que representa cada dato
 ```{r}
 calles_renombradas = list()
 for (r in calles){
@@ -305,6 +306,7 @@ calles = calles_renombradas
 
 
 ### Estadisticos
+Estos datos estadisticos son sobre todos las calles en todos los años
 ```{r}
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
@@ -341,6 +343,7 @@ print(lista_estadisticos)
 
 ### Diferenciar años
 
+Para que el trabajo quede mas claro vamos a separar los datos en 3 rmd distintos, uno por año, así podemos investigar mas a fondo como varia el sonido en cada uno de los años y a la vista queda mucho mas claro tambien.
 ```{r}
 #columna_anyo=map(calles, function(x){unlist(x=x %>% mutate(year = year(dateObserved)))})
 #SuecaEsqDenia %>% mutate(year = year(dateObserved))
@@ -489,6 +492,7 @@ datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
 ```
 
+Para posteriormente poder trabajar con ellos guardamos los datos en sus respectivos Rdata
 ```{r}
 dir.create("dataframes")
 
