@@ -94,6 +94,8 @@ datos = datos_2020
 ```
 
 ## Estudio estadistico
+
+Lo primero que hacemos es calcular los valores estadísticos como la media, mediana, percentil...
 ```{r}
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
@@ -109,6 +111,7 @@ estadisticos = function(x){
 }
 ```
 
+Una vez los tenemos calculados y almacenados, los mostramos en una tabla , donde cambiamos los nombres para que quede todo mas claro
 ```{r}
 tabla_estadisticos = data.frame()
 
@@ -121,6 +124,8 @@ colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "
 rownames(tabla_estadisticos)=colnames(datos[,2:6])
 tabla_estadisticos
 ```
+
+**Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
 
 ## Estudio outliers
 ```{r}
