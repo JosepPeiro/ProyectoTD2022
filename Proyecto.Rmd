@@ -495,3 +495,13 @@ save(datos_2020, file="./dataframes/datos_2020.Rdata")
 save(datos_2021, file="./dataframes/datos_2021.Rdata")
 save(datos_2022, file="./dataframes/datos_2022.Rdata")
 ```
+
+##Preguntas generales
+Como hemos dividido los datos en 3 rmd diferentes en este que seria como el que une los 3 años , estan las preguntas respectivas a los 3 a la vez
+
+- ¿En que año hubo mas y menos ruido?
+- ¿Como afecto la cuarentena al sonido percibido?
+- ¿En que epocas del año se produce mas ruido (navidas, verano...)?
+- ¿Coinciden los meses con mas y menos sonido?
+- ¿Coinciden las calles con mas y menos sonido?
+- ¿El ruido aumenta , dismunuye o se mantiene con el paso del tiempo?
