@@ -93,6 +93,7 @@ package.check <- lapply(packages, FUN = function(x) {
 ## Analisis
 
 ### Descarga ficheros
+El primer paso es descargar todos los ficheros de sonido de las calles que vayamos a necesitar
 ```{r, Descarga datos de internet, echo=FALSE, message=FALSE, warning=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
@@ -141,9 +142,9 @@ download.file(url14, destfile = "./data/GeneralPrim.csv")
 
 ```
 
-
+Ahora tenemos los datos en forma de csv para cada calle, vamos a importar estos datos y a guardarlos con el nombre de cad calle
 ```{r, Leer dataframe,  echo=FALSE, message=FALSE}
-# Importamos los datos 
+
 
 library(readr)
 
@@ -163,7 +164,7 @@ DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 ```
 ![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO BUENO.png)
-
+Una vez guardados los archivos en una lista llamade calles y asi los tenemos todos juntos
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
 
