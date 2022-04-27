@@ -506,3 +506,4 @@ Como hemos dividido los datos en 3 rmd diferentes en este que seria como el que 
 - ¿Coinciden los meses con mas y menos sonido?
 - ¿Coinciden las calles con mas y menos sonido?
 - ¿El ruido aumenta , dismunuye o se mantiene con el paso del tiempo?
+- ¿Porque hay datos infinitos?
