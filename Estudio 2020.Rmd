@@ -376,3 +376,14 @@ cor(datos_tidy$long, datos_tidy$value)
 cov(datos_tidy$long, datos_tidy$value,method = 'spearman')
 cor(datos_tidy$long, datos_tidy$value,method = 'spearman')
 ```
+
+##Preguntas 2020
+A traves de los datos obtenidos en el analisis previo podemos plantear unas preguntas las cuales se van a poder responder con estos mismos datos.
+
+Las preguntas relacionadas con el año 2020 son las siguientes:
+- ¿Durante que parte del dia ha sido minimo y maximo el ruido?
+- ¿Cual ha sido el mínimo y máximo de ruido registrado?
+- ¿Cuales son los momentos del dia que mas semejante es el ruido?
+- ¿En que calle se solia escuchar mas y menos ruido?
+- ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
+- ¿En que epoca del año hay ayor produccion de ruido?
