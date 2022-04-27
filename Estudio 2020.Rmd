@@ -346,37 +346,33 @@ ggplot(datos_tidy, aes(x=Street,y=mean(value),fill=Street))+
 ```{r, message=FALSE}
 datos_estadisticos = datos_tidy %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value)) %>% ungroup()
 
-lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))
-lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))
+lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 layout=matrix(c(1,1,2,2), 2,2)
-multiplot(lv1, lv2, layout=layout)
+#multiplot(lv1, lv2, layout=layout)
 
-lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()
-lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()
+lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-multiplot(lv3, lv4, layout=layout)
+#multiplot(lv3, lv4, layout=layout)
 
-lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="")
+lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
 
 ```{r}
-#Esto queda mal, hay que hacer directamente la relacion con cov y cor entre long y todos los estadisticos 1 por 1
-GGally::ggpairs(datos_estadisticos %>% select(-Street))
-chart.Correlation(datos_estadisticos %>% select(-Street))
-datos_estadisticos %>% select(long, mean_val, median_val)
-
-# Josep te refieres a esto?? 
-cat('Covarianza Pearson\n')
-cov(select(datos_estadisticos,-Street))
-cat('\nCorrelación Pearson\n')
-cor(select(datos_estadisticos,-Street))
-cat('\nCovarianza Spearman\n')
-cov(select(datos_estadisticos,-Street),method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(select(datos_estadisticos,-Street),method = 'spearman')
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
 ```
 
+```{r}
+cov(datos_tidy$long, datos_tidy$value)
+cor(datos_tidy$long, datos_tidy$value)
+cov(datos_tidy$long, datos_tidy$value,method = 'spearman')
+cor(datos_tidy$long, datos_tidy$value,method = 'spearman')
+```
