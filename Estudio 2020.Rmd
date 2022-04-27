@@ -387,3 +387,6 @@ Las preguntas relacionadas con el año 2020 son las siguientes:
 - ¿En que calle se solia escuchar mas y menos ruido?
 - ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
 - ¿En que epoca del año hay ayor produccion de ruido?
+- ¿Que calle tiene una media del sonido mas alta?
+- ¿Tiene que ver algo la largaria de las calles con su sonido?
+
