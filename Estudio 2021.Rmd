@@ -52,6 +52,7 @@ Este sera el Rmd donde trabajaremos con los datos de 2021
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2021.Rdata")
+#cargamos los datos
 ```
 
 ## Estudio estadistico
@@ -68,6 +69,7 @@ estadisticos = function(x){
   names(vector)=NULL
   return (vector)
 }
+##ahora vamos a calcular los datos estadísticos, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
 ```
 
 ```{r}
@@ -81,18 +83,29 @@ for (a in datos_2021[,2:6]){
 colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(tabla_estadisticos)=colnames(datos_2021[,2:6])
 tabla_estadisticos
+#vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
 ```{r}
 datos_2021 = datos_2021 %>% select(-year) %>% gather("noise", "value", 2:6)
+#en este ejercicio vamos a seleccionar todos los datos, menos la columna año, agruparlo por sonido y valor.
 ```
 
 ```{r}
 ggplot(datos_2021, aes(noise, value))+geom_boxplot()
+#con los valores de ruido y valor, vamos a crear un boxplot dividiendo los datos por las franjas horarias.
 ```
 
 ```{r}
 ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
   geom_line() + facet_wrap(~Street)
+#Ahora vamos a representar el sonido durante el dia por cada calle.
 ```
 
+##Preguntas
+-¿Qué diferencias hay de ruido entre enero y julio?, ¿Qué épocas del año tienen mayor índice de ruido?
+-¿En los meses de verano, se aprecia más ruido por el día o   por la noche, y en invierno?
+-¿Porque hay datos con valor infinito?
+-¿Como afectó el confinamiento al ruido?
+-¿Que podemos decir de cada calle al ver sus datos estadísticos del ruido a lo largo de los meses y en cada franja horaria?
+-¿En general, en las calles, donde podemos ver un mayor índoce de ruido?
