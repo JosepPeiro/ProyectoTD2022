@@ -93,6 +93,7 @@ package.check <- lapply(packages, FUN = function(x) {
 ## Analisis
 
 ### Descarga ficheros
+El primer paso es descargar todos los ficheros de sonido de las calles que vayamos a necesitar
 ```{r, Descarga datos de internet, echo=FALSE, message=FALSE, warning=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
@@ -141,9 +142,9 @@ download.file(url14, destfile = "./data/GeneralPrim.csv")
 
 ```
 
-
+Ahora tenemos los datos en forma de csv para cada calle, vamos a importar estos datos y a guardarlos con el nombre de cad calle
 ```{r, Leer dataframe,  echo=FALSE, message=FALSE}
-# Importamos los datos 
+
 
 library(readr)
 
@@ -163,7 +164,7 @@ DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 ```
 ![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO BUENO.png)
-
+Una vez guardados los archivos en una lista llamade calles y asi los tenemos todos juntos
 ```{r, Crear lista de dataframes}
 calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
 
@@ -288,6 +289,7 @@ all(setNames(comprobar_clases, NULL)==T)
 ```
 
 ### Cambiar nombre variables
+Como algunos nombres no quedan muy claros vamos a cambiarle los nombres para que se vea mas claro que representa cada dato
 ```{r}
 calles_renombradas = list()
 for (r in calles){
@@ -304,6 +306,7 @@ calles = calles_renombradas
 
 
 ### Estadisticos
+Estos datos estadisticos son sobre todos las calles en todos los años
 ```{r}
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
@@ -340,6 +343,7 @@ print(lista_estadisticos)
 
 ### Diferenciar años
 
+Para que el trabajo quede mas claro vamos a separar los datos en 3 rmd distintos, uno por año, así podemos investigar mas a fondo como varia el sonido en cada uno de los años y a la vista queda mucho mas claro tambien.
 ```{r}
 #columna_anyo=map(calles, function(x){unlist(x=x %>% mutate(year = year(dateObserved)))})
 #SuecaEsqDenia %>% mutate(year = year(dateObserved))
@@ -488,6 +492,7 @@ datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
 ```
 
+Para posteriormente poder trabajar con ellos guardamos los datos en sus respectivos Rdata
 ```{r}
 dir.create("dataframes")
 
@@ -495,3 +500,14 @@ save(datos_2020, file="./dataframes/datos_2020.Rdata")
 save(datos_2021, file="./dataframes/datos_2021.Rdata")
 save(datos_2022, file="./dataframes/datos_2022.Rdata")
 ```
+
+##Preguntas generales
+Como hemos dividido los datos en 3 rmd diferentes en este que seria como el que une los 3 años , estan las preguntas respectivas a los 3 a la vez
+
+- ¿En que año hubo mas y menos ruido?
+- ¿Como afecto la cuarentena al sonido percibido?
+- ¿En que epocas del año se produce mas ruido (navidas, verano...)?
+- ¿Coinciden los meses con mas y menos sonido?
+- ¿Coinciden las calles con mas y menos sonido?
+- ¿El ruido aumenta , dismunuye o se mantiene con el paso del tiempo?
+- ¿Porque hay datos infinitos?
