@@ -90,4 +90,5 @@ datos_2022 = datos_2022 %>% select(-year) %>% gather("noise", "value", 2:6)
 ```{r}
 ggplot(datos_2022, aes(noise, value))+geom_boxplot()
 ```
-
+##Preguntas
+-¿Ha incrementado el ruido en los últimos 3 años?
