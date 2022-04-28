@@ -52,7 +52,7 @@ Este sera el Rmd donde trabajaremos con los datos de 2021
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2021.Rdata")
-#cargamos los datos
+#cargamos los datos de año 2021
 ```
 
 ## Estudio estadistico
@@ -69,7 +69,7 @@ estadisticos = function(x){
   names(vector)=NULL
   return (vector)
 }
-##ahora vamos a calcular los datos estadísticos, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
+#ahora vamos a calcular los datos estadísticos edl año 2021, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
 ```
 
 ```{r}
