@@ -364,6 +364,16 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
 
 ```{r}
+datos_tidy %>% mutate(level=case_when(
+  between(value, 10, 30) ~ "Very Low", 
+    between(value, 30, 50) ~ "Low", 
+    between(value, 50, 65) ~ "Medium", 
+    between(value, 65, 80) ~ "Loud", 
+    TRUE ~ "Very Loud"
+)) %>% ggplot(aes(noise, fill=level))+geom_bar(position="dodge")
+```
+
+```{r}
 cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
 cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
 cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
