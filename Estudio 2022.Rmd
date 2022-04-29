@@ -52,6 +52,7 @@ Este sera el Rmd donde trabajaremos con los datos de 2022
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2022.Rdata")
+#cargamos los datos de año 2022
 ```
 
 ## Estudio estadistico
@@ -68,6 +69,7 @@ estadisticos = function(x){
   names(vector)=NULL
   return (vector)
 }
+#ahora vamos a calcular los datos estadísticos edl año 2022, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
 ```
 
 ```{r}
@@ -81,13 +83,22 @@ for (a in datos_2022[,2:6]){
 colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(tabla_estadisticos)=colnames(datos_2022[,2:6])
 tabla_estadisticos
+#vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
 ```{r}
 datos_2022 = datos_2022 %>% select(-year) %>% gather("noise", "value", 2:6)
+#en este ejercicio vamos a seleccionar todos los datos, menos la columna año, agruparlo por sonido y valor.
 ```
 
 ```{r}
 ggplot(datos_2022, aes(noise, value))+geom_boxplot()
+#con los valores de ruido y valor, vamos a crear un boxplot dividiendo los datos por las franjas horarias.
 ```
-
+##Preguntas
+-¿Ha incrementado el ruido en los últimos 3 años?
+-¿Existe algún dato nulo?
+-¿Tras ver los datos de este año, apreeciamos una recuperación muy grande del ruido?¿Se debe esto al fin del confinamiento?
+-¿vemos similitudes en los niveles acústicos entre los meses anteriores y posteriores a la cuarentena?
+-¿Que franja horaria acapara un mayor porcentaje del ruido?
+-¿El ruido en la noche ha aumentado respeceto al año pasado?
