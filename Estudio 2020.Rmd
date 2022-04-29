@@ -213,7 +213,14 @@ chart.Correlation(select(datos,starts_with("noise")))
 ```
 Ponemos los datos tidy en ordden de cuando fueran tomadas las muestras y agrupadas por calles
 ```{r}
-datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
+datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))%>% 
+  mutate(level=case_when(
+    between(value, 10, 30) ~ "Very Low", 
+    between(value, 30, 50) ~ "Low", 
+    between(value, 50, 65) ~ "Medium", 
+    between(value, 65, 80) ~ "Loud", 
+    TRUE ~ "Very Loud"
+))
 head(datos_tidy)
 ```
 
@@ -364,17 +371,10 @@ lvtt=ggplot(datos_tidy, aes(long, value, color=Street))+geom_jitter()+scale_y_co
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 ```
-Covarianza y correlacion de la media de los datos estaditicos
 ```{r}
-datos_tidy %>% mutate(level=case_when(
-  between(value, 10, 30) ~ "Very Low", 
-    between(value, 30, 50) ~ "Low", 
-    between(value, 50, 65) ~ "Medium", 
-    between(value, 65, 80) ~ "Loud", 
-    TRUE ~ "Very Loud"
-)) %>% ggplot(aes(noise, fill=level))+geom_bar(position="dodge")
+datos_tidy %>% ggplot(aes(noise, fill=level))+geom_bar(position="dodge")
 ```
-
+Covarianza y correlacion de la media de los datos estaditicos
 ```{r}
 cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
 cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
@@ -386,7 +386,7 @@ cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),met
 cov(datos_tidy$long, datos_tidy$value)
 cor(datos_tidy$long, datos_tidy$value)
 cov(datos_tidy$long, datos_tidy$value,method = 'spearman')
-cor(datos_tidy$long, datos_tidy$value,method = 'spearman')
+cor(datos_tidy$long, datos_tidy$value,method = 'spearman') 
 ```
 
 ##Preguntas 2020
