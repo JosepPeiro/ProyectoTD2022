@@ -241,6 +241,30 @@ all(comprobar_colnames==T)
 ```
 Vemos como definitivamente, todos los dataframes tienen el mismo numero de columnas, sabiendo todo esto podemos trabajar con los datos conjuntamente con bastante seguridad.
 
+### Tipos de variables
+Finalmente, para asegurarnos todavía más de que podemos trabajar con todos los datos al mismo tiempo vamos a ver si los tipos de cada variable son los mismos en cada dataframe
+
+```{r}
+#Vamos a conocer el tipo de cada variable de un solo dataframe, 
+#y luego comprobaremos si el resto de dataframes cumplen las mismas 
+#caracteristicas
+clases_calle = unlist(lapply(SuecaEsqDenia, class))
+clases_calle #Vemos los tipos de cada variable de una calle
+
+todas_las_clases=map(calles, function(x){unlist(lapply(x, class))})
+comprobar_clases = c()
+for (c in todas_las_clases){
+  clase = (c == clases_calle)
+  comprobar_clases = c(comprobar_clases, clase)
+}
+
+#Si el codigo devuelve TRUE significa que todos tienen el 
+#mismo tipo de variables
+all(setNames(comprobar_clases, NULL)==T)
+```
+
+Hemos comprobado que, efectivamente los tipos de las variables de los distintos dataframes coinciden en tipo
+
 ## Segunda inspeccion, datos anómalos
 
 ### Datos faltantes NA
@@ -343,27 +367,6 @@ Cadiz16=Cadiz16 %>% filter(!LAeq_e==Inf)
 SalvadorAbril=SalvadorAbril %>% filter(!LAeq_d==Inf)
 calles$Cadiz16=Cadiz16
 calles$SalvadorAbril=SalvadorAbril
-```
-
-
-#### Tipos de variables
-```{r}
-#Vamos a conocer el tipo de cada variable de un solo dataframe, y luego comprobaremos si el resto de dataframes cumplen las mismas caracteristicas
-
-colnames(SuecaEsqDenia)
-glimpse(SuecaEsqDenia)
-#Podemos apreciar que el tipo de cada variable corresponde con lo que nos gustaria que fuera
-
-clases_calle = unlist(lapply(SuecaEsqDenia, class))
-clases_calle
-
-todas_las_clases=map(calles, function(x){unlist(lapply(x, class))})
-comprobar_clases = c()
-for (c in todas_las_clases){
-  clase = (c == clases_calle)
-  comprobar_clases = c(comprobar_clases, clase)
-}
-all(setNames(comprobar_clases, NULL)==T)
 ```
 
 ### Cambiar nombre variables
