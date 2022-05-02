@@ -185,7 +185,7 @@ nombre_calles=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3",
 names(calles)=nombre_calles
 ```
 
-## Primera inspeccion, dimensiones y variables
+## Dimensiones y variables
 
 ### Definición de variables
 
@@ -226,7 +226,7 @@ Sin embargo, vemos que cada los dataframe tiene un numero diferente de columnas
 
 Y ahora vamos a comprobar activamente que todos los dataframes tienen las mismas variables viendo si los nombres de las columnas son todos iguales
 
-```{r, Inspeccionar dataframes}
+```{r, Inspeccionar variables}
 #Ahora comprobamos si todos los dataframes tienen de hecho, las mismas variables
 #Para ello vamos a comprobar que los nombres de las variables sean siempre 
 #los mismos
@@ -265,7 +265,7 @@ all(setNames(comprobar_clases, NULL)==T)
 
 Hemos comprobado que, efectivamente los tipos de las variables de los distintos dataframes coinciden en tipo
 
-## Segunda inspeccion, datos anómalos
+## Datos anómalos
 
 ### Datos faltantes NA
 En primer lugar vamos a analizar si existen datos con valor NA, y de ser así, qué tipo de datos faltantes son.
@@ -328,7 +328,7 @@ Visto el resultado sabemos que hay valores infinitos en las calles CAlles Cadiz1
 Viendo este resultado nos salta la primera pregunta, y es ¿por que encontramos en algunos dataframes muy extrañamente valores infinitos?
 
 #### Comparacion infinitos con valores anteriores y posteriores
-Vamos a buscar cuál puede ser la causa por la que puede ser que haya valores infinitos, para hacer el estudio vamos a empezar comparando con los valores anteriores y posteriores carcanos al que encontramos que vale infinito, y tambien vamos a ver la posicion dentro del dataframe, por si nos puede ser de ayuda
+Vamos a buscar cuál puede ser la causa por la que puede ser que haya valores infinitos, para hacer el estudio vamos a empezar comparando con los valores anteriores y posteriores cercanos al que encontramos que vale infinito, y tambien vamos a ver la posicion dentro del dataframe, por si nos puede ser de ayuda
 
 ```{r}
 for (m in 1:length(conjuntos_datos_infinitos)){
@@ -369,24 +369,60 @@ calles$Cadiz16=Cadiz16
 calles$SalvadorAbril=SalvadorAbril
 ```
 
-### Cambiar nombre variables
-Como algunos nombres no quedan muy claros vamos a cambiarle los nombres para que se vea mas claro que representa cada dato
+### Visualizacion superficial datos
+Vamos a ver como se organizan los dataframes para ver qué dudas nos pueden surgir de este.
+Como todos tienen la misma estructura podemos ver un dataframe y extrapolar que el resto serán parecidos, si no iguales
+
 ```{r}
+head(Cadiz16)
+tail(Cadiz16)
+glimpse(Cadiz16)
+```
+
+Aqui hemos visto la forma del dataframe
+
+Y vamos a averiguar si hay variables que tienen todo el tiempo el mismo valor
+
+```{r}
+vector_unique=c()
+for (r in 1:ncol(Cadiz16)){
+  vector_unique=c(vector_unique, count(unique(Cadiz16[,r])))
+}
+print(setNames(unlist(vector_unique), colnames(Cadiz16)))
+```
+
+Encontramos que así es, y que fiwareServicePath, entityType y entityId mantienen en todo momento el mismo valor.
+Eso influirá en como tratemos a esas variables más adelante
+
+### Cambiar nombre variables
+La primera cosa que haremos para manipular los datos es cambiar el nombre de las variables de cada dataframe para tener algo más intuitivo y explicativo.
+
+Lo haremos especialmente con las columnas que tienen datos de nivel de sonido, ya que estas son las que tienen los datos más interesantes de analizar y la columna id, que con el nombre que tiene es realmente incómoda de utilizar
+
+```{r}
+#Vamos a crear una lista con los dataframes cambiados de nombre que sustituirá 
+#a la lista que teniamos antes de calles
 calles_renombradas = list()
 for (r in calles){
   s = r %>% rename("noise_min" = LAeq, 
                    "noise_morning"=LAeq_d, 
                    "noise_all"=LAeq_den,
                    "noise_afternoon"=LAeq_e,
-                   "noise_night"=LAeq_n)
+                   "noise_night"=LAeq_n,
+                   "id"=1)
   calles_renombradas[[length(calles_renombradas) + 1]] = s
 }
 names(calles_renombradas)=nombre_calles
 calles = calles_renombradas
+
+#Visualizamos como han quedado el resultado
+head(calles$Cadiz16)
 ```
 
 
 ### Estadisticos
+
+Para conocer los datos que tenemos vamso a sacar una tabla de estadisticos de las variables que ya tenemos.
 Estos datos estadisticos son sobre todos las calles en todos los años
 ```{r}
 estadisticos = function(x){
