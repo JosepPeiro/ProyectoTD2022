@@ -97,32 +97,16 @@ datos = datos_2020
 
 Lo primero que hacemos es calcular los valores estadísticos como la media, mediana, percentil...
 ```{r}
-estadisticos = function(x){
-  minimo = round(min(x, na.rm=T),2)
-  percentil_25 = round(quantile(x, 0.25, na.rm=T),2)
-  mediana = round(median(x, na.rm=T),2)
-  media = round(mean(x, na.rm=T),2)
-  desviacion_tipica = round(sd(x, na.rm=T),2)
-  percentil_75 = round(quantile(x, 0.75, na.rm=T),2)
-  maximo = round(max(x, na.rm=T),2)
-  vector = c(minimo, percentil_25, mediana, media, desviacion_tipica, percentil_75, maximo)
-  names(vector)=NULL
-  return (vector)
-}
-```
-
-Una vez los tenemos calculados y almacenados, los mostramos en una tabla , donde cambiamos los nombres para que quede todo mas claro
-```{r}
-tabla_estadisticos = data.frame()
-
-for (a in datos[,2:6]){
-  b = estadisticos(a)
-  tabla_estadisticos=rbind(tabla_estadisticos, b)
-}
-
-colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos[,2:6])
-tabla_estadisticos
+datos %>% 
+  group_by(noise) %>% 
+  summarise(minimo=min(value), 
+            perc_25=round(quantile(value, 0.25),2),
+            mediana = median(value),
+            media = mean(value),
+            desv_tipica = sd(value),
+            perc_75 = round(quantile(value, 0.75),2),
+            maximo = max(value)
+  )
 ```
 
 **Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
@@ -158,61 +142,77 @@ outliers = function(x, method="3sigma"){
   minIn = min(x[which(x>lowLim)])
   maxIn = max(x[which(x<upLim)])
   minOut = min(x[which(x>upLim)])
-  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut)
+  percOut = nOut/length(x) 
+  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut, percOut)
   rownames(resultado)=NULL
   return (resultado)
 }
 ```
 
-
 ```{r}
+niveles = levels(datos$noise)
+
 out_3sigma = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c)
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
 out_3sigma
 
 out_percentil = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "percentil")
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
 out_percentil
 
 out_boxplot = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "boxplot")
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
 out_boxplot
 
 out_hampel = data.frame()
-for (c in datos[,2:6]){
-  resultado = outliers(c, "hampel")
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
 out_hampel
 ```
 
+
 ## Estudio correlación y covarianza
 Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
 ```{r}
-
+datos_wide = datos %>% pivot_wider(names_from=noise, values_from=value)
 cat('Covarianza Pearson\n')
-cov(select(datos,starts_with("noise")))
+cov(datos_wide[,7:11] %>% na.omit())
 cat('\nCorrelación Pearson\n')
-cor(select(datos,starts_with("noise")))
+cor(datos_wide[,7:11] %>% na.omit())
 cat('\nCovarianza Spearman\n')
-cov(select(datos,starts_with("noise")),method = 'spearman')
+cov(datos_wide[,7:11] %>% na.omit(),method = 'spearman')
 cat('\nCorrelación Spearman\n')
-cor(select(datos,starts_with("noise")),method = 'spearman')
+cor(datos_wide[,7:11] %>% na.omit(),method = 'spearman')
 
-GGally::ggpairs(select(datos,starts_with("noise")))
-chart.Correlation(select(datos,starts_with("noise")))
+GGally::ggpairs(datos_wide[,7:11] %>% na.omit())
+chart.Correlation(datos_wide[,7:11] %>% na.omit())
 ```
 Ponemos los datos tidy en ordden de cuando fueran tomadas las muestras y agrupadas por calles
 ```{r}
+#Eliminar!!!!!!!!!!!!
 datos_tidy = datos %>% select(-year) %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))%>% 
   mutate(level=case_when(
     between(value, 10, 30) ~ "Very Low", 
@@ -411,7 +411,6 @@ Las preguntas relacionadas con el año 2020 son las siguientes:
 - ¿Cuales son los momentos del dia que mas semejante es el ruido?
 - ¿En que calle se solia escuchar mas y menos ruido?
 - ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
-- ¿En que epoca del año hay ayor produccion de ruido?
+- ¿En que epoca del año hay mayor produccion de ruido?
 - ¿Que calle tiene una media del sonido mas alta?
-- ¿Tiene que ver algo la largaria de las calles con su sonido?
-
+- ¿Tiene que ver algo la longitud de las calles con su sonido?

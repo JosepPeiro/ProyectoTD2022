@@ -595,7 +595,7 @@ Una manera de trabajar con los datos de manera seperada es separandolos por año
 De esta maner podemos ver el caracter cíclico del tiempo y si los datos varian de un año a otro o aparecen paralelismos
 
 ```{r}
-datos = datos %>% mutate(year = year(dateObserved))
+datos_tidy = datos_tidy %>% mutate(year = year(dateObserved))
 unique(datos$year) #Vemos los años de los que tenemos datos
 ```
 
@@ -603,9 +603,9 @@ unique(datos$year) #Vemos los años de los que tenemos datos
 Vamos a crear distintos dataframes para trabajar con ellos por separado
 
 ```{r}
-datos_2020 = datos %>% filter(year==2020)
-datos_2021 = datos %>% filter(year==2021)
-datos_2022 = datos %>% filter(year==2022)
+datos_2020 = datos_tidy %>% filter(year==2020)
+datos_2021 = datos_tidy %>% filter(year==2021)
+datos_2022 = datos_tidy %>% filter(year==2022)
 ```
 
 ## Guardar datos
