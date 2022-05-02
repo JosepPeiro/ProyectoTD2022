@@ -97,8 +97,8 @@ ggplot(datos_2021, aes(noise, value))+geom_boxplot()
 ```
 
 ```{r}
-ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
-  geom_line() + facet_wrap(~Street)
+# ggplot(datos_tidy, aes(x = dateObserved, y = value, color = noise)) +
+#   geom_line() + facet_wrap(~Street)
 #Ahora vamos a representar el sonido durante el dia por cada calle.
 ```
 

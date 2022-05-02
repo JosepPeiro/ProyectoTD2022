@@ -154,8 +154,8 @@ outliers = function(x, method="3sigma"){
     upLim=mediana+3*medabdev
   }
   nOut = length(which(x<lowLim|x>upLim))
-  minIn = min(x[which(x>lowLim)])
   maxOut = max(x[which(x<lowLim)])
+  minIn = min(x[which(x>lowLim)])
   maxIn = max(x[which(x<upLim)])
   minOut = min(x[which(x>upLim)])
   resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut)

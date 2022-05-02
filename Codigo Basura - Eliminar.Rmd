@@ -1,0 +1,29 @@
+```{r}
+#Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
+datos2 = 
+  Cadiz16 %>% dplyr::select(1, 6:11) %>% mutate(Street="Cadiz16")%>% 
+  full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Street="Cadiz3")
+            , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
+  full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Street="CarlesCervera")
+            , by="dateObserved", suffix=c("_Cadiz3", "")) %>% 
+  full_join(CarlesCervera34 %>% select(1, 6:11) %>% mutate(Street="CarlesCervera34")
+            , by="dateObserved", suffix=c("_CarlesCerCh", "")) %>%
+  full_join(Cuba3 %>% select(1, 6:11) %>% mutate(Street="Cuba3")
+            , by="dateObserved", suffix=c("_CarlesCer34", "")) %>% 
+  full_join(DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Street="DoctorSerrano21")
+            , by="dateObserved", suffix=c("_Cuba3", "")) %>% 
+  full_join(GeneralPrim %>% select(1, 6:11) %>% mutate(Street="GeneralPrim")
+            , by="dateObserved", suffix=c("_Serrano21", "")) %>% 
+  full_join(PuertoRico21 %>% select(1, 6:11) %>% mutate(Street="PuertoRico21")
+            , by="dateObserved", suffix=c("_GenPrim", "")) %>% 
+  full_join(SalvadorAbril %>% select(1, 6:11) %>% mutate(Street="SalvadorAbril")
+            , by="dateObserved", suffix=c("_PuertoRico21", "")) %>% 
+  full_join(Sueca2 %>% select(1, 6:11) %>% mutate(Street="Sueca2")
+            , by="dateObserved", suffix=c("_SalvadorAbril", "")) %>% 
+  full_join(Sueca32 %>% select(1, 6:11) %>% mutate(Street="Sueca32")
+            , by="dateObserved", suffix=c("_Sueca2", "")) %>% 
+  full_join(Sueca61 %>% select(1, 6:11) %>% mutate(Street="Sueca61")
+            , by="dateObserved", suffix=c("_Sueca32", "")) %>% 
+  full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
+            , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
+```
