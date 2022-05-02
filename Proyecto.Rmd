@@ -43,11 +43,6 @@ pre {
 }
 </style>
 
-
-```{r, echo=F}
-#rm(list=ls())
-```
-
 ```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
@@ -90,10 +85,15 @@ package.check <- lapply(packages, FUN = function(x) {
 
 ```
 
-## Analisis
+```{r, include=FALSE}
+#rm(list=ls())
+```
+
+## Previo
 
 ### Descarga ficheros
-El primer paso es descargar todos los ficheros de sonido de las calles que vayamos a necesitar
+En primer lugar, descargamos todos los ficheros que vamos a utilizar en una carpeta llamada data.
+
 ```{r, Descarga datos de internet, echo=FALSE, message=FALSE, warning=FALSE}
 # descargamos y almacenamos los datos en la carpeta data
 dir.create("data")
@@ -142,10 +142,10 @@ download.file(url14, destfile = "./data/GeneralPrim.csv")
 
 ```
 
-Ahora tenemos los datos en forma de csv para cada calle, vamos a importar estos datos y a guardarlos con el nombre de cad calle
+### Importacion
+Una vez descargados los datos en forma de csv para cada calle vamos a importarlos y a guardarlos con el nombre de cada calle
+
 ```{r, Leer dataframe,  echo=FALSE, message=FALSE}
-
-
 library(readr)
 
 SuecaEsqDenia <- read_csv("./data/SuecaEsqDenia.csv") 
@@ -163,19 +163,40 @@ PuertoRico21 <- read_csv("./data/PuertoRico21.csv")
 DoctorSerrano21 <- read_csv("./data/DoctorSerrano21.csv")
 GeneralPrim <- read_csv("./data/GeneralPrim.csv")
 ```
-![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO BUENO.png)
-Una vez guardados los archivos en una lista llamade calles y asi los tenemos todos juntos
-```{r, Crear lista de dataframes}
-calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, Sueca2, Sueca61, Sueca32, CarlesCervera, SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, DoctorSerrano21, GeneralPrim)
 
-nombre_calles=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", "DoctorSerrano21", "GeneralPrim")
+### Imagen calles
+Para visualizar como estan distribuidos los sensores incluimos una imagen con las calles de las que se tienen datos
+
+![Barrio de Ruzafa, fuente: Google Maps](images/RUZAFA DELIMITADO RECORTADO CON CALLES A COLORINES RECORTADO BUENO.png)
+
+### Agrupacion dataframes en un solo objeto
+Para poder trabajar con todos los archivos juntos hemos creado una lista con todos los dataframes de las calles. De esta manera podemos manipular los datos conjuntamente. A cada dataframe, como es normal, le asignamos el nombre de la calle a la que pertenece.
+
+```{r, Crear lista de dataframes}
+calles = list(SuecaEsqDenia, Cadiz16, Cadiz3, Cuba3, 
+              Sueca2, Sueca61, Sueca32, CarlesCervera, 
+              SalvadorAbril, Vivons, CarlesCervera34, PuertoRico21, 
+              DoctorSerrano21, GeneralPrim)
+
+nombre_calles=c("SuecaEsqDenia", "Cadiz16", "Cadiz3", "Cuba3", 
+                "Sueca2", "Sueca61", "Sueca32", "CarlesCervera", 
+                "SalvadorAbril", "Vivons", "CarlesCervera34", "PuertoRico21", 
+                "DoctorSerrano21", "GeneralPrim")
 names(calles)=nombre_calles
 ```
 
-### Primera inspeccion
+## Primera inspeccion
 
 ### Definición de variables
 
+Antes de empezar a analizar en profundidad los datos los datos vamos a conocer qué representa cada variable
+
+```{r}
+#Escogemos un dataframe al azar y vemos sus variables
+colnames(Cadiz3)
+```
+
+- _id: Identificador para cada recepcion de datos
 - RecvTime: Fecha en la que se insertó el dato en la plataforma.
 - FiwareServicePath: Servicio de la plataforma VLCi al que pertenece el sensor.
 - EntityType: Tipo de entidad del sensor en la plataforma VLCi.
@@ -187,29 +208,41 @@ names(calles)=nombre_calles
 - LAeq_n: Es un indicador del nivel sonoro durante la noche, donde a la noche le corresponden 8 horas, en el período que se extiende desde las 23 hasta las 7 horas.
 - Dateobserved: Día al que se refieren las medidas.
 
-#### Todos los dataframes al mismo tiempo
+### Dimensiones
+Antes de empezar a trabajar con los valores de los datos vamos a conocer como estan estructurados, si todos tienen el mismo numero de lineas y de columnas
+
 ```{r, Inspeccionar dataframes}
 library(purrr)
 
 #Averiguamos si las dimensiones de los dataframes son siempre las mismas
 numero_columnas=unlist(map(calles, ncol), use.names = F)
-numero_columnas
+numero_columnas #Numero de columnas de todos los dataframes
 numero_filas=unlist(map(calles, nrow), use.names = F)
-numero_filas
+numero_filas #Numero de filas de todos los dataframes
+```
 
+Vemos en seguida que todos tienen el mismo numero de columnas, 11, suponemos que es porque son tantas como variables hemos analizado previamente.
+Sin embargo, vemos que cada los dataframe tiene un numero diferente de columnas
+
+Y ahora vamos a comprobar activamente que todos los dataframes tienen las mismas variables viendo si los nombres de las columnas son todos iguales
+
+```{r, Inspeccionar dataframes}
 #Ahora comprobamos si todos los dataframes tienen de hecho, las mismas variables
 #Para ello vamos a comprobar que los nombres de las variables sean siempre 
-#las mismas
+#los mismos
 comprobar_colnames = c()
 for (a in map(calles, colnames)){
   nombres = (a == colnames(SuecaEsqDenia))
   comprobar_colnames = c(comprobar_colnames, nombres)
 }
+
+#Si todas son TRUE entonces todos los dataframes tienen las mismas columnas
 all(comprobar_colnames==T)
 
 #Y aqui averiguamos si algun dataframe tiene datos faltantes
 all(unlist(map(calles, function(x){all(!is.na(x))}))==T)
 ```
+Vemos como definitivamente, todos los dataframes tienen el mismo numero de colunas
 
 Ahora hemos comprobado que todos los dataframes tienen el mismo numero de columnas, las variables son las mismas y dentro de los dataframes no aparecen valores faltantes
 
@@ -344,18 +377,7 @@ print(lista_estadisticos)
 ### Diferenciar años
 
 Para que el trabajo quede mas claro vamos a separar los datos en 3 rmd distintos, uno por año, así podemos investigar mas a fondo como varia el sonido en cada uno de los años y a la vista queda mucho mas claro tambien.
-```{r}
-#columna_anyo=map(calles, function(x){unlist(x=x %>% mutate(year = year(dateObserved)))})
-#SuecaEsqDenia %>% mutate(year = year(dateObserved))
 
-calles2 = list()
-for (d in calles){
-  d = d %>% mutate(year = year(dateObserved))
-  calles2[[length(calles2) + 1]] = d
-}
-names(calles2) = nombre_calles
-#Es posible que eliminemos este chunk porque no sirve para nada
-```
 Creamos una columna año que despues utilizaremos para los facets
 
 ### Unir dataframes
@@ -369,16 +391,6 @@ length(unique(SuecaEsqDenia$entityType))
 length(unique(SuecaEsqDenia$entityId))
 
 # vemos que las columnas 3,4,5 no son importantes porque siempre es la misma observación
-
-
-# INTENTO DE BUCLE NO FUNCIONA
-# for (a in map(calles, colnames)){
-#   for (i in 1:length(a)){
-#     if(length(unique(calles$a[i])) == 1){
-#   print(a[i])
-#   }
-# }
-# }
 ```
 
 ```{r}
@@ -478,18 +490,23 @@ estadisticos_conjuntos
 ```
 
 ```{r}
-#Este grafico hay que eliminarlo, que servia para ver el infinito, pero ya no esta
-
-#ggplot(SalvadorAbril %>% filter(year(dateObserved)==2021), aes(dateObserved, LAeq_d))+geom_line()+geom_vline(xintercept=ymd("2021-03-03"), color="grey2", linetype=3)
-#geom_vline(xintercept = ymd("2021-03-03"), color = "grey", linetype = 3)
-```
-
-```{r}
 datos = datos %>% mutate(year = year(dateObserved))
 unique(datos$year)
 datos_2020 = datos %>% filter(year==2020)
 datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
+```
+
+```{r}
+datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))%>% 
+  mutate(level=case_when(
+    between(value, 10, 30) ~ "Very Low", 
+    between(value, 30, 50) ~ "Low", 
+    between(value, 50, 65) ~ "Medium", 
+    between(value, 65, 80) ~ "Loud", 
+    TRUE ~ "Very Loud"
+), level=as.factor(level))
+head(datos_tidy)
 ```
 
 Para posteriormente poder trabajar con ellos guardamos los datos en sus respectivos Rdata
