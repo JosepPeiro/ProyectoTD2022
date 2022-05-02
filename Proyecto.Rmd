@@ -608,7 +608,7 @@ datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
 ```
 
-### Guardar datos
+## Guardar datos
 Para poder trabajar con los datos separados por año guardamos los dataframes en sus respectivos Rdata
 ```{r}
 dir.create("dataframes")
