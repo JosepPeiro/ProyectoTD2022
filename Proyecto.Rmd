@@ -369,7 +369,7 @@ calles$Cadiz16=Cadiz16
 calles$SalvadorAbril=SalvadorAbril
 ```
 
-### Visualizacion superficial datos
+## Visualizacion superficial datos
 Vamos a ver como se organizan los dataframes para ver qué dudas nos pueden surgir de este.
 Como todos tienen la misma estructura podemos ver un dataframe y extrapolar que el resto serán parecidos, si no iguales
 
@@ -377,6 +377,7 @@ Como todos tienen la misma estructura podemos ver un dataframe y extrapolar que 
 head(Cadiz16)
 tail(Cadiz16)
 glimpse(Cadiz16)
+str(Cadiz16)
 ```
 
 Aqui hemos visto la forma del dataframe
@@ -393,6 +394,8 @@ print(setNames(unlist(vector_unique), colnames(Cadiz16)))
 
 Encontramos que así es, y que fiwareServicePath, entityType y entityId mantienen en todo momento el mismo valor.
 Eso influirá en como tratemos a esas variables más adelante
+
+## Manipulacion
 
 ### Cambiar nombre variables
 La primera cosa que haremos para manipular los datos es cambiar el nombre de las variables de cada dataframe para tener algo más intuitivo y explicativo.
@@ -463,9 +466,9 @@ print(lista_estadisticos)
 ```
 
 
-### Unir dataframes
+## Unir dataframes
 
-#### Variables con un solo valor
+### Variables con un solo valor
 Comprobamos la hipotesis que teniamos antes de que las columnas fiwareServicePath, entityType y entityId mantienen en todo momento el mismo valor
 
 ```{r}
@@ -483,9 +486,10 @@ Como tales, esas variables no tiene sentido mantenerlas si son todo el tiempo ig
 Luego, por otra parte, la columna recvTime tampoco nos ofrece un conocimiento relevante. Vale más la pena eliminarla porque tiene más caracter de metadato que de dato de por sí, al igual que fiwareServicePath, entityType y entityId. Y es por eso por lo que decidimos eliminarla. 
 Finalemente nos quedaremos con las columnas id, todas las referentes a valores de ruido y la fecha de observacion
 
-#### Pegar dataframes
+### Pegar dataframes
 Vamos a unir todos los dataframes en 1 solo, para empezar una manipulacion conjunta de todos los datos.
-Para hacerlo hemos considerado el metodo mas apropiado juntarlos mediante rbind porque el nombre de las variables es en todos los dataframes el mismo; al igual que la estructura 
+Para hacerlo hemos considerado el metodo mas apropiado juntarlos mediante rbind porque el nombre de las variables es en todos los dataframes el mismo; al igual que la estructura, las variables y el numero de columnas.
+Sin embargo, pensamos que es acertado para diferenciar calles añadir una nueva columna en cada dataframe que indique a qué calle pertenece
 
 ```{r}
 datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
@@ -510,6 +514,33 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
 ```
 
 ```{r}
+#Visualizamos como ha quedado el resultado
+str(datos)
+```
+Las dimensiones de la nueva tabla son de 6721 x 8
+
+### Estadisticos de todo el dataframe
+Despues de haber juntado todos los dataframes podemos ver los estadisticos de los datos conjuntos para tener una vision compacta de estos
+
+```{r}
+#Utilizamos la misma funcion de estadisticos que hemos utilizado antes
+estadisticos_conjuntos=matrix(ncol=7)
+for (h in datos[,2:6]){
+    i = estadisticos(h)
+    estadisticos_conjuntos = rbind(estadisticos_conjuntos, i)
+}
+
+estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
+colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
+rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
+estadisticos_conjuntos
+```
+
+### Añadir longitud calles
+Viendo que nos es posible hemos decidido añadir una nueva variable que puede influir en el analisis que hagamos de los datos. Esta es la longitud de las calles.
+La informacion la hemos obtenido de la pagina web https://www.foro-ciudad.com
+
+```{r}
 #Datos obtenidos de https://www.foro-ciudad.com
 datos=datos %>% mutate(long = case_when(
   str_detect(Street, "Cadiz")~692,
@@ -526,18 +557,25 @@ datos=datos %>% mutate(long = case_when(
 ))
 ```
 
-### Estadisticos de todo el dataframe
+## Tidy
+Vamos a convertir los datos a formato tidy.
+Para ello vamos a juntar todas las columnas que hacen referencia a la variable de ruido y las vamos dividir en 2, una que refiera al tipo de ruido y otra al valor
 ```{r}
-estadisticos_conjuntos=matrix(ncol=7)
-for (h in datos[,2:6]){
-    i = estadisticos(h)
-    estadisticos_conjuntos = rbind(estadisticos_conjuntos, i)
-}
+datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
+head(datos_tidy)
+```
 
-estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
-colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
-estadisticos_conjuntos
+
+```{r}
+datos_tidy = datos_tidy%>% 
+    mutate(level=case_when(
+    between(value, 10, 30) ~ "Very Low", 
+    between(value, 30, 50) ~ "Low", 
+    between(value, 50, 65) ~ "Medium", 
+    between(value, 65, 80) ~ "Loud", 
+    TRUE ~ "Very Loud"
+), level=as.factor(level))
+head(datos_tidy)
 ```
 
 ```{r}
@@ -548,17 +586,7 @@ datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
 ```
 
-```{r}
-datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))%>% 
-  mutate(level=case_when(
-    between(value, 10, 30) ~ "Very Low", 
-    between(value, 30, 50) ~ "Low", 
-    between(value, 50, 65) ~ "Medium", 
-    between(value, 65, 80) ~ "Loud", 
-    TRUE ~ "Very Loud"
-), level=as.factor(level))
-head(datos_tidy)
-```
+
 
 Para posteriormente poder trabajar con ellos guardamos los datos en sus respectivos Rdata
 ```{r}
