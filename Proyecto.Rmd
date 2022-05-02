@@ -560,11 +560,19 @@ datos=datos %>% mutate(long = case_when(
 ## Tidy
 Vamos a convertir los datos a formato tidy.
 Para ello vamos a juntar todas las columnas que hacen referencia a la variable de ruido y las vamos dividir en 2, una que refiera al tipo de ruido y otra al valor
+
 ```{r}
 datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
+
+#Visualizamos los datos
 head(datos_tidy)
 ```
 
+### Añadir ruido categorico
+Una vez tenemos los datos en formato podemos discretizar el ruido en niveles segun su intensidad.
+Cabe destacar a la hora de hacer esta distincion que la Organizacion Mundial de la Salud considera los 50dB como el limite superior deseable de ruido.
+
+La manera de partir los intervalos de ruido se han decidido mediante las conclusiones sacadas en las paginas de https://www.saludambientalenlaescuela.org/ y https://www.salud.mapfre.es/ 
 
 ```{r}
 datos_tidy = datos_tidy%>% 
@@ -575,20 +583,31 @@ datos_tidy = datos_tidy%>%
     between(value, 65, 80) ~ "Loud", 
     TRUE ~ "Very Loud"
 ), level=as.factor(level))
+
+#Visualizamos la nueva variable
 head(datos_tidy)
 ```
 
+### Añadir año
+Una manera de trabajar con los datos de manera seperada es separandolos por años.
+De esta maner podemos ver el caracter cíclico del tiempo y si los datos varian de un año a otro o aparecen paralelismos
+
 ```{r}
 datos = datos %>% mutate(year = year(dateObserved))
-unique(datos$year)
+unique(datos$year) #Vemos los años de los que tenemos datos
+```
+
+#### Separar por años
+Vamos a crear distintos dataframes para trabajar con ellos por separado
+
+```{r}
 datos_2020 = datos %>% filter(year==2020)
 datos_2021 = datos %>% filter(year==2021)
 datos_2022 = datos %>% filter(year==2022)
 ```
 
-
-
-Para posteriormente poder trabajar con ellos guardamos los datos en sus respectivos Rdata
+### Guardar datos
+Para poder trabajar con los datos separados por año guardamos los dataframes en sus respectivos Rdata
 ```{r}
 dir.create("dataframes")
 
