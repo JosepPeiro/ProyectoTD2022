@@ -421,10 +421,11 @@ head(calles$Cadiz16)
 
 
 ### Estadisticos
+Para conocer los datos que tenemos vamos a sacar una tabla de estadisticos de las variables que ya tenemos y que nos puedan ser interesantes.
+Estos datos estadisticos son sobre todas las calles en todos los años. Vamos a fijarnos en las variables numericas para sacar los estadisticos.
 
-Para conocer los datos que tenemos vamso a sacar una tabla de estadisticos de las variables que ya tenemos.
-Estos datos estadisticos son sobre todos las calles en todos los años
 ```{r}
+#Creamos una funcion que cree los estadisticos más interesantes.
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
   percentil_25 = round(quantile(x, 0.25, na.rm=T),2)
@@ -440,6 +441,9 @@ estadisticos = function(x){
 ```
 
 ```{r}
+#Y ahora creamos un dataframe con estadisticos para cada calle
+#En cada linea apareceran los estadisticos de una variable
+#Utilizaremos listas para agrupar las tablas de estadisticos
 lista_estadisticos = list()
 for (e in calles){
   matriz_estadisticos=matrix(ncol=7)
@@ -458,24 +462,11 @@ names(lista_estadisticos)=nombre_calles
 print(lista_estadisticos)
 ```
 
-### Diferenciar años
-
-Para que el trabajo quede mas claro vamos a separar los datos en 3 rmd distintos, uno por año, así podemos investigar mas a fondo como varia el sonido en cada uno de los años y a la vista queda mucho mas claro tambien.
-
-Creamos una columna año que despues utilizaremos para los facets
 
 ### Unir dataframes
-```{r}
-#Puede que eliminemos este chunk tambien
-#Comprobamos si algunas columnas nos son completamente inutiles, para poder eliminarlas
-# comprobamos usando unique que columnas tienen una misma observación en todo el df
 
-length(unique(SuecaEsqDenia$fiwareServicePath)) 
-length(unique(SuecaEsqDenia$entityType)) 
-length(unique(SuecaEsqDenia$entityId))
-
-# vemos que las columnas 3,4,5 no son importantes porque siempre es la misma observación
-```
+#### Variables con un solo valor
+Comprobamos la hipotesis que teniamos antes de que las columnas fiwareServicePath, entityType y entityId mantienen en todo momento el mismo valor
 
 ```{r}
 numero_niveles=c()
@@ -488,7 +479,13 @@ for (o in calles){
 all(numero_niveles==1)
 #Las variables que repiten todo el tiempo el mismo valor no nos interesan, la eliminamos
 ```
+Como tales, esas variables no tiene sentido mantenerlas si son todo el tiempo iguales.
+Luego, por otra parte, la columna recvTime tampoco nos ofrece un conocimiento relevante. Vale más la pena eliminarla porque tiene más caracter de metadato que de dato de por sí, al igual que fiwareServicePath, entityType y entityId. Y es por eso por lo que decidimos eliminarla. 
+Finalemente nos quedaremos con las columnas id, todas las referentes a valores de ruido y la fecha de observacion
 
+#### Pegar dataframes
+Vamos a unir todos los dataframes en 1 solo, para empezar una manipulacion conjunta de todos los datos.
+Para hacerlo hemos considerado el metodo mas apropiado juntarlos mediante rbind porque el nombre de las variables es en todos los dataframes el mismo; al igual que la estructura 
 
 ```{r}
 datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
@@ -507,39 +504,9 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
                Vivons %>% select(1, 6:11) %>% mutate(Street="Vivons")
                ) %>% rename("noise_min" = LAeq, 
                             "noise_morning"=LAeq_d, 
-                            "noise_all"=LAeq_den,
+                            "noise_all"=LAeq_den,#Tenemos que volver a renombrar variables
                             "noise_afternoon"=LAeq_e,
                             "noise_night"=LAeq_n)
-```
-
-```{r}
-#Los datos imporatnte solo son los que hemos elegido, el resto son metadatos
-datos2 = 
-  Cadiz16 %>% dplyr::select(1, 6:11) %>% mutate(Street="Cadiz16")%>% 
-  full_join(Cadiz3 %>% select(1, 6:11) %>% mutate(Street="Cadiz3")
-            , by="dateObserved", suffix=c("_Cadiz16", "")) %>% 
-  full_join(CarlesCervera %>% select(1, 6:11) %>% mutate(Street="CarlesCervera")
-            , by="dateObserved", suffix=c("_Cadiz3", "")) %>% 
-  full_join(CarlesCervera34 %>% select(1, 6:11) %>% mutate(Street="CarlesCervera34")
-            , by="dateObserved", suffix=c("_CarlesCerCh", "")) %>%
-  full_join(Cuba3 %>% select(1, 6:11) %>% mutate(Street="Cuba3")
-            , by="dateObserved", suffix=c("_CarlesCer34", "")) %>% 
-  full_join(DoctorSerrano21 %>% select(1, 6:11) %>% mutate(Street="DoctorSerrano21")
-            , by="dateObserved", suffix=c("_Cuba3", "")) %>% 
-  full_join(GeneralPrim %>% select(1, 6:11) %>% mutate(Street="GeneralPrim")
-            , by="dateObserved", suffix=c("_Serrano21", "")) %>% 
-  full_join(PuertoRico21 %>% select(1, 6:11) %>% mutate(Street="PuertoRico21")
-            , by="dateObserved", suffix=c("_GenPrim", "")) %>% 
-  full_join(SalvadorAbril %>% select(1, 6:11) %>% mutate(Street="SalvadorAbril")
-            , by="dateObserved", suffix=c("_PuertoRico21", "")) %>% 
-  full_join(Sueca2 %>% select(1, 6:11) %>% mutate(Street="Sueca2")
-            , by="dateObserved", suffix=c("_SalvadorAbril", "")) %>% 
-  full_join(Sueca32 %>% select(1, 6:11) %>% mutate(Street="Sueca32")
-            , by="dateObserved", suffix=c("_Sueca2", "")) %>% 
-  full_join(Sueca61 %>% select(1, 6:11) %>% mutate(Street="Sueca61")
-            , by="dateObserved", suffix=c("_Sueca32", "")) %>% 
-  full_join(SuecaEsqDenia %>% select(1, 6:11) %>% mutate(Street="SuecaEsqDenia")
-            , by="dateObserved", suffix=c("_Sueca61", "_SuecaDenia"))
 ```
 
 ```{r}
