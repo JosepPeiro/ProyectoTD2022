@@ -89,6 +89,8 @@ package.check <- lapply(packages, FUN = function(x) {
 #rm(list=ls())
 ```
 
+# Proyecto introductorio
+
 ## Previo
 
 ### Descarga ficheros
@@ -616,13 +618,18 @@ save(datos_2021, file="./dataframes/datos_2021.Rdata")
 save(datos_2022, file="./dataframes/datos_2022.Rdata")
 ```
 
-##Preguntas generales
-Como hemos dividido los datos en 3 rmd diferentes en este que seria como el que une los 3 años , estan las preguntas respectivas a los 3 a la vez
+# Preguntas generales
+Una vez realizado todo este primer analisis cabe hacerse las siguientes preguntas
 
 - ¿En que año hubo mas y menos ruido?
 - ¿Como afecto la cuarentena al sonido percibido?
 - ¿En que epocas del año se produce mas ruido (navidas, verano...)?
-- ¿Coinciden los meses con mas y menos sonido?
-- ¿Coinciden las calles con mas y menos sonido?
+- ¿Coinciden los meses con mas y menos sonido en cada año?
+- ¿Coinciden las calles con mas y menos sonido en cada año?
 - ¿El ruido aumenta , dismunuye o se mantiene con el paso del tiempo?
-- ¿Porque hay datos infinitos?
+- ¿A que horas el ruido es mas fuerte?
+- ¿Afecta la longitud de las calles al ruido?
+- ¿Las calles mas importantes detectan mas ruido?
+- ¿Se escede muchas veces el nivel de ruido con lo recomendable?
+- ¿Y en épocas de futbol hay más ruido?
+- ¿Si hay más ruido por la mañana es más probable que haga mas ruido por la noche?
