@@ -90,7 +90,7 @@ Este sera el Rmd donde trabajaremos con los datos de 2020
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2020.Rdata")
-datos = datos_2020
+datos = datos_2020 %>% select(-year)
 ```
 
 ## Estudio estadistico
@@ -106,7 +106,7 @@ datos %>%
             desv_tipica = sd(value),
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
-  )
+  ) %>% ungroup()
 ```
 
 **Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
@@ -196,19 +196,20 @@ out_hampel
 
 ## Estudio correlación y covarianza
 Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
-```{r}
-datos_wide = datos %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,7:11] %>% na.omit())
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,7:11] %>% na.omit())
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,7:11] %>% na.omit(),method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,7:11] %>% na.omit(),method = 'spearman')
 
-GGally::ggpairs(datos_wide[,7:11] %>% na.omit())
-chart.Correlation(datos_wide[,7:11] %>% na.omit())
+```{r}
+datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
+cat('Covarianza Pearson\n')
+cov(datos_wide[,5:9], use="complete.obs")
+cat('\nCorrelación Pearson\n')
+cor(datos_wide[,5:9], use="complete.obs")
+cat('\nCovarianza Spearman\n')
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+GGally::ggpairs(datos_wide[,5:9])
+chart.Correlation(datos_wide[,5:9])
 ```
 Ponemos los datos tidy en ordden de cuando fueran tomadas las muestras y agrupadas por calles
 

@@ -512,14 +512,14 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
                             "noise_morning"=LAeq_d, 
                             "noise_all"=LAeq_den,#Tenemos que volver a renombrar variables
                             "noise_afternoon"=LAeq_e,
-                            "noise_night"=LAeq_n)
+                            "noise_night"=LAeq_n,
+                            "id"=1)
 ```
 
 ```{r}
 #Visualizamos como ha quedado el resultado
 str(datos)
 ```
-Las dimensiones de la nueva tabla son de 6721 x 8
 
 ### Estadisticos de todo el dataframe
 Despues de haber juntado todos los dataframes podemos ver los estadisticos de los datos conjuntos para tener una vision compacta de estos
@@ -568,6 +568,7 @@ datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c(
 
 #Visualizamos los datos
 head(datos_tidy)
+str(datos_tidy)
 ```
 
 ### Añadir ruido categorico
@@ -596,7 +597,7 @@ De esta maner podemos ver el caracter cíclico del tiempo y si los datos varian 
 
 ```{r}
 datos_tidy = datos_tidy %>% mutate(year = year(dateObserved))
-unique(datos$year) #Vemos los años de los que tenemos datos
+unique(datos_tidy$year) #Vemos los años de los que tenemos datos
 ```
 
 #### Separar por años
