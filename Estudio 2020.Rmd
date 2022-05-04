@@ -417,13 +417,16 @@ background_image <- function(raster.img){
 
 ```{r}
 datos_media = datos %>% group_by(Street) %>% summarise(media = mean(value)) %>% ungroup()
-datos_media$x = c(4.1, 3.8,5.3,5.4, 2.15, 4.6, seq(1,8,1))
-datos_media$y = c(8.6, 9.35,6.7, 7,8.2, 8, seq(1,8,1))
-# datos_media %>% summarise(min(media), max(media))
+datos_media$x = c(4.1, 3.8,5.3,5.4, 2.15, 4.6, 7.15, 3, 6.8, 2.75,3.73, 4.4, 3.35,5.7)
+datos_media$y = c(8.6, 9.35,6.7, 7,8.2, 8, 7.85, 6.6,8.9,8.5,6.77, 6,8.2,5.5)
+datos_media
+```
 
+
+```{r}
 ggplot(datos_media, aes(x, y))+
  background_image(img)+
- geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))
+ geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")
 ```
 
 
