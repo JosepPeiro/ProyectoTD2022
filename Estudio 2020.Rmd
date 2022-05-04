@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "gganimate")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -318,8 +318,6 @@ ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
 ```
 ```{r}
-library(gganimate)
-
 g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value, col = Street)) + 
   geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
 
