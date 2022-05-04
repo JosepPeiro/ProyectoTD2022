@@ -68,7 +68,11 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
+<<<<<<< HEAD
 packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork")
+=======
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "gganimate")
+>>>>>>> 7b58c6efc8ff34f1690de95cdccd0031ed17a626
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -318,6 +322,18 @@ Cantidad de sonido en diferentes momento del dia a lo largo de los meses del añ
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
 ```
+```{r}
+g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value, col = Street)) + 
+  geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
+
+g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) + 
+  labs(title = 'Índice de ruido durante todo el día en 2020', x = 'Fecha',y = 'Valor del ruido')
+
+animate(g_all2, fps = 8)
+
+
+```
+
 
 ```{r}
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  

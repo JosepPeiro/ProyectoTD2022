@@ -191,7 +191,7 @@ names(calles)=nombre_calles
 
 ### Definición de variables
 
-Antes de empezar a analizar en profundidad los datos los datos vamos a conocer qué representa cada variable
+Antes de empezar a analizar en profundidad los datos, vamos a conocer qué representa cada variable
 
 ```{r}
 #Escogemos un dataframe al azar y vemos sus variables
@@ -224,7 +224,7 @@ numero_filas #Numero de filas de todos los dataframes
 ```
 
 Vemos en seguida que todos tienen el mismo numero de columnas, 11, suponemos que es porque son tantas como variables hemos analizado previamente.
-Sin embargo, vemos que cada los dataframe tiene un numero diferente de columnas
+Sin embargo, vemos que cada dataframe tiene un numero diferente de columnas
 
 Y ahora vamos a comprobar activamente que todos los dataframes tienen las mismas variables viendo si los nombres de las columnas son todos iguales
 
@@ -265,7 +265,7 @@ for (c in todas_las_clases){
 all(setNames(comprobar_clases, NULL)==T)
 ```
 
-Hemos comprobado que, efectivamente los tipos de las variables de los distintos dataframes coinciden en tipo
+Hemos comprobado que, efectivamente los tipos de las variables de los distintos dataframes coinciden en tipo.
 
 ## Datos anómalos
 
@@ -278,7 +278,7 @@ En primer lugar vamos a analizar si existen datos con valor NA, y de ser así, q
 all(unlist(map(calles, function(x){all(!is.na(x))}))==T)
 ```
 
-Vemos que no hay datos faltantes con valor NA
+Vemos que no hay datos faltantes con valor NA.
 
 ### Datos nulos
 Repetimos el proceso para ver si hay datos con valor nulo.
@@ -287,10 +287,10 @@ Repetimos el proceso para ver si hay datos con valor nulo.
 all(unlist(map(calles, function(x){all(!is.null(x))}))==T)
 ```
 
-Podemos corroborar que tampoca hay valores nulos
+Podemos corroborar que tampoco hay valores nulos.
 
 ### Infinitos
-Vamos a ver si puede ser que haya valores infinitos
+Vamos a ver si puede ser que haya valores infinitos.
 
 ```{r}
 #Como al utilizar una funcion como las anteriores encontramos problemas 
@@ -325,12 +325,12 @@ all(busqueda_infinitos) #Si el resultado es TRUE, no hay valores infinitos
 #Tendremos que tratar con ellos
 ```
 
-Visto el resultado sabemos que hay valores infinitos en las calles CAlles Cadiz16 en la variable LAeq_e y en SalvadorAbril en LAeq_d
+Visto el resultado sabemos que hay valores infinitos en las calles Calles Cadiz16 en la variable LAeq_e y en SalvadorAbril en LAeq_d
 
 Viendo este resultado nos salta la primera pregunta, y es ¿por que encontramos en algunos dataframes muy extrañamente valores infinitos?
 
 #### Comparacion infinitos con valores anteriores y posteriores
-Vamos a buscar cuál puede ser la causa por la que puede ser que haya valores infinitos, para hacer el estudio vamos a empezar comparando con los valores anteriores y posteriores cercanos al que encontramos que vale infinito, y tambien vamos a ver la posicion dentro del dataframe, por si nos puede ser de ayuda
+Vamos a buscar cuál puede ser la causa por la que puede ser que haya valores infinitos, para hacer el estudio vamos a empezar comparando con los valores anteriores y posteriores cercanos al que encontramos que vale infinito, y tambien vamos a ver la posicion dentro del dataframe, por si nos puede ser de ayuda.
 
 ```{r}
 for (m in 1:length(conjuntos_datos_infinitos)){
@@ -339,7 +339,7 @@ for (m in 1:length(conjuntos_datos_infinitos)){
   print(conjuntos_datos_infinitos[[m]][(n-5):(n+5)])
 }
 ```
-No vemos un motivo aparente por los que los valores son erroneos con relacion a los datos cercanos suyos. Los valores anteriores y posteriores a los dias que aparecio el infinito no parecen anómalos
+No vemos un motivo aparente por lo que los valores son erroneos con relacion a los datos cercanos suyos. Los valores anteriores y posteriores a los dias que aparecio el infinito no parecen anómalos
 
 #### Comparacion infinitos con resto de variables
 Hemos averiguado los dataframes de donde provienen los errores, y las columnas, ahora vamos a ver si puede haber relacion entre otras variables.
@@ -361,7 +361,7 @@ filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130)
 ```
 No encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno
 
-Tomaremos los infinitos como datos faltentes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes.
+Tomaremos los infinitos como datos faltantes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes.
 
 ```{r}
 #Eliminamos los registros que valen infinito
@@ -630,7 +630,7 @@ Una vez realizado todo este primer analisis cabe hacerse las siguientes pregunta
 
 - ¿En que año hubo mas y menos ruido?
 - ¿Como afecto la cuarentena al sonido percibido?
-- ¿En que epocas del año se produce mas ruido (navidas, verano...)?
+- ¿En que epocas del año se produce mas ruido (navidad, verano...)?
 - ¿Coinciden los meses con mas y menos sonido en cada año?
 - ¿Coinciden las calles con mas y menos sonido en cada año?
 - ¿El ruido aumenta , dismunuye o se mantiene con el paso del tiempo?
