@@ -489,3 +489,4 @@
 1000,2022-04-30T00:00:25.475Z,/sonometros,NoiseLevelObserved,T248652-daily,61.2,61.1,66.2,65.7,58.7,2022-04-29
 1001,2022-05-01T00:00:27.858Z,/sonometros,NoiseLevelObserved,T248652-daily,73.8,74.0,76.7,80.1,62.2,2022-04-30
 1002,2022-05-02T00:00:30.246Z,/sonometros,NoiseLevelObserved,T248652-daily,60.5,59.9,67.5,58.4,61.7,2022-05-01
+1003,2022-05-03T00:00:32.664Z,/sonometros,NoiseLevelObserved,T248652-daily,57.8,59.3,61.0,57.5,52.6,2022-05-02

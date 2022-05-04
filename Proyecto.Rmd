@@ -86,7 +86,7 @@ package.check <- lapply(packages, FUN = function(x) {
 ```
 
 ```{r, include=FALSE}
-#rm(list=ls())
+rm(list=ls())
 ```
 
 # Proyecto introductorio
@@ -203,7 +203,7 @@ colnames(Cadiz3)
 - FiwareServicePath: Servicio de la plataforma VLCi al que pertenece el sensor.
 - EntityType: Tipo de entidad del sensor en la plataforma VLCi.
 - EntityId: Identificador único del sensor en la plataforma VLCi.
-- LAeq: Nivel sonoro continuo equivalente. El período establecido para este sensor es de 1 minuto.
+- LAeq: Nivel sonoro continuo equivalente. El período establecido para este sensor es de 1 minuto. Es una  media ponderada según la frecuencia que varía constantemente.
 - LAeq_d: Es un indicador de ruido asociado al día, donde al día le corresponden 12 horas, en el período que se extiende desde las 7 hasta las 19 horas.
 - LAeq_den: índice de ruido día-tarde-noche, es utilizado para determinar la molestia vinculada a la exposición al ruido.
 - LAeq_e: Es un indicador del nivel sonoro durante la tarde, donde a la tarde le corresponden 4 horas, en el período que se extiende desde las 19 hasta las 23 horas.
@@ -424,6 +424,12 @@ calles = calles_renombradas
 head(calles$Cadiz16)
 ```
 
+Hemos puesto estos nombres en funcion de lo que representan:
+  - LAeq representa el nivel sonoro continuo equivalente medido por minutos. Así que hemos querido representarlo con el nombre de noise_min queriendo decir el sonido por minuto.
+  - LAeq_d representa el sonido por la mañana, de 7:00h a 19:00h, así que lo llamamos noise_morning.
+  - LAeq_den representa el indice dia-tarde-noche, que se usa para establecer la molestia de ruido. Como esta variable hace referencia a todo el día la llamamos noise_all.
+  - LAeq_e representa el ruido por la tarde de 19.00h a 23.00h. Así que la llamamos noise_afternoon.
+  - LAeq_n representa el ruido por la noche de 23.00h a 7.00h, y por eso la llamamos noise_night 
 
 ### Estadisticos
 Para conocer los datos que tenemos vamos a sacar una tabla de estadisticos de las variables que ya tenemos y que nos puedan ser interesantes.
