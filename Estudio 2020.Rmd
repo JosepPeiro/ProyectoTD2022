@@ -485,3 +485,38 @@ layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lvtt, layout=layout)
 ```
 Independientemente de la longitud de las calles todas suelen estar entre el mismo rango de sonido, lo que si que es cierto es que la calles que son de la misma longitud producen casi extamente el mismo sonido pero no es nada muy revelelados ya que como he dicho casi todas estan en el mismo rango.
+
+- ¿Cual es la media del nivel del sonido?
+**Respuesta8:**
+Vamos a verlo con unas graficas:
+```{r}
+datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
+nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
+  geom_bar()+
+  scale_y_continuous(limits = c(0,100))+
+  labs(y="Porcentaje por nivel de sonido")
+nr3=datos %>% ggplot(aes(Street, fill=level))+
+  geom_bar(position="dodge")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")
+
+layout=matrix(c(1,3,2,3),2,2, byrow=T)
+multiplot(nr1, nr3, layout=layout)
+```
+Como se puede ver en la primera grafica lo que destaca es el sonido medio, ni muy alto ni muy bajo, pero si nos centramos a analizapor calles en Cadiz3 que era la que tenia un registro mas alto, su sonido esta entre medio y alto, habiendo tambien una gran cantidad de registro con sonido alto y al contario pasa en la calle GeneralPrim aunque la compracaion de media con bajo no es tan grande.
+Es decir hay mas sonido medio-alto que bajo.
+
+- ¿Cual es la media del nivel del sonido en las diferentes partes del dia?
+**Respuesta9:**
+Vamos a verlo con una graficas:
+```{r}
+datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
+
+nr2=datos %>% ggplot(aes(noise, fill=level))+
+  geom_bar(position="dodge")+
+  theme(legend.position="none")
+
+
+layout=matrix(c(1,3,2,3),2,2, byrow=T)
+multiplot(nr2, layout=layout)
+```
+Se puede ver que predomina el sonido medio en todas las partes del dia pero durante la mañana y la tarde el sonido alto tambien destaca y durante la noche como es obvio tambien destaca el sonido bajo
