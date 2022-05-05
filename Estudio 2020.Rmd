@@ -408,8 +408,29 @@ arrange(tabla_estadisticos,(minimo))
 #En cambio si ordenamos de forma descendente la del maximo sabremos en que momento ha sido el maximo ruido
 arrange(tabla_estadisticos,desc(maximo))
 ```
+El valor minimo ha sido de 41.3 y se ha producido durante la noche y el valor maximo ha sido de 78.5 y se produjo durante la mañana.
+
 - ¿Cual ha sido el mínimo y máximo de ruido registrado?
+**Respuesta 2:**
+El ruido mas bajo registrado ha sido de 41.3 y el maximo de 78.5
+
+
 - ¿Cuales son los momentos del dia que mas semejante es el ruido?
+**Respuesta 3:**
+```{r}
+cat('Covarianza Pearson\n')
+cov(select(datos,starts_with("noise")))
+cat('\nCorrelación Pearson\n')
+cor(select(datos,starts_with("noise")))
+cat('\nCovarianza Spearman\n')
+cov(select(datos,starts_with("noise")),method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(select(datos,starts_with("noise")),method = 'spearman')
+#La semejanza de los ruidos se estudia con la correlacion y la covarianza, en la correlacion cuando esta mas se acerque a 1, mas semejantes seran, es decir, cuannto mas suba uno mas lo hara la otra tambien y viceversa.
+#La correlacion es la causa efecto, es decir si una varia como varian sistematica mente los valores de la otra, cuanto mayor sea, mayor similitud de cambio tendran.
+```
+En nuestro caso, en el año 2020, los que mas se parecen serian el ruido por la mañanas y la media de sonido pero si queremos centrarnos en 2 partes del dia serian la tarde con la noche, su correlacion es de 0.737 y el caso de Spearman es de 0.713, ademas en ambos casos su covarianza tambien es la mas alta con 10.20 para la Pearson y de 117734 para la Spearman.
+
 - ¿En que calle se solia escuchar mas y menos ruido?
 - ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
 - ¿En que epoca del año hay mayor produccion de ruido?
