@@ -465,5 +465,12 @@ En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas 
 
 
 - ¿En que epoca del año hay mayor produccion de ruido?
+**Respuesta6:**
+```{r}
+ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+````
+En este grafico podemos ver que esta organizado por meses y por calles segun el ruido registrado, se puede ver que independientemente del mes por la noche es cando menos ruido hay pero especialmente en los primeros y ultimos meses del año debido a que anoche antes y en general a principios de año el ruido es menor.
+En cambio el ruido mas alto quitando del que es el total, la parte del dia con mas ruido generalmente es durante la mañana independientemente del mes del año aunque en los meses de mitad de año durante la tarde hay mas o menos la misma cantidad se sonido, esto sera debido a las vacaciones.
 - ¿Que calle tiene una media del sonido mas alta?
 - ¿Tiene que ver algo la longitud de las calles con su sonido?
