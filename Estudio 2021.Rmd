@@ -50,10 +50,8 @@ package.check <- lapply(packages, FUN = function(x) {
 Este sera el Rmd donde trabajaremos con los datos de 2021
 
 ## Carga de datos
-
 ```{r}
 load("./dataframes/datos_2021.Rdata")
-datos = datos_2021 %>% select(-year)
 ```
 
 ## Estudio estadistico
@@ -74,16 +72,15 @@ estadisticos = function(x){
 ```
 
 ```{r}
-tabla_estadisticos <- datos %>% 
-  group_by(noise) %>% 
-  summarise(minimo=min(value), 
-            perc_25=round(quantile(value, 0.25),2),
-            mediana = median(value),
-            media = mean(value),
-            desv_tipica = sd(value),
-            perc_75 = round(quantile(value, 0.75),2),
-            maximo = max(value)
-  ) %>% ungroup()
+tabla_estadisticos = data.frame()
+
+for (a in datos_2021[,2:6]){
+  b = estadisticos(a)
+  tabla_estadisticos=rbind(tabla_estadisticos, b)
+}
+
+colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
+rownames(tabla_estadisticos)=colnames(datos_2021[,2:6])
 tabla_estadisticos
 ```
 
@@ -103,7 +100,7 @@ ggplot(datos_2021, aes(noise, value))+geom_boxplot()
 #Ahora vamos a representar el sonido durante el dia por cada calle.
 ```
 
-##Preguntas
+## Preguntas
 -¿Qué diferencias hay de ruido entre enero y julio?, ¿Qué épocas del año tienen mayor índice de ruido?
 -¿En los meses de verano, se aprecia más ruido por el día o   por la noche, y en invierno?
 -¿Porque hay datos con valor infinito?
