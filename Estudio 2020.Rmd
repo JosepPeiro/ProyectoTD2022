@@ -433,8 +433,23 @@ cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 ```
 En nuestro caso, en el año 2020, los que mas se parecen serian el ruido por la mañanas y la media de sonido pero si queremos centrarnos en 2 partes del dia serian la tarde con la noche, su correlacion es de 0.737 y el caso de Spearman es de 0.713, ademas en ambos casos su covarianza tambien es la mas alta con 10.20 para la Pearson y de 117734 para la Spearman.
 
-- ¿En que calle se solia escuchar mas y menos ruido?
+- ¿En que calle registro mas y menos ruido?
 **Respuesta 4:**
+Para responder esta pregunta queda bastante mas claro con una grafica:
+```{r}
+gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
+    geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
+    scale_x_discrete(breaks=NULL)
+
+gdv=ggplot(datos, aes(x = Street, y = value)) + 
+  geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
+  geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
+  theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top", legend.title=element_blank())+
+  scale_x_discrete(breaks=NULL)
+
+multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
+```
+Se puede ver que el valor mas ato se registra en la calle cadiz3, aunuqe haya algun punto mas arriba en otras calles pero por regla general es en la calle Cadiz3 en cambio el sonido mas bajo es en GeneralPrim sin ninguna duda.
 
 - ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
 - ¿En que epoca del año hay mayor produccion de ruido?
