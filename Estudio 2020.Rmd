@@ -399,7 +399,7 @@ cov(datos$long, datos$value,method = 'spearman')
 cor(datos$long, datos$value,method = 'spearman') 
 ```
 
-##Preguntas 2020
+## Preguntas 2020
 A traves de los datos obtenidos en el analisis previo podemos plantear unas preguntas las cuales se van a poder responder con estos mismos datos.
 
 Las preguntas relacionadas con el año 2020 son las siguientes:
@@ -524,7 +524,7 @@ multiplot(nr2, layout=layout)
 ```
 Se puede ver que predomina el sonido medio en todas las partes del dia pero durante la mañana y la tarde el sonido alto tambien destaca y durante la noche como es obvio tambien destaca el sonido bajo
 
-##Conclusiones 2020
+## Conclusiones 2020
 Con todas las tablas y con todos los graficos vistos podemos concluir que durante el año 2020 el sonido mas alto estuvo en la calle Cadiz3 con 78.5 y la mas baja GeneralPrim con 42.3 aunque esto son extremos, como ya hemos podido ver independientemente de la calle el sonido sule encontarse en un punto medio.
 Ademas tambien hemos analizado el sonido segun la parte del dia viendo que durante la noche el sonido el muscho mas bajo y durante la mañana es cuando suele producirse mas ruido
 Tambien hemos visto que en diciembre la cantidad de sonido que se produce es mas baja que la que se produce durante los meses anteriores ya que es cuando mas pronto anochece 
