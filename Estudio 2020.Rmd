@@ -469,8 +469,19 @@ En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas 
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
-````
+```
 En este grafico podemos ver que esta organizado por meses y por calles segun el ruido registrado, se puede ver que independientemente del mes por la noche es cando menos ruido hay pero especialmente en los primeros y ultimos meses del año debido a que anoche antes y en general a principios de año el ruido es menor.
 En cambio el ruido mas alto quitando del que es el total, la parte del dia con mas ruido generalmente es durante la mañana independientemente del mes del año aunque en los meses de mitad de año durante la tarde hay mas o menos la misma cantidad se sonido, esto sera debido a las vacaciones.
-- ¿Que calle tiene una media del sonido mas alta?
+
+
 - ¿Tiene que ver algo la longitud de las calles con su sonido?
+**Respuesta7:**
+Vamos a verlo con una grafica:
+```{r}
+
+lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles")
+
+layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
+multiplot(lvtt, layout=layout)
+```
+Independientemente de la longitud de las calles todas suelen estar entre el mismo rango de sonido, lo que si que es cierto es que la calles que son de la misma longitud producen casi extamente el mismo sonido pero no es nada muy revelelados ya que como he dicho casi todas estan en el mismo rango.
