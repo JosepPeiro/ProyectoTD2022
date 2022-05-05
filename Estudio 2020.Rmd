@@ -452,6 +452,18 @@ multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 Se puede ver que el valor mas ato se registra en la calle cadiz3, aunuqe haya algun punto mas arriba en otras calles pero por regla general es en la calle Cadiz3 en cambio el sonido mas bajo es en GeneralPrim sin ninguna duda.
 
 - ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
+**Respuesta5:**
+Aqui tambien queda bastante mas claro con una grafica:
+```{r}
+ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
+    guides(colour = guide_legend(override.aes = list(size=10))) +
+    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
+```
+Si nos centramos en la calle con mas ruido (Cadiz3), se ve que el ruido mas alto seria en el all, pero si queremos centrarnos en una parte de dia seria durante la mañana.
+En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas bajo se registro durante la noche.
+
+
 - ¿En que epoca del año hay mayor produccion de ruido?
 - ¿Que calle tiene una media del sonido mas alta?
 - ¿Tiene que ver algo la longitud de las calles con su sonido?
