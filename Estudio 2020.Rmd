@@ -97,7 +97,7 @@ datos = datos_2020 %>% select(-year)
 
 Lo primero que hacemos es calcular los valores estadísticos como la media, mediana, percentil...
 ```{r}
-datos %>% 
+tabla_estadisticos <- datos %>% 
   group_by(noise) %>% 
   summarise(minimo=min(value), 
             perc_25=round(quantile(value, 0.25),2),
@@ -419,14 +419,15 @@ El ruido mas bajo registrado ha sido de 41.3 y el maximo de 78.5
 - ¿Cuales son los momentos del dia que mas semejante es el ruido?
 **Respuesta 3:**
 ```{r}
+datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
 cat('Covarianza Pearson\n')
-cov(select(datos,starts_with("noise")))
+cov(datos_wide[,5:9], use="complete.obs")
 cat('\nCorrelación Pearson\n')
-cor(select(datos,starts_with("noise")))
+cor(datos_wide[,5:9], use="complete.obs")
 cat('\nCovarianza Spearman\n')
-cov(select(datos,starts_with("noise")),method = 'spearman')
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 cat('\nCorrelación Spearman\n')
-cor(select(datos,starts_with("noise")),method = 'spearman')
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 #La semejanza de los ruidos se estudia con la correlacion y la covarianza, en la correlacion cuando esta mas se acerque a 1, mas semejantes seran, es decir, cuannto mas suba uno mas lo hara la otra tambien y viceversa.
 #La correlacion es la causa efecto, es decir si una varia como varian sistematica mente los valores de la otra, cuanto mayor sea, mayor similitud de cambio tendran.
 ```
