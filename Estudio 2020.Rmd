@@ -107,6 +107,7 @@ tabla_estadisticos <- datos %>%
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
   ) %>% ungroup()
+tabla_estadisticos
 ```
 
 **Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
