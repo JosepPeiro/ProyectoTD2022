@@ -50,9 +50,10 @@ package.check <- lapply(packages, FUN = function(x) {
 Este sera el Rmd donde trabajaremos con los datos de 2021
 
 ## Carga de datos
+
 ```{r}
 load("./dataframes/datos_2021.Rdata")
-#cargamos los datos de año 2021
+datos = datos_2021 %>% select(-year)
 ```
 
 ## Estudio estadistico
@@ -73,17 +74,17 @@ estadisticos = function(x){
 ```
 
 ```{r}
-tabla_estadisticos = data.frame()
-
-for (a in datos_2021[,2:6]){
-  b = estadisticos(a)
-  tabla_estadisticos=rbind(tabla_estadisticos, b)
-}
-
-colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos_2021[,2:6])
+tabla_estadisticos <- datos %>% 
+  group_by(noise) %>% 
+  summarise(minimo=min(value), 
+            perc_25=round(quantile(value, 0.25),2),
+            mediana = median(value),
+            media = mean(value),
+            desv_tipica = sd(value),
+            perc_75 = round(quantile(value, 0.75),2),
+            maximo = max(value)
+  ) %>% ungroup()
 tabla_estadisticos
-#vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
 ```{r}
