@@ -400,6 +400,14 @@ A traves de los datos obtenidos en el analisis previo podemos plantear unas preg
 
 Las preguntas relacionadas con el año 2020 son las siguientes:
 - ¿Durante que parte del dia ha sido minimo y maximo el ruido?
+**Respuesta 1:**
+```{r}
+#Si ordenamos la tabla segun el minimo, el que este en 1 posicion sera el que menos ruido tenga
+arrange(tabla_estadisticos,(minimo))
+
+#En cambio si ordenamos de forma descendente la del maximo sabremos en que momento ha sido el maximo ruido
+arrange(tabla_estadisticos,desc(maximo))
+```
 - ¿Cual ha sido el mínimo y máximo de ruido registrado?
 - ¿Cuales son los momentos del dia que mas semejante es el ruido?
 - ¿En que calle se solia escuchar mas y menos ruido?
