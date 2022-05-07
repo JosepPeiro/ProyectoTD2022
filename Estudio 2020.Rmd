@@ -339,12 +339,12 @@ animate(g_all2, fps = 8)
 
 ```
 
-Graficos del sonio¡do por calle dependiendo del momento del dia:
+Graficos del sonido por calle dependiendo del momento del dia:
 ```{r}
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Media del valor de cada calle
 ```{r}
