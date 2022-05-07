@@ -358,21 +358,22 @@ Valor de sonido registrado segun longitud de la calle:
 ```{r, message=FALSE}
 datos_estadisticos = datos %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value)) %>% ungroup()
 
-lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
-lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Media_valor") +  ggtitle ("Media")
+lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Mediana_valor") +  ggtitle ("Mediana")
 
 layout=matrix(c(1,1,2,2), 2,2)
 #multiplot(lv1, lv2, layout=layout)
 
-lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
-lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1))
+lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Max_valor") +  ggtitle ("Máximo")
+lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Mínimo_valor") +  ggtitle ("Mínimo")
 
 #multiplot(lv3, lv4, layout=layout)
 
-lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles")
+lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles", y= "Cantidad de sonido") +  ggtitle ("Valor de sonido registrado según \n longitud de la calle")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
+
 ```
 Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto
 Luego se especifica esto segun cada calle y segun el momemto del dia
