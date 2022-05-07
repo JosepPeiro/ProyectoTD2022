@@ -197,7 +197,7 @@ out_hampel
 
 
 ## Estudio correlación y covarianza
-Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
+Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependiendo del momento del dia
 
 ```{r}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
@@ -213,7 +213,7 @@ cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
 ```
-Ponemos los datos tidy en ordden de cuando fueran tomadas las muestras y agrupadas por calles
+Ponemos los datos tidy en orden de cuando fueran tomadas las muestras y agrupadas por calles
 
 ```{r}
 library(grid)
@@ -257,10 +257,13 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 Comparamos la cantidad de sonido con el momento del dia
 ```{r}
-gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
-gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")
+library(gridExtra) #Libreria para poner titulos a los multiplots
 
-multiplot(gd1, gd2, cols=2)
+gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
+gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
+
+multiplot(gd1, gd2, cols=2) 
+grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido (violin y boxplot)")
 ```
 Contamos la cantidad de veces que se repite una frecuencia en diferentes momentos del dia
 ```{r}
