@@ -324,7 +324,7 @@ ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
 Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año en cada calle
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street)
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") 
 ```
 Ahora vamos a ver como avanza el sonido en cada calle durante cada dia desde septiembre hasta diciembre con un grafico movil:
 ```{r}
