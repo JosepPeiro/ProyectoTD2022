@@ -451,13 +451,13 @@ Para responder esta pregunta queda bastante mas claro con una grafica:
 ```{r}
 gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
-    scale_x_discrete(breaks=NULL)
+    scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (boxplot)")
 
 gdv=ggplot(datos, aes(x = Street, y = value)) + 
   geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
   geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
   theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top", legend.title=element_blank())+
-  scale_x_discrete(breaks=NULL)
+  scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (violin)")
 
 multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 ```
@@ -470,7 +470,7 @@ Aqui tambien queda bastante mas claro con una grafica:
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street)
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Si nos centramos en la calle con mas ruido (Cadiz3), se ve que el ruido mas alto seria en el all, pero si queremos centrarnos en una parte de dia seria durante la mañana.
 En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas bajo se registro durante la noche.
@@ -480,7 +480,7 @@ En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas 
 **Respuesta6:**
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+  geom_point(size=0.5, shape=10)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 En este grafico podemos ver que esta organizado por meses y por calles segun el ruido registrado, se puede ver que independientemente del mes por la noche es cando menos ruido hay pero especialmente en los primeros y ultimos meses del año debido a que anoche antes y en general a principios de año el ruido es menor.
 En cambio el ruido mas alto quitando del que es el total, la parte del dia con mas ruido generalmente es durante la mañana independientemente del mes del año aunque en los meses de mitad de año durante la tarde hay mas o menos la misma cantidad se sonido, esto sera debido a las vacaciones.
@@ -491,7 +491,7 @@ En cambio el ruido mas alto quitando del que es el total, la parte del dia con m
 Vamos a verlo con una grafica:
 ```{r}
 
-lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles")
+lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles", y= "Cantidad de sonido") +  ggtitle ("Valor de sonido registrado según \n longitud de la calle")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lvtt, layout=layout)
@@ -506,10 +506,10 @@ datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "V
 nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
   geom_bar()+
   scale_y_continuous(limits = c(0,100))+
-  labs(y="Porcentaje por nivel de sonido")
+  labs(x = "Nivel", y="Porcentaje por nivel \n de sonido") + guides(fill = guide_legend(title = "Clasificación")) + ggtitle ("Clasificación del \n sonido")
 nr3=datos %>% ggplot(aes(Street, fill=level))+
   geom_bar(position="dodge")+
-  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none") + labs(x = "Calles", y="Contador del sonido") + ggtitle ("Media del nivel del  sonido\n según las calles")
 
 layout=matrix(c(1,3,2,3),2,2, byrow=T)
 multiplot(nr1, nr3, layout=layout)
@@ -525,7 +525,7 @@ datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "V
 
 nr2=datos %>% ggplot(aes(noise, fill=level))+
   geom_bar(position="dodge")+
-  theme(legend.position="none")
+  theme(legend.position="none") + labs(x = "Momentos del día", y="Contador del sonido") + ggtitle ("Media del nivel del sonido\n según el momento del día")
 
 
 layout=matrix(c(1,3,2,3),2,2, byrow=T)
