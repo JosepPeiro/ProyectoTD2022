@@ -315,10 +315,11 @@ ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
 Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth(method="lm")
+  geom_point(size=0.5, shape=10)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") 
 
+#No se por que está 2 veces
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth(method=lm)
+  geom_point(size=0.5, shape=10)+geom_smooth(method=lm) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") 
 ```
 Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año en cada calle
 ```{r}
