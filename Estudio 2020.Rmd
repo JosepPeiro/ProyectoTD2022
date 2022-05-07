@@ -263,7 +263,7 @@ gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text
 gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 
 multiplot(gd1, gd2, cols=2) 
-grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido (violin y boxplot)")
+grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia (violin y boxplot)")
 ```
 Contamos la cantidad de veces que se repite una frecuencia en diferentes momentos del dia
 ```{r}
@@ -276,19 +276,20 @@ layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 multiplot(gh1, gh2,gh3, layout=layout)
 
 ```
-Comparaacion del valor del sonido con cada una de las calles
+Comparacion del valor del sonido con cada una de las calles
 ```{r}
 gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
-    scale_x_discrete(breaks=NULL)
+    scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (boxplot)")
 
 gdv=ggplot(datos, aes(x = Street, y = value)) + 
   geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
   geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
   theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top", legend.title=element_blank())+
-  scale_x_discrete(breaks=NULL)
+  scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (violin)") #   Queda raro este titulo 
 
 multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
+#grid.arrange(gdb, gdv,  top = "Comparación cantidad de sonido en las diferentes calles (violin y boxplot)")
 ```
 Comparacion del sonido en diferentes momentos del dia en cada calle
 ```{r}
