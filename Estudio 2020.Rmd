@@ -267,12 +267,14 @@ grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido (violin y 
 ```
 Contamos la cantidad de veces que se repite una frecuencia en diferentes momentos del dia
 ```{r}
-gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5)
-gh2=ggplot(datos, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none")
-gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none")
+library(gridExtra)
+gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
+gh2=ggplot(datos, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Densidad de frecuencia") +  ggtitle ("Gráfico de densidad de frecuencias \n en diferentes momentos del dia")
+gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia") +  ggtitle ("Gráfico de densidad(crestas) de frecuencias \n en diferentes momentos del dia")
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 
 multiplot(gh1, gh2,gh3, layout=layout)
+
 ```
 Comparaacion del valor del sonido con cada una de las calles
 ```{r}
