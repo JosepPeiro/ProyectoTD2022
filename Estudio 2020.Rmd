@@ -376,7 +376,7 @@ multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 
 ```
 Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto
-Luego se especifica esto segun cada calle y segun el momemto del dia
+Luego se especifica esto segun cada calle y segun el momemto del dia.
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
 nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
