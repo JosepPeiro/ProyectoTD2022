@@ -52,49 +52,305 @@ Este sera el Rmd donde trabajaremos con los datos de 2022
 ## Carga de datos
 ```{r}
 load("./dataframes/datos_2022.Rdata")
+datos = datos_2022 %>% select(-year)
 #cargamos los datos de año 2022
 ```
 
 ## Estudio estadistico
 ```{r}
-estadisticos = function(x){
-  minimo = round(min(x, na.rm=T),2)
-  percentil_25 = round(quantile(x, 0.25, na.rm=T),2)
-  mediana = round(median(x, na.rm=T),2)
-  media = round(mean(x, na.rm=T),2)
-  desviacion_tipica = round(sd(x, na.rm=T),2)
-  percentil_75 = round(quantile(x, 0.75, na.rm=T),2)
-  maximo = round(max(x, na.rm=T),2)
-  vector = c(minimo, percentil_25, mediana, media, desviacion_tipica, percentil_75, maximo)
-  names(vector)=NULL
-  return (vector)
-}
-#ahora vamos a calcular los datos estadísticos edl año 2022, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
-```
-
-```{r}
-tabla_estadisticos = data.frame()
-
-for (a in datos_2022[,2:6]){
-  b = estadisticos(a)
-  tabla_estadisticos=rbind(tabla_estadisticos, b)
-}
-
-colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos_2022[,2:6])
-tabla_estadisticos
+datos %>% 
+  group_by(noise) %>% 
+  summarise(minimo=min(value), 
+            perc_25=round(quantile(value, 0.25),2),
+            mediana = median(value),
+            media = mean(value),
+            desv_tipica = sd(value),
+            perc_75 = round(quantile(value, 0.75),2),
+            maximo = max(value)
+  ) %>% ungroup()
+#ahora vamos a calcular los datos estadísticos edl año 2021, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
 #vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
-```{r}
-datos_2022 = datos_2022 %>% select(-year) %>% gather("noise", "value", 2:6)
-#en este ejercicio vamos a seleccionar todos los datos, menos la columna año, agruparlo por sonido y valor.
+## Estudio outliers
+```{r, include=FALSE}
+outliers = function(x, method="3sigma"){
+  media = mean(x)
+  sigma = sd(x)
+  mediana = median(x)
+  q1 = quantile(x, 0.25)
+  q3 = quantile(x, 0.75)
+  iqr = IQR(x)
+  if (method == "3sigma"){
+    lowLim = media-3*sigma
+    upLim = media+3*sigma
+  } 
+  if(method=="percentil"){
+    lowLim=quantile(x, 0.05)
+    upLim=quantile(x, 0.95)
+  }
+  if(method=="boxplot"){
+    lowLim=q1-1.5*iqr
+    upLim=q3+1.5*iqr
+  }
+  if (method == "hampel"){
+    medabdev = mad(x)
+    lowLim=mediana-3*medabdev
+    upLim=mediana+3*medabdev
+  }
+  nOut = length(which(x<lowLim|x>upLim))
+  maxOut = max(x[which(x<lowLim)])
+  minIn = min(x[which(x>lowLim)])
+  maxIn = max(x[which(x<upLim)])
+  minOut = min(x[which(x>upLim)])
+  percOut = nOut/length(x) 
+  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut, percOut)
+  rownames(resultado)=NULL
+  return (resultado)
+}
 ```
 
 ```{r}
-ggplot(datos_2022, aes(noise, value))+geom_boxplot()
-#con los valores de ruido y valor, vamos a crear un boxplot dividiendo los datos por las franjas horarias.
+niveles = levels(datos$noise)
+
+out_3sigma = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers()
+  out_3sigma=rbind(out_3sigma, resultado)
+}
+out_3sigma
+
+out_percentil = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="percentil")
+  out_percentil=rbind(out_percentil, resultado)
+}
+out_percentil
+
+out_boxplot = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="boxplot")
+  out_boxplot=rbind(out_boxplot, resultado)
+}
+out_boxplot
+
+out_hampel = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="hampel")
+  out_hampel=rbind(out_hampel, resultado)
+}
+out_hampel
 ```
+
+## Estudio correlación y covarianza
+Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
+
+```{r}
+datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
+cat('Covarianza Pearson\n')
+cov(datos_wide[,5:9], use="complete.obs")
+cat('\nCorrelación Pearson\n')
+cor(datos_wide[,5:9], use="complete.obs")
+cat('\nCovarianza Spearman\n')
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+GGally::ggpairs(datos_wide[,5:9])
+chart.Correlation(datos_wide[,5:9])
+```
+
+# Graficos
+```{r, include=FALSE}
+library(grid)
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+```
+
+Comparamos la cantidad de sonido con el momento del dia
+```{r}
+library(gridExtra) #Libreria para poner titulos a los multiplots
+
+gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
+gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
+
+multiplot(gd1, gd2, cols=2) 
+grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia (violin y boxplot)")
+```
+Contamos la cantidad de veces que se repite una frecuencia en diferentes momentos del dia
+```{r}
+library(gridExtra)
+gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
+gh2=ggplot(datos, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Densidad de frecuencia") +  ggtitle ("Gráfico de densidad de frecuencias \n en diferentes momentos del dia")
+gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia") +  ggtitle ("Gráfico de densidad(crestas) de frecuencias \n en diferentes momentos del dia")
+layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
+
+multiplot(gh1, gh2,gh3, layout=layout)
+
+```
+Comparacion del valor del sonido con cada una de las calles
+```{r}
+gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
+    geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
+    scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (boxplot)")
+
+gdv=ggplot(datos, aes(x = Street, y = value)) + 
+  geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
+  geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
+  theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top", legend.title=element_blank())+
+  scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (violin)") #   Queda raro este titulo 
+
+multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
+#grid.arrange(gdb, gdv,  top = "Comparación cantidad de sonido en las diferentes calles (violin y boxplot)")
+```
+Comparacion del sonido en diferentes momentos del dia en cada calle
+```{r}
+ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+```
+
+#### Pequeño problemo
+Como si los hacemos por juntos queda feisimo, vamos a probar a hacerlos todos por separado
+
+```{r, echo=FALSE, fig.align='center', out.width="70%"}
+ggplot(datos %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n a lo largo de 4 meses") 
+ggplot(datos %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n a lo largo de 4 meses") 
+ggplot(datos %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n a lo largo de 4 meses") 
+ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n a lo largo de 4 meses") 
+ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n a lo largo de 4 meses") 
+```
+Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año
+```{r}
+ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+```
+Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año en cada calle
+```{r}
+ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+```
+
+Ahora vamos a ver como avanza el sonido en cada calle durante cada dia desde septiembre hasta diciembre con un grafico movil:
+```{r}
+g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value, col = Street)) + 
+  geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
+
+g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) + 
+  labs(title = 'Índice de ruido durante todo el día en 2020', x = 'Fecha',y = 'Valor del ruido')
+
+animate(g_all2, fps = 8)
+```
+
+Graficos del sonido por calle dependiendo del momento del dia:
+```{r}
+ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
+    guides(colour = guide_legend(override.aes = list(size=10))) +
+    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+```
+
+Media del valor de cada calle
+```{r}
+ggplot(datos, aes(x=Street,y=value,fill=Street))+
+          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none") + labs(x = "Calles",y = "Valor") +  ggtitle ("Valor de cada calle")
+
+ggplot(datos, aes(x=Street,y=mean(value),fill=Street))+
+          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none") + labs(x = "Calles",y = "Media del valor") +  ggtitle ("Media del valor de cada calle")
+```
+
+Valor de sonido registrado segun longitud de la calle:
+```{r, message=FALSE}
+datos_estadisticos = datos %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value)) %>% ungroup()
+
+lv1=datos_estadisticos %>% ggplot(aes(long, mean_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Media_valor") +  ggtitle ("Media")
+lv2=datos_estadisticos %>% ggplot(aes(long, median_val))+geom_point()+scale_y_continuous(limits = c(55,65))+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Mediana_valor") +  ggtitle ("Mediana")
+
+layout=matrix(c(1,1,2,2), 2,2)
+#multiplot(lv1, lv2, layout=layout)
+
+lv3=datos_estadisticos %>% ggplot(aes(long, max_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Max_valor") +  ggtitle ("Máximo")
+lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()+ theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x = "Longitud",y = "Mínimo_valor") +  ggtitle ("Mínimo")
+
+#multiplot(lv3, lv4, layout=layout)
+
+lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles", y= "Cantidad de sonido") +  ggtitle ("Valor de sonido registrado según \n longitud de la calle")
+
+layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
+multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
+
+```
+
+Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto
+Luego se especifica esto segun cada calle y segun el momemto del dia.
+```{r}
+datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
+nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
+  geom_bar()+
+  scale_y_continuous(limits = c(0,100))+
+  labs(x = "Nivel", y="Porcentaje por nivel \n de sonido") + guides(fill = guide_legend(title = "Clasificación")) + ggtitle ("Clasificación del \n sonido")
+nr2=datos %>% ggplot(aes(noise, fill=level))+
+  geom_bar(position="dodge")+
+  theme(legend.position="none") + labs(x = "Momentos del día", y="Contador del sonido") + ggtitle ("Clasificación del sonido\n según el momento del\n día")
+nr3=datos %>% ggplot(aes(Street, fill=level))+
+  geom_bar(position="dodge")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")  + labs(x = "Calles", y="Contador del sonido") + ggtitle ("Clasificación del sonido\n según las calles")
+
+layout=matrix(c(1,3,2,3),2,2, byrow=T)
+multiplot(nr1, nr2, nr3, layout=layout)
+```
+
+
+
 ##Preguntas
 -¿Ha incrementado el ruido en los últimos 3 años?
 -¿Existe algún dato nulo?
