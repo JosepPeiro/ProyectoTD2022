@@ -57,38 +57,158 @@ load("./dataframes/datos_2021.Rdata")
 
 ## Estudio estadistico
 ```{r}
-estadisticos = function(x){
-  minimo = round(min(x, na.rm=T),2)
-  percentil_25 = round(quantile(x, 0.25, na.rm=T),2)
-  mediana = round(median(x, na.rm=T),2)
-  media = round(mean(x, na.rm=T),2)
-  desviacion_tipica = round(sd(x, na.rm=T),2)
-  percentil_75 = round(quantile(x, 0.75, na.rm=T),2)
-  maximo = round(max(x, na.rm=T),2)
-  vector = c(minimo, percentil_25, mediana, media, desviacion_tipica, percentil_75, maximo)
-  names(vector)=NULL
-  return (vector)
-}
+datos %>% 
+  group_by(noise) %>% 
+  summarise(minimo=min(value), 
+            perc_25=round(quantile(value, 0.25),2),
+            mediana = median(value),
+            media = mean(value),
+            desv_tipica = sd(value),
+            perc_75 = round(quantile(value, 0.75),2),
+            maximo = max(value)
+  ) %>% ungroup()
 #ahora vamos a calcular los datos estadísticos edl año 2021, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
-```
-
-```{r}
-tabla_estadisticos = data.frame()
-
-for (a in datos_2021[,2:6]){
-  b = estadisticos(a)
-  tabla_estadisticos=rbind(tabla_estadisticos, b)
-}
-
-colnames(tabla_estadisticos) = c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
-rownames(tabla_estadisticos)=colnames(datos_2021[,2:6])
-tabla_estadisticos
 #vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
+## Estudio outliers
+```{r, include=FALSE}
+outliers = function(x, method="3sigma"){
+  media = mean(x)
+  sigma = sd(x)
+  mediana = median(x)
+  q1 = quantile(x, 0.25)
+  q3 = quantile(x, 0.75)
+  iqr = IQR(x)
+  if (method == "3sigma"){
+    lowLim = media-3*sigma
+    upLim = media+3*sigma
+  } 
+  if(method=="percentil"){
+    lowLim=quantile(x, 0.05)
+    upLim=quantile(x, 0.95)
+  }
+  if(method=="boxplot"){
+    lowLim=q1-1.5*iqr
+    upLim=q3+1.5*iqr
+  }
+  if (method == "hampel"){
+    medabdev = mad(x)
+    lowLim=mediana-3*medabdev
+    upLim=mediana+3*medabdev
+  }
+  nOut = length(which(x<lowLim|x>upLim))
+  maxOut = max(x[which(x<lowLim)])
+  minIn = min(x[which(x>lowLim)])
+  maxIn = max(x[which(x<upLim)])
+  minOut = min(x[which(x>upLim)])
+  percOut = nOut/length(x) 
+  resultado = cbind(nOut, lowLim, upLim, maxOut, minIn, maxIn, minOut, percOut)
+  rownames(resultado)=NULL
+  return (resultado)
+}
+```
+
 ```{r}
-datos_2021 = datos_2021 %>% select(-year) %>% gather("noise", "value", 2:6)
-#en este ejercicio vamos a seleccionar todos los datos, menos la columna año, agruparlo por sonido y valor.
+niveles = levels(datos$noise)
+
+out_3sigma = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers()
+  out_3sigma=rbind(out_3sigma, resultado)
+}
+out_3sigma
+
+out_percentil = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="percentil")
+  out_percentil=rbind(out_percentil, resultado)
+}
+out_percentil
+
+out_boxplot = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="boxplot")
+  out_boxplot=rbind(out_boxplot, resultado)
+}
+out_boxplot
+
+out_hampel = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    outliers(method="hampel")
+  out_hampel=rbind(out_hampel, resultado)
+}
+out_hampel
+```
+
+## Estudio correlación y covarianza
+Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
+
+```{r}
+datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
+cat('Covarianza Pearson\n')
+cov(datos_wide[,5:9], use="complete.obs")
+cat('\nCorrelación Pearson\n')
+cor(datos_wide[,5:9], use="complete.obs")
+cat('\nCovarianza Spearman\n')
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+cat('\nCorrelación Spearman\n')
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+GGally::ggpairs(datos_wide[,5:9])
+chart.Correlation(datos_wide[,5:9])
+```
+
+# Graficos
+```{r, include=FALSE}
+library(grid)
+
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+
+  numPlots = length(plots)
+
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                    ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+
+ if (numPlots==1) {
+    print(plots[[1]])
+
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
 ```
 
 ```{r}
