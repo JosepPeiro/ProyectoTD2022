@@ -1,0 +1,98 @@
+---
+title: "Ruido en Ruzafa"
+author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño & Javier Montaner"
+date: "01/04/2022"
+output: 
+  html_document:
+    toc: true 
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+
+<style>
+#TOC {
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708091;
+}
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+}
+h4.author{
+  color: #708090;
+  font-family: Calibri;
+}
+h4.date{
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px;
+  background-color: #F5F5F5;
+}
+body {
+  color: #708090;
+  font-family: Calibri;
+  background-color: #F5F5F5;
+}
+pre {
+  color: #708090;
+  background-color: #F8F8FF;
+}
+</style>
+
+```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+
+# CONFIGURACIÓN GENERAL
+library(knitr)
+options(width = 100)
+
+# Opciones generales de los chucks. Se utilizarán salvo cambios en el chunk
+opts_chunk$set(echo=T, message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
+
+# Opciones generales de dígitos cuando se incluyen tablas
+#options(xtable.type = 'html')
+knit_hooks$set(inline = function(x) {
+  
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+#knit_hooks$set(plot = knitr:::hook_plot_html)
+```
+
+```{r libraries, echo=F}
+# Especificamos las librerías necesarias en esta lista
+
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
+
+#use this function to check if each package is on the local machine
+#if a package is installed, it will be loaded
+#if any are not, the missing package(s) will be installed and loaded
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
+  }
+  library(x, character.only = TRUE)
+})
+
+#verify they are loaded
+#search()
+```
+
+# Trabajo total
+
+## Carga de datos
+Nos descargamos los datos desde el .Rdata que habiamos creado previamente.
+```{r Morrar Memoria, include=FALSE}
+rm(list=ls())
+```
+
+```{r Carga}
+load("./dataframes/datos_2020.Rdata")
+datos = datos_2020 %>% select(-year)
+```

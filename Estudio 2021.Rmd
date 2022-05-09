@@ -30,7 +30,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -44,10 +44,11 @@ package.check <- lapply(packages, FUN = function(x) {
 
 #verify they are loaded
 #search()
-
 ```
-
-Este sera el Rmd donde trabajaremos con los datos de 2021
+# Trabajo 2021
+Este sera el Rmd donde trabajaremos con los datos de 2021.
+Durante todo este año se fueron recogiendo datos, y es el único completo año del que se tienen datos, y en este año dejó de haber confinamiento. Y fue el año donde empezó la vacunación a gran escala.
+Sin embargo, este año siguieron sin haber fallas y continuaban muchas de las restricciones que prohibían juntar a varias personas en el mismo sitio. Así que este año todavía no podían crearse grandes aglomeraciones de gente.
 
 ## Carga de datos
 ```{r, include=FALSE}
@@ -230,11 +231,10 @@ Contamos la cantidad de veces que se repite una frecuencia en diferentes momento
 library(gridExtra)
 gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
 gh2=ggplot(datos, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Densidad de frecuencia") +  ggtitle ("Gráfico de densidad de frecuencias \n en diferentes momentos del dia")
-gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia") +  ggtitle ("Gráfico de densidad(crestas) de frecuencias \n en diferentes momentos del dia")
+gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia")
+
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
-
 multiplot(gh1, gh2,gh3, layout=layout)
-
 ```
 Comparacion del valor del sonido con cada una de las calles
 ```{r}

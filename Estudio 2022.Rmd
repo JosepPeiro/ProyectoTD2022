@@ -30,7 +30,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -44,12 +44,15 @@ package.check <- lapply(packages, FUN = function(x) {
 
 #verify they are loaded
 #search()
-
 ```
 
 Este sera el Rmd donde trabajaremos con los datos de 2022
 
 ## Carga de datos
+```{r, include=FALSE}
+rm(list=ls())
+```
+
 ```{r}
 load("./dataframes/datos_2022.Rdata")
 datos = datos_2022 %>% select(-year)
