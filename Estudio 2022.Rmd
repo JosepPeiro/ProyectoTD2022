@@ -393,6 +393,7 @@ multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 Así se puede apreciar que las calles que alcanzan valores más elevados son Sueca32 y Carles Cervera.
 Un detalle interesante es que la calle General Prim es la que está centrada más abajo pero también es de las que alcanza valores más altos. Esto quizás se lo podemos deber a que cuando hay mucho ruido en esa calle, al ser pequeña, igual rebota y puede causar que aumente la percepcion de ruido.
 En estos violines también queda la pequeña montaña debajo fruto de que los valores por la noche están centrados por debajo.
+Una cosa de la que quizás no nos demos cuenta es que el número de calles que aparecen representadas aquí son 13, mientras que en 2020 y 2021 aparecian 14. Esto se debe a que en la calle Sueca 2 dejaron de haber registros a partir de 2022, el motivo nos es completamente desconocido.
 
 ## Evolucion
 Ahora veremos como se evoluciona el ruido en el tiempo. Habrá que darle especial importancia a momentso como las fallas. Especialmente porque Ruzafa está muy cerca de la Plaza del Ayuntamiento, que es donde se hace la mascletá y donde se dirige todo el mundo.

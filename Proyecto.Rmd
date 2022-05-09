@@ -605,6 +605,8 @@ De esta maner podemos ver el caracter cíclico del tiempo y si los datos varian 
 datos_tidy = datos_tidy %>% mutate(year = year(dateObserved))
 unique(datos_tidy$year) #Vemos los años de los que tenemos datos
 ```
+### Imagen sensores
+Vamos a incluir una imagen de la posicion exacta de donde están los sensores. Sabiendo la posicion exacta en la que se encuentra cada sensor podremos saber cómo se ha ido recogiendo la información de mejor manera.
 
 ```{r, include=FALSE}
 library(png)
@@ -629,23 +631,14 @@ datos_media$y = c(8.6, 9.35,6.7, 7,8.2, 8, 7.85, 6.6,8.9,8.5,6.77, 6,8.2,5.5)
 datos_media
 ```
 
-```{r, representacion valor de la media del ruido}
+```{r, Representacion valor de la media del ruido}
 ggplot(datos_media, aes(x, y))+
  background_image(img)+
  geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")+geom_text(aes(label=Street), size=1.5)
 ```
-
-
-### Representación inicial
-```{r, representacion valor ruido}
-datos_tidy %>% ggplot(aes(x = dateObserved, y = value, color = Street)) + geom_line()
-```
-Vemos en este gráfico que en 2021 los sensores no han recogido datos durante un periodo de tiempo.
-
-```{r, representacion valor ruido para cada calle}
-datos_tidy %>% ggplot(aes(x = dateObserved, y = value)) + facet_wrap(Street~., ncol = 2) + geom_point(size = 0.2)
-```
-Aqui podemos ver que en el sensor de la _calle Sueca, 2_ a partir de 2022 no tenemos ningun valor de ruido. También hay pequeños periodos de tiempo donde vemos que no se han recogido datos en los distintos sensores.
+En el gráfico el tamaño del punto representa la media del sonido, de esta forma son más visibles los focos principales de ruido.
+Es observable que la media en la calle General Prim es mucho menor que en cualquiera de las otras calles.
+Y una cosa a destacar es que trabajaremos con muchos dataframes de datos recogidos en muy cerca entre ellos, pero también trabajaremos con 2 calles que están mucho más aisladas del resto, como son General Prim y Salvador Abril. Y esto puede influir en el análisis.
 
 #### Separar por años
 Vamos a crear distintos dataframes para trabajar con ellos por separado

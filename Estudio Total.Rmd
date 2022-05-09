@@ -102,7 +102,8 @@ load("./dataframes/datos.Rdata")
 También vamos a cargar un dataset con la polución acústica en Madrid, que hemos sacado de Kaggle
 
 ```{r}
-Madrid=read_delim("./data/ruidoMadrid.csv", delim=";") %>% 
+Madrid=read_delim("./data/ruidoMadrid.csv", delim=";") 
+Madrid=Madrid %>% 
   mutate(date=paste(anio, mes, dia, sep="-"), tipo=as.factor(tipo)) %>% 
   select(-anio, -mes, -dia) %>% 
   mutate(date=as.Date(date)) %>% 
@@ -111,7 +112,14 @@ Madrid=read_delim("./data/ruidoMadrid.csv", delim=";") %>%
 levels(Madrid$noise)=c("morning","afternoon","night","min")
 ```
 
-```{r}
-
+### Representación inicial
+```{r, representacion valor ruido}
+datos_tidy %>% ggplot(aes(x = dateObserved, y = value, color = Street)) + geom_line()
 ```
+Vemos en este gráfico que en 2021 los sensores no han recogido datos durante un periodo de tiempo.
+
+```{r, representacion valor ruido para cada calle}
+datos_tidy %>% ggplot(aes(x = dateObserved, y = value)) + facet_wrap(Street~., ncol = 2) + geom_point(size = 0.2)
+```
+Aqui podemos ver que en el sensor de la _calle Sueca, 2_ a partir de 2022 no tenemos ningun valor de ruido. También hay pequeños periodos de tiempo donde vemos que no se han recogido datos en los distintos sensores.
 
