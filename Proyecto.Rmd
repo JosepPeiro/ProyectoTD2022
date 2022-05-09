@@ -82,7 +82,6 @@ package.check <- lapply(packages, FUN = function(x) {
 
 #verify they are loaded
 #search()
-
 ```
 
 ```{r, include=FALSE}
@@ -632,7 +631,7 @@ datos_media
 ```{r}
 ggplot(datos_media, aes(x, y))+
  background_image(img)+
- geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")
+ geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")+geom_text(aes(label=Street), size=1.5)
 ```
 
 #### Separar por años
@@ -652,6 +651,7 @@ dir.create("dataframes")
 save(datos_2020, file="./dataframes/datos_2020.Rdata")
 save(datos_2021, file="./dataframes/datos_2021.Rdata")
 save(datos_2022, file="./dataframes/datos_2022.Rdata")
+save(datos_tidy, file="./dataframes/datos.Rdata")
 ```
 
 # Preguntas generales
