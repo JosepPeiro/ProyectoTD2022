@@ -192,7 +192,7 @@ names(calles)=nombre_calles
 
 Antes de empezar a analizar en profundidad los datos, vamos a conocer qué representa cada variable
 
-```{r}
+```{r, nombres columnas}
 #Escogemos un dataframe al azar y vemos sus variables
 colnames(Cadiz3)
 ```
@@ -245,7 +245,7 @@ Vemos como definitivamente, todos los dataframes tienen el mismo numero de colum
 ### Tipos de variables
 Finalmente, para asegurarnos todavía más de que podemos trabajar con todos los datos al mismo tiempo vamos a ver si los tipos de cada variable son los mismos en cada dataframe
 
-```{r}
+```{r, tipo de cada variable}
 #Vamos a conocer el tipo de cada variable de un solo dataframe, 
 #y luego comprobaremos si el resto de dataframes cumplen las mismas 
 #caracteristicas
@@ -271,7 +271,7 @@ Hemos comprobado que, efectivamente los tipos de las variables de los distintos 
 ### Datos faltantes NA
 En primer lugar vamos a analizar si existen datos con valor NA, y de ser así, qué tipo de datos faltantes son.
 
-```{r}
+```{r, mirar si hay NA}
 #Y aqui averiguamos si algun dataframe tiene datos faltantes
 #En el caso de que el resultado sea TRUE podremos estar seguros de que no aparecen datos faltantes
 all(unlist(map(calles, function(x){all(!is.na(x))}))==T)
@@ -281,7 +281,7 @@ Vemos que no hay datos faltantes con valor NA.
 
 ### Datos nulos
 Repetimos el proceso para ver si hay datos con valor nulo.
-```{r}
+```{r, mirar si hay NULL}
 #Utilizamos una operacion paralela a la enterior.
 all(unlist(map(calles, function(x){all(!is.null(x))}))==T)
 ```
@@ -291,7 +291,7 @@ Podemos corroborar que tampoco hay valores nulos.
 ### Infinitos
 Vamos a ver si puede ser que haya valores infinitos.
 
-```{r}
+```{r, mirar si hay Inf}
 #Como al utilizar una funcion como las anteriores encontramos problemas 
 #creamos el codigo que encuentre valores infinitos y que nos diga en qué 
 #calles se encuentran si es que los hay y en qué variable los encuentra
@@ -331,7 +331,7 @@ Viendo este resultado nos salta la primera pregunta, y es ¿por que encontramos 
 #### Comparacion infinitos con valores anteriores y posteriores
 Vamos a buscar cuál puede ser la causa por la que puede ser que haya valores infinitos, para hacer el estudio vamos a empezar comparando con los valores anteriores y posteriores cercanos al que encontramos que vale infinito, y tambien vamos a ver la posicion dentro del dataframe, por si nos puede ser de ayuda.
 
-```{r}
+```{r, comparar valores anteriores y posteriores}
 for (m in 1:length(conjuntos_datos_infinitos)){
   n = which(conjuntos_datos_infinitos[[m]]==Inf)
   print(n)
@@ -342,7 +342,7 @@ No vemos un motivo aparente por lo que los valores son erroneos con relacion a l
 
 #### Comparacion infinitos con resto de variables
 Hemos averiguado los dataframes de donde provienen los errores, y las columnas, ahora vamos a ver si puede haber relacion entre otras variables.
-```{r}
+```{r, comparar con otras variables}
 rbind(
 Cadiz16 %>% filter(LAeq_e==Inf),
 SalvadorAbril %>% filter(LAeq_d==Inf)
@@ -354,7 +354,7 @@ No se encuentra ningun tipo de relacion entre las variables por las que se pueda
 #### Comparacion infinitos con otras observaciones
 Ahora que sabemos el _id de las observaciones con valor infinito vamos a ver si podemos encontrar alguna relacion entre lo ocurrido con observaciones anteriores; de no encontrarlo tomaremos los valores como completamente aleatorios
 
-```{r}
+```{r, comparar con otras observaciones}
 filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202)
 filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130)
 ```
@@ -362,7 +362,7 @@ No encontramos ninguna anomalia aparente entre las distintas observaciones, de h
 
 Tomaremos los infinitos como datos faltantes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes.
 
-```{r}
+```{r, eliminar infinitos}
 #Eliminamos los registros que valen infinito
 Cadiz16=Cadiz16 %>% filter(!LAeq_e==Inf)
 SalvadorAbril=SalvadorAbril %>% filter(!LAeq_d==Inf)
@@ -374,7 +374,7 @@ calles$SalvadorAbril=SalvadorAbril
 Vamos a ver como se organizan los dataframes para ver qué dudas nos pueden surgir de este.
 Como todos tienen la misma estructura podemos ver un dataframe y extrapolar que el resto serán parecidos, si no iguales
 
-```{r}
+```{r, estructura}
 head(Cadiz16)
 tail(Cadiz16)
 glimpse(Cadiz16)
@@ -385,7 +385,7 @@ Aqui hemos visto la forma del dataframe
 
 Y vamos a averiguar si hay variables que tienen todo el tiempo el mismo valor
 
-```{r}
+```{r, valores iguales en cada columna}
 vector_unique=c()
 for (r in 1:ncol(Cadiz16)){
   vector_unique=c(vector_unique, count(unique(Cadiz16[,r])))
@@ -403,7 +403,7 @@ La primera cosa que haremos para manipular los datos es cambiar el nombre de las
 
 Lo haremos especialmente con las columnas que tienen datos de nivel de sonido, ya que estas son las que tienen los datos más interesantes de analizar y la columna id, que con el nombre que tiene es realmente incómoda de utilizar
 
-```{r}
+```{r, renombrar variables}
 #Vamos a crear una lista con los dataframes cambiados de nombre que sustituirá 
 #a la lista que teniamos antes de calles
 calles_renombradas = list()
@@ -434,7 +434,7 @@ Hemos puesto estos nombres en funcion de lo que representan:
 Para conocer los datos que tenemos vamos a sacar una tabla de estadisticos de las variables que ya tenemos y que nos puedan ser interesantes.
 Estos datos estadisticos son sobre todas las calles en todos los años. Vamos a fijarnos en las variables numericas para sacar los estadisticos.
 
-```{r}
+```{r, funcion estadisticos}
 #Creamos una funcion que cree los estadisticos más interesantes.
 estadisticos = function(x){
   minimo = round(min(x, na.rm=T),2)
@@ -450,7 +450,7 @@ estadisticos = function(x){
 }
 ```
 
-```{r}
+```{r, tablas estadisticos}
 #Y ahora creamos un dataframe con estadisticos para cada calle
 #En cada linea apareceran los estadisticos de una variable
 #Utilizaremos listas para agrupar las tablas de estadisticos
@@ -478,7 +478,7 @@ print(lista_estadisticos)
 ### Variables con un solo valor
 Comprobamos la hipotesis que teniamos antes de que las columnas fiwareServicePath, entityType y entityId mantienen en todo momento el mismo valor
 
-```{r}
+```{r, eliminar variables con el mismo valor}
 numero_niveles=c()
 for (o in calles){
   for (p in o[,3:5]){
@@ -498,7 +498,7 @@ Vamos a unir todos los dataframes en 1 solo, para empezar una manipulacion conju
 Para hacerlo hemos considerado el metodo mas apropiado juntarlos mediante rbind porque el nombre de las variables es en todos los dataframes el mismo; al igual que la estructura, las variables y el numero de columnas.
 Sin embargo, pensamos que es acertado para diferenciar calles añadir una nueva columna en cada dataframe que indique a qué calle pertenece
 
-```{r}
+```{r, unir df}
 datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
                Cadiz3 %>% select(1, 6:11) %>% mutate(Street="Cadiz3"),
                CarlesCervera %>% select(1, 6:11) %>% mutate(Street="CarlesCervera"),
@@ -521,7 +521,7 @@ datos = rbind(Cadiz16 %>% select(1, 6:11) %>% mutate(Street="Cadiz16"),
                             "id"=1)
 ```
 
-```{r}
+```{r, estructura del nuevo df}
 #Visualizamos como ha quedado el resultado
 str(datos)
 ```
@@ -529,7 +529,7 @@ str(datos)
 ### Estadisticos de todo el dataframe
 Despues de haber juntado todos los dataframes podemos ver los estadisticos de los datos conjuntos para tener una vision compacta de estos
 
-```{r}
+```{r, estadisticos}
 #Utilizamos la misma funcion de estadisticos que hemos utilizado antes
 estadisticos_conjuntos=matrix(ncol=7)
 for (h in datos[,2:6]){
@@ -547,7 +547,7 @@ estadisticos_conjuntos
 Viendo que nos es posible hemos decidido añadir una nueva variable que puede influir en el analisis que hagamos de los datos. Esta es la longitud de las calles.
 La informacion la hemos obtenido de la pagina web https://www.foro-ciudad.com
 
-```{r}
+```{r, longitud de las calles}
 #Datos obtenidos de https://www.foro-ciudad.com
 datos=datos %>% mutate(long = case_when(
   str_detect(Street, "Cadiz")~692,
@@ -568,7 +568,7 @@ datos=datos %>% mutate(long = case_when(
 Vamos a convertir los datos a formato tidy.
 Para ello vamos a juntar todas las columnas que hacen referencia a la variable de ruido y las vamos dividir en 2, una que refiera al tipo de ruido y otra al valor
 
-```{r}
+```{r, formato tidy}
 datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
 
 #Visualizamos los datos
@@ -583,7 +583,7 @@ Cabe destacar a la hora de hacer esta distincion que la Organizacion Mundial de 
 
 La manera de partir los intervalos de ruido se han decidido mediante las conclusiones sacadas en las paginas de https://www.saludambientalenlaescuela.org/ y https://www.salud.mapfre.es/ 
 
-```{r}
+```{r, añadir nivel de ruido}
 datos_tidy = datos_tidy%>% 
     mutate(level=case_when(
     between(value, 10, 30) ~ "Very Low", 
@@ -601,7 +601,7 @@ head(datos_tidy)
 Una manera de trabajar con los datos de manera seperada es separandolos por años.
 De esta maner podemos ver el caracter cíclico del tiempo y si los datos varian de un año a otro o aparecen paralelismos
 
-```{r}
+```{r, añadir año}
 datos_tidy = datos_tidy %>% mutate(year = year(dateObserved))
 unique(datos_tidy$year) #Vemos los años de los que tenemos datos
 ```
@@ -629,7 +629,7 @@ datos_media$y = c(8.6, 9.35,6.7, 7,8.2, 8, 7.85, 6.6,8.9,8.5,6.77, 6,8.2,5.5)
 datos_media
 ```
 
-```{r}
+```{r, representacion valor de la media del ruido}
 ggplot(datos_media, aes(x, y))+
  background_image(img)+
  geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")+geom_text(aes(label=Street), size=1.5)
@@ -637,12 +637,12 @@ ggplot(datos_media, aes(x, y))+
 
 
 ### Representación inicial
-```{r}
+```{r, representacion valor ruido}
 datos_tidy %>% ggplot(aes(x = dateObserved, y = value, color = Street)) + geom_line()
 ```
 Vemos en este gráfico que en 2021 los sensores no han recogido datos durante un periodo de tiempo.
 
-```{r}
+```{r, representacion valor ruido para cada calle}
 datos_tidy %>% ggplot(aes(x = dateObserved, y = value)) + facet_wrap(Street~., ncol = 2) + geom_point(size = 0.2)
 ```
 Aqui podemos ver que en el sensor de la _calle Sueca, 2_ a partir de 2022 no tenemos ningun valor de ruido. También hay pequeños periodos de tiempo donde vemos que no se han recogido datos en los distintos sensores.
@@ -650,7 +650,7 @@ Aqui podemos ver que en el sensor de la _calle Sueca, 2_ a partir de 2022 no ten
 #### Separar por años
 Vamos a crear distintos dataframes para trabajar con ellos por separado
 
-```{r}
+```{r, crear df para cada año}
 datos_2020 = datos_tidy %>% filter(year==2020)
 datos_2021 = datos_tidy %>% filter(year==2021)
 datos_2022 = datos_tidy %>% filter(year==2022)
@@ -658,7 +658,7 @@ datos_2022 = datos_tidy %>% filter(year==2022)
 
 ## Guardar datos
 Para poder trabajar con los datos separados por año guardamos los dataframes en sus respectivos Rdata
-```{r}
+```{r, guardar df en nueva carpeta}
 dir.create("dataframes")
 
 save(datos_2020, file="./dataframes/datos_2020.Rdata")
