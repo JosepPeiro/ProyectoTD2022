@@ -250,6 +250,8 @@ cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
 ```
+Con estos valores podemos afirmar que por lo general hay una relacion muy cercana entre los valores de un momento del día con el resto. En todos los casos se observa una correlacion superior al 50%, i en algunos casos se ve una correlacion incluso del 98%
+
 # Graficos
 ```{r Funcion Multiplot, include=FALSE}
 library(grid)
@@ -343,8 +345,8 @@ ggplot(datos %>% filter(noise=="night"), aes(value,fct_rev(Street),fill=Street))
 ```
 
 ## Evolucion
-
 Primero probamos a representar los valores de cada tipo de sonido y hacemos un grafico para cada calle.
+
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
   geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
