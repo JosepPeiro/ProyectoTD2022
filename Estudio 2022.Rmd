@@ -2,8 +2,46 @@
 title: "Estudio datos 2022"
 author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño & Javier Montaner"
 date: "16/4/2022"
-output: html_document
+output: 
+  html_document:
+    toc: true 
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
 ---
+
+<style>
+#TOC {
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708091;
+}
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+}
+h4.author{
+  color: #708090;
+  font-family: Calibri;
+}
+h4.date{
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px;
+  background-color: #F5F5F5;
+}
+body {
+  color: #708090;
+  font-family: Calibri;
+  background-color: #F5F5F5;
+}
+pre {
+  color: #708090;
+  background-color: #F8F8FF;
+}
+</style>
 
 ```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
 
@@ -46,9 +84,14 @@ package.check <- lapply(packages, FUN = function(x) {
 #search()
 ```
 
+# Trabajo 2022
 Este sera el Rmd donde trabajaremos con los datos de 2022
+Es al año donde estamos actualmente, así que se van añadiendo registros cada día.
+Este año, vuelve a haber fallas y ha vuelto en gran medida la normalidad.
 
 ## Carga de datos
+Volvemos a cargar los datos a partir del .Rdata creado en el primer archivo del proyecto para seleccionar solo los datos de 2022 y vamos a eliminar la coluna de año porque ahora resulta redundante.
+
 ```{r, include=FALSE}
 rm(list=ls())
 ```
@@ -60,6 +103,9 @@ datos = datos_2022 %>% select(-year)
 ```
 
 ## Estudio estadistico
+Ahora vamos a calcular los datos estadísticos del año 2022, el mínimo, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo.
+Vamos a crear una tabla con cada uno de los datos estadísticos obtenidos respecto a cada una de las variables extraidas.
+
 ```{r}
 datos %>% 
   group_by(noise) %>% 
@@ -71,11 +117,11 @@ datos %>%
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
   ) %>% ungroup()
-#ahora vamos a calcular los datos estadísticos edl año 2021, el mínimo,, el percentil, la mediana, la media, la desviacion típica, el percentil y el máximo, y tras ello, crearemos un vector con cada dato correspondiente.
-#vamos a crear una tabla con cada uno de los datos estadísticos obtenidos en el ejercicio anterior, respecto a cada una de las franjas horarias establecidas.
 ```
 
 ## Estudio outliers
+Igual que antes, vamos a hacer un estudio de outliers con cada uno de los métodos para reconocer outliers que hemos conocemos, la regla 3 sigma, el boxplot, el percentil 5-95 y la regla de Hampel.
+
 ```{r, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
@@ -156,6 +202,89 @@ for (a in niveles){
 }
 out_hampel
 ```
+A diferencia de lo que se podría esperar, en estos datos según el método de extraccion de outliers que se aplique aparecen más o menos outliers que en el archivo de 2021.
+El método 3 sigma sigue siendo el que menos outliers extrae y el del percentil el que más con una diferencia importante, pero los outliers de boxplot y de hampel identifican más de 100 datos como outliers para cada tipo de ruido. Ahora es fácil cuestionarse el porqué de tanto outlier.
+
+Como antes, vamos a ver cuantos outliers están por encima y cuántos por debajo
+```{r}
+n_outliers = function(x, method="3sigma"){
+  media = mean(x)
+  sigma = sd(x)
+  mediana = median(x)
+  q1 = quantile(x, 0.25)
+  q3 = quantile(x, 0.75)
+  iqr = IQR(x)
+  if (method == "3sigma"){
+    lowLim = media-3*sigma
+    upLim = media+3*sigma
+  } 
+  if(method=="percentil"){
+    lowLim=quantile(x, 0.05)
+    upLim=quantile(x, 0.95)
+  }
+  if(method=="boxplot"){
+    lowLim=q1-1.5*iqr
+    upLim=q3+1.5*iqr
+  }
+  if (method == "hampel"){
+    medabdev = mad(x)
+    lowLim=mediana-3*medabdev
+    upLim=mediana+3*medabdev
+  }
+  nOut = length(which(x<lowLim|x>upLim))
+  nDown = length(which(x<lowLim))
+  nUp = length(which(x>upLim))
+  resultado = cbind(nOut, nDown, nUp)
+  rownames(resultado)=NULL
+  return (resultado)
+}
+```
+
+```{r}
+niveles = levels(datos$noise)
+
+out_3sigma = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    n_outliers()
+  out_3sigma=rbind(out_3sigma, resultado)
+}
+out_3sigma
+
+out_percentil = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    n_outliers(method="percentil")
+  out_percentil=rbind(out_percentil, resultado)
+}
+out_percentil
+
+out_boxplot = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    n_outliers(method="boxplot")
+  out_boxplot=rbind(out_boxplot, resultado)
+}
+out_boxplot
+
+out_hampel = data.frame()
+for (a in niveles){
+  resultado=datos %>% 
+    filter(noise==a) %>% 
+    select(value)%>% pull() %>% 
+    n_outliers(method="hampel")
+  out_hampel=rbind(out_hampel, resultado)
+}
+out_hampel
+```
+De nuevo, vemos que lo que impera son valores que están por encima de lo normal y no que estén por debajo.
+A diferencia de en el estudio de 2021, que también tenía muchos outliers, el problema en este año reside en que aún teniendo menor volumen de datos que el año pasado, el número de outliers extraidos con métodos que por lo general no suelen generar cantidades demasiado altas generan más de lo que cabría esperar.
 
 ## Estudio correlación y covarianza
 Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
@@ -174,6 +303,10 @@ cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
 ```
+Los resultados este año son soprendentes porque la correlacion cada vez es más visible entre las distintas variables.
+En 2021 todavía había correlaciones de $0.55$. En este año, la correlación más pequeña que encontramos es entre el ruido por la mañana y el de por la noche, que es de $0.7$.
+Tal y como se observan los valores de correlacion cada vez se puede afirmar con menos incertidumbre que si un día empieza siendo ruidoso acabará siendo ruidoso y viceversa.
+Conocer esto nos puede ayudar a saber cómo actuar o a pensar estrategias para prever que el ruido no moleste a los vecinos.
 
 # Graficos
 ```{r, include=FALSE}
@@ -215,7 +348,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 }
 ```
 
-Comparamos la cantidad de sonido con el momento del dia
+## Distrubución
+Veamos cómo se distribuyen los valores y donde aparecen más outliers
+
 ```{r}
 library(gridExtra) #Libreria para poner titulos a los multiplots
 
@@ -223,9 +358,12 @@ gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text
 gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 
 multiplot(gd1, gd2, cols=2) 
-grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia (violin y boxplot)")
+grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia")
 ```
-Contamos la cantidad de veces que se repite una frecuencia en diferentes momentos del dia
+Si nos fijamos en el el boxplot veremos que la cantidad de outliers es tan grande que no aprecian todo lo bien que se podría, y si nos fijamos en el gráfico de violin vemos que la línea que se alarga hacia arriba es más ancha que de costumbre, eso quiere decir que se acumulan varios valores en esa pequeña franja. Así que hay muchos outliers con valores muy parecidos y cercanos a los valores comunes.
+También, como ocurre con 2021, los datos de noche se disperson más que el resto de variables, que están mucho más centrados en valores determinados.
+
+Ahora vamos a visualizar el gráfico en horizontal.
 ```{r}
 library(gridExtra)
 gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
@@ -234,31 +372,38 @@ gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alph
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 
 multiplot(gh1, gh2,gh3, layout=layout)
-
 ```
-Comparacion del valor del sonido con cada una de las calles
+Y los resultados no nos sorprenden porque tienen una forma parecida a los de 2021. De hecho, la linea que se alarga por la derecha llega a lo mismo que llegaba la de 2021, casi a 100. Detalle preocupante teniendo en cuenta que eso implica que hay valores que superan por mucho el límite recomendado.
+
+Y ahora vemos el gráfico diferenciando por calles.
 ```{r}
 gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
-    scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (boxplot)")
+    scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles")
 
 gdv=ggplot(datos, aes(x = Street, y = value)) + 
   geom_jitter(size = 1, color = 'gray', alpha = 0.5) +
   geom_violin(aes(fill = Street), color = 'black', alpha = 0.8) + 
   theme_minimal()+ theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="top", legend.title=element_blank())+
-  scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles (violin)") #   Queda raro este titulo 
+  scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") 
 
 multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 #grid.arrange(gdb, gdv,  top = "Comparación cantidad de sonido en las diferentes calles (violin y boxplot)")
 ```
-Comparacion del sonido en diferentes momentos del dia en cada calle
+Así se puede apreciar que las calles que alcanzan valores más elevados son Sueca32 y Carles Cervera.
+Un detalle interesante es que la calle General Prim es la que está centrada más abajo pero también es de las que alcanza valores más altos. Esto quizás se lo podemos deber a que cuando hay mucho ruido en esa calle, al ser pequeña, igual rebota y puede causar que aumente la percepcion de ruido.
+En estos violines también queda la pequeña montaña debajo fruto de que los valores por la noche están centrados por debajo.
+
+## Evolucion
+Ahora veremos como se evoluciona el ruido en el tiempo. Habrá que darle especial importancia a momentso como las fallas. Especialmente porque Ruzafa está muy cerca de la Plaza del Ayuntamiento, que es donde se hace la mascletá y donde se dirige todo el mundo.
+
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
   geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
+Este gráfico nos tranquiliza porque el ruido parece más estable. Ya no hace formas raras ni apenas se mueve sinoq ue se mantiene constante durante todo el año menos ne el mes de marzo, por la razón que ya hemos comentado y es obvia. Las fallas. 
 
-#### Pequeño problemo
-Como si los hacemos por juntos queda feisimo, vamos a probar a hacerlos todos por separado
+A pesar de que los datos del grafico son muy visuales, vamos a partirlo en varios gráficos para ver si podemos extraer más informacion.
 
 ```{r, echo=FALSE, fig.align='center', out.width="70%"}
 ggplot(datos %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
@@ -272,18 +417,42 @@ ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
 ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
   geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n a lo largo de 4 meses") 
 ```
-Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año
+Cosas destacables que encontramos es que la calle Cuba parece tener un comportamient irregular en enero pero luego se estabiliza como el resto de calles.
+```{r}
+gen1=ggplot(datos %>% filter(Street=="Cuba3", noise=="morning"))+geom_line(aes(dateObserved, value,color=month(dateObserved)==1))+theme(legend.position = "none")
+gen2=ggplot(datos %>% filter(Street=="Cuba3", noise=="all"))+geom_line(aes(dateObserved, value,color=month(dateObserved)==1))+theme(legend.position = "none")
+gen3=ggplot(datos %>% filter(Street=="Cuba3", noise=="min"))+geom_line(aes(dateObserved, value,color=month(dateObserved)==1))+theme(legend.position = "none")
+
+multiplot(gen1, gen2, gen3)
+```
+Pocas cosas más que no hayamos dicho ya son destacables.
+De alguna manera es sorprendente que el ruido adquiera en 2022 una forma tan regular y se mantenga con un valor tan parecido todo el tiempo menos en momentos claves como son las fallas.
+
+Ahora veamos si el ruido ha ido aumentando o disminuyendo con el paso del año o se ha mantenido contante.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))+
+    geom_vline(xintercept=date("2022-03-19"), linetype="longdash", color="red")
 ```
-Cantidad de sonido en diferentes momento del dia a lo largo de los meses del año en cada calle
+Este grafico muestra 2 cosas destacables la primera es ver el salto que pega de repente cuando pasa del dia 19 de marzo al 20. Donde vuelve a los valores que mantenía a principios de año de golpe, sin la más mínima pendiente.
+Y lo otro destacable es que, lamentablemente, todos los tipos de ruido tienen una pendiente ligeramente elevada a la drecha. Eso quiere decir que conforme avanza el año cada vez aumenta más y más la contaminación acústica, que es lo contrario de lo que se debería pretender.
+
+Veamos los gráficos de las calles por separado para ver como es la curva en estos.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
+Aquí se muestra mejor cómo en fallas la tendencia sube considerabemente y luego vuelve a bajar, pero se mantiene por encima de donde estaba en febrero.
 
-Ahora vamos a ver como avanza el sonido en cada calle durante cada dia desde septiembre hasta diciembre con un grafico movil:
+```{r}
+ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
+    guides(colour = guide_legend(override.aes = list(size=10))) +
+    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+```
+Y con este gráfico es todavía más apreciable la subida de marzo. Pero en Cuba3 los valores extraños de enero hacen que la forma de su gráfica muestre un resultado un poco diferente.
+
+Ahora veamos como avanza el sonido en cada calle durante lo que llevamos de año.
 ```{r}
 g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value, col = Street)) + 
   geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
@@ -293,23 +462,10 @@ g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) +
 
 animate(g_all2, fps = 8)
 ```
+De esta manera es muy gráfica la subida de Fallas y el descenso en picado después de esta. Y además también vemos el comportamiento extraño de la calle Cuba en enero.
 
-Graficos del sonido por calle dependiendo del momento del dia:
-```{r}
-ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
-    guides(colour = guide_legend(override.aes = list(size=10))) +
-    geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
-```
-
-Media del valor de cada calle
-```{r}
-ggplot(datos, aes(x=Street,y=value,fill=Street))+
-          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none") + labs(x = "Calles",y = "Valor") +  ggtitle ("Valor de cada calle")
-
-ggplot(datos, aes(x=Street,y=mean(value),fill=Street))+
-          geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 45, hjust = 1))+scale_y_continuous(breaks = seq(0, 35000, 2500))+theme(legend.position="none") + labs(x = "Calles",y = "Media del valor") +  ggtitle ("Media del valor de cada calle")
-```
+## Relacion longitud calles
+Vamos a hacer de nuevo una muestra de la longitud de las calles por longitud, para ver si independientemente del año los resultados que nos muestran son iguales.
 
 Valor de sonido registrado segun longitud de la calle:
 ```{r, message=FALSE}
@@ -332,9 +488,28 @@ layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
 
 ```
+Los graficos resultantes son bastante difusos. No se puede ver nada realmente interesante
 
-Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto
-Luego se especifica esto segun cada calle y segun el momemto del dia.
+```{r}
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")))
+cov(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
+cor(datos_estadisticos$long, datos_estadisticos %>% select(ends_with("val")),method = 'spearman')
+```
+
+```{r}
+cov(datos$long, datos$value)
+cor(datos$long, datos$value)
+cov(datos$long, datos$value,method = 'spearman')
+cor(datos$long, datos$value,method = 'spearman')
+```
+Sin embargo, pese a que los gráficos no sean reveladores, los valores numéricos nos advierten que la correlacion en 2022 es mayor que la de 2021 y 2020. Pero sigue siendo muy poco alentadora de que podamos encontrar una relacion absoluta y fiable.
+Reiteramos el problema de que una calle más larga no implica que sea más inmportante. Y que quizás los valores de longitud útiles no sean los que estamos tomando.
+
+## Clasificacion
+Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto según unos niveles estandars y oficiales.
+Luego se especifica esto segun cada calle y segun el momento del dia.
+
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
 nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
@@ -351,8 +526,39 @@ nr3=datos %>% ggplot(aes(Street, fill=level))+
 layout=matrix(c(1,3,2,3),2,2, byrow=T)
 multiplot(nr1, nr2, nr3, layout=layout)
 ```
+Aqui, como ya podíamos suponer, se vuelve a superar el límite y vuelven a aparecer valores de ruido muy altos.
+Esto podría suponer un problema, porque además tambien aparecen estos valores por la noche, lo cual sí puede ser una preocupación para el bienestar público.
+Vamos a calcular el procentaje de cada uno de los niveles de sonido dentro del conjunto entero de datos, pero también vamos a hacer lo mismo a sustrayendo los valores de marzo, para ver si el reultado cambia mucho.
 
+```{r}
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))%>% ungroup()
+datos %>% filter(month(dateObserved)!=3)%>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos %>% filter(month(dateObserved)!=3))) %>% ungroup() 
+```
 
+Vemos claramente que si quitamos los datos de marzo el número de veces que aparece ruido muy fuerte es prácticamente despreciable. Y la gran mayoría de datos pasar a ser de valor medio.
+Y de hecho vamos a volver a presentar los graficos para ver que la información que nos muestran ahora cambia considerablemente.
+
+```{r}
+datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
+nr1=datos %>% filter(month(dateObserved)!=3)%>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
+  geom_bar()+
+  scale_y_continuous(limits = c(0,100))+
+  labs(x = "Nivel", y="Porcentaje por nivel \n de sonido") + guides(fill = guide_legend(title = "Clasificación")) + ggtitle ("Clasificación del \n sonido")
+nr2=datos%>% filter(month(dateObserved)!=3) %>% ggplot(aes(noise, fill=level))+
+  geom_bar(position="dodge")+
+  theme(legend.position="none") + labs(x = "Momentos del día", y="Contador del sonido") + ggtitle ("Clasificación del sonido\n según el momento del\n día")
+nr3=datos%>% filter(month(dateObserved)!=3) %>% ggplot(aes(Street, fill=level))+
+  geom_bar(position="dodge")+
+  theme(axis.text.x = element_text(angle = 90, hjust = 1), legend.position="none")  + labs(x = "Calles", y="Contador del sonido") + ggtitle ("Clasificación del sonido\n según las calles")
+
+layout=matrix(c(1,3,2,3),2,2, byrow=T)
+multiplot(nr1, nr2, nr3, layout=layout)
+```
+Por la noche todavía quedan valores altos, pero no son la misma proporcion que había antes.
+Sin embargo, en Cadiz3 la cantidad de veces que se sobrepasa el límite recomendado por la OMS es preocupante, porque ya supera con creces la mitad.
+Y a parte de valorar los valores altos. Los valores bajos cada vez son menos, y esto también es síntoma de contaminación acústica, en menor medida, pero también supone algo que debamos tener en cuenta.
+
+Finalmente, esto vuelve abrir el dilema de si las fallas pueden ser algo nocivo para el medio ambiente y para el bienestar común o algo transitivo que no supone un problema real.
 
 ##Preguntas
 -¿Ha incrementado el ruido en los últimos 3 años?
