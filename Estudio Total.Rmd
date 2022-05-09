@@ -85,14 +85,33 @@ package.check <- lapply(packages, FUN = function(x) {
 ```
 
 # Trabajo total
+Aqui vamos a trabajar conjuntamente con todos los datos y vamos a poder sacar conclusiones interesantes a partir del conocimiento que hemos extraido de examinar el dataframe por año.
+También vamos a hacer comparaciones entre paises
 
 ## Carga de datos
-Nos descargamos los datos desde el .Rdata que habiamos creado previamente.
+Nos descargamos los datos desde el .Rdata que habiamos creado previamente que contiene los datos en forma tidy.
+
 ```{r Morrar Memoria, include=FALSE}
 rm(list=ls())
 ```
 
 ```{r Carga}
-load("./dataframes/datos_2020.Rdata")
-datos = datos_2020 %>% select(-year)
+load("./dataframes/datos.Rdata")
 ```
+
+También vamos a cargar un dataset con la polución acústica en Madrid, que hemos sacado de Kaggle
+
+```{r}
+Madrid=read_delim("./data/ruidoMadrid.csv", delim=";") %>% 
+  mutate(date=paste(anio, mes, dia, sep="-"), tipo=as.factor(tipo)) %>% 
+  select(-anio, -mes, -dia) %>% 
+  mutate(date=as.Date(date)) %>% 
+  rename(noise=tipo, value=LAEQ, Street=DIRECCION, X="X (ETRS89)", Y="Y (ETRS89)", id=NMT)
+
+levels(Madrid$noise)=c("morning","afternoon","night","min")
+```
+
+```{r}
+
+```
+
