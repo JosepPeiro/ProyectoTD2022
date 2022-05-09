@@ -576,6 +576,7 @@ head(datos_tidy)
 str(datos_tidy)
 ```
 
+
 ### Añadir ruido categorico
 Una vez tenemos los datos en formato podemos discretizar el ruido en niveles segun su intensidad.
 Cabe destacar a la hora de hacer esta distincion que la Organizacion Mundial de la Salud considera los 50dB como el limite superior deseable de ruido.
@@ -633,6 +634,18 @@ ggplot(datos_media, aes(x, y))+
  background_image(img)+
  geom_point(aes(size = media), color = "white")+scale_y_continuous(limits = c(0,13),breaks = seq(0,100,0.5))+scale_x_continuous(breaks = seq(0,100,0.5), limits = c(0,13))+theme(axis.text.x = element_blank(), axis.text.y=element_blank(), axis.ticks = element_blank())+labs(x="", y="")+geom_text(aes(label=Street), size=1.5)
 ```
+
+
+### Representación inicial
+```{r}
+datos_tidy %>% ggplot(aes(x = dateObserved, y = value, color = Street)) + geom_line()
+```
+Vemos en este gráfico que en 2021 los sensores no han recogido datos durante un periodo de tiempo.
+
+```{r}
+datos_tidy %>% ggplot(aes(x = dateObserved, y = value)) + facet_wrap(Street~., ncol = 2) + geom_point(size = 0.2)
+```
+Aqui podemos ver que en el sensor de la _calle Sueca, 2_ a partir de 2022 no tenemos ningun valor de ruido. También hay pequeños periodos de tiempo donde vemos que no se han recogido datos en los distintos sensores.
 
 #### Separar por años
 Vamos a crear distintos dataframes para trabajar con ellos por separado
