@@ -346,7 +346,7 @@ Hemos averiguado los dataframes de donde provienen los errores, y las columnas, 
 rbind(
 Cadiz16 %>% filter(LAeq_e==Inf),
 SalvadorAbril %>% filter(LAeq_d==Inf)
-) %>% kable()
+) %>% kable() %>% kable_styling()
 ```
 
 No se encuentra ningun tipo de relacion entre las variables por las que se pueda sospechar que estos datos fueran erroneos.
@@ -355,8 +355,8 @@ No se encuentra ningun tipo de relacion entre las variables por las que se pueda
 Ahora que sabemos el _id de las observaciones con valor infinito vamos a ver si podemos encontrar alguna relacion entre lo ocurrido con observaciones anteriores; de no encontrarlo tomaremos los valores como completamente aleatorios
 
 ```{r, comparar con otras observaciones}
-filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202) %>% kable()
-filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130) %>% kable()
+filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202) %>% kable() %>% kable_styling()
+filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130) %>% kable() %>% kable_styling()
 ```
 No encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno
 
@@ -375,10 +375,10 @@ Vamos a ver como se organizan los dataframes para ver qué dudas nos pueden surg
 Como todos tienen la misma estructura podemos ver un dataframe y extrapolar que el resto serán parecidos, si no iguales
 
 ```{r, estructura}
-head(Cadiz16)
-tail(Cadiz16)
-glimpse(Cadiz16)
-str(Cadiz16)
+head(Cadiz16) %>% kbl() %>% kable_styling()
+tail(Cadiz16) %>% kbl() %>% kable_styling()
+glimpse(Cadiz16) 
+str(Cadiz16) 
 ```
 
 Aqui hemos visto la forma del dataframe
@@ -403,8 +403,8 @@ primera_fecha = c()
 for (t in calles){
   primera_fecha=c(primera_fecha,min(t$dateObserved))
 }
-inicio_calle = data.frame(names(calles), primera_fecha %>% as.Date())
-inicio_calle
+inicio_calle = data.frame(names(calles), primera_fecha)
+inicio_calle %>% kable() 
 ```
 
 Curiosamente, todos los dataframes empiezan a registrar datos el 17 de Septiembre de 2020 salvo el correspondiente a SalvadorAbril que empieza el 14 de Octubre.
@@ -433,7 +433,7 @@ names(calles_renombradas)=nombre_calles
 calles = calles_renombradas
 
 #Visualizamos como han quedado el resultado
-head(calles$Cadiz16)
+head(calles$Cadiz16) %>% kable() %>% kable_styling()
 ```
 
 Hemos puesto estos nombres en funcion de lo que representan:
@@ -585,7 +585,7 @@ Para ello vamos a juntar todas las columnas que hacen referencia a la variable d
 datos_tidy = datos %>% gather("noise", "value", 2:6) %>% separate(noise, into=c("noise_column", "noise"), sep="_") %>% select(-noise_column) %>% mutate(noise=as.factor(noise), Street=as.factor(Street))
 
 #Visualizamos los datos
-head(datos_tidy)
+head(datos_tidy) %>% kable() %>% kable_styling()
 str(datos_tidy)
 ```
 
@@ -607,7 +607,7 @@ datos_tidy = datos_tidy%>%
 ), level=as.factor(level))
 
 #Visualizamos la nueva variable
-head(datos_tidy)
+head(datos_tidy) %>% kable() %>% kable_styling()
 ```
 
 ### Añadir año
