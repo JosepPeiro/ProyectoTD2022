@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "stringr")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "stringr", "kableExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -346,7 +346,7 @@ Hemos averiguado los dataframes de donde provienen los errores, y las columnas, 
 rbind(
 Cadiz16 %>% filter(LAeq_e==Inf),
 SalvadorAbril %>% filter(LAeq_d==Inf)
-)
+) %>% kable()
 ```
 
 No se encuentra ningun tipo de relacion entre las variables por las que se pueda sospechar que estos datos fueran erroneos.
@@ -355,8 +355,8 @@ No se encuentra ningun tipo de relacion entre las variables por las que se pueda
 Ahora que sabemos el _id de las observaciones con valor infinito vamos a ver si podemos encontrar alguna relacion entre lo ocurrido con observaciones anteriores; de no encontrarlo tomaremos los valores como completamente aleatorios
 
 ```{r, comparar con otras observaciones}
-filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202)
-filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130)
+filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202) %>% kable()
+filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130) %>% kable()
 ```
 No encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno
 
