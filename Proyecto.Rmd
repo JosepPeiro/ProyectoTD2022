@@ -364,8 +364,9 @@ Tomaremos los infinitos como datos faltantes completamente aleatorios, y como so
 
 ```{r, eliminar infinitos}
 #Eliminamos los registros que valen infinito
-Cadiz16=Cadiz16 %>% filter(!LAeq_e==Inf)
-SalvadorAbril=SalvadorAbril %>% filter(!LAeq_d==Inf)
+Cadiz16$LAeq_e= replace(Cadiz16$LAeq_e, is.infinite(Cadiz16$LAeq_e), mean(Cadiz16 %>% filter(!is.infinite(LAeq_e)) %>% select(LAeq_e) %>% pull()))
+
+SalvadorAbril$LAeq_d=replace(SalvadorAbril$LAeq_d, is.infinite(SalvadorAbril$LAeq_d), mean(SalvadorAbril %>% filter(!LAeq_d==Inf) %>% select(LAeq_d) %>% pull()))
 calles$Cadiz16=Cadiz16
 calles$SalvadorAbril=SalvadorAbril
 ```
