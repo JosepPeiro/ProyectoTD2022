@@ -143,13 +143,13 @@ tabla_estadisticos <- datos %>%
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
   ) %>% ungroup()
-tabla_estadisticos %>% kbl() %>%kable_styling()
+tabla_estadisticos %>% kable(caption = "Tabla estadísticos") %>%kable_styling()
 ```
 
 **Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
 
 ## Estudio outliers
-En los outliers vamos a estudiar aquellos valores que por alguna razon estan fuera de los niveles tanto por ser demasiado grandes o demasiado pequeños y vamos a estudiarlos de 3 formas: 3sigma, percentil, boxplot y hampel.
+En los outliers vamos a estudiar aquellos valores que por alguna razon estan fuera de los niveles tanto por ser demasiado grandes o demasiado pequeños y vamos a estudiarlos de 4 formas: 3sigma, percentil, boxplot y hampel.
 
 ```{r Funcion Outliers, include=FALSE}
 outliers = function(x, method="3sigma"){
@@ -199,7 +199,7 @@ for (a in niveles){
     outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma %>% kbl() %>%kable_styling()
+out_3sigma %>% kable(caption = "Regla 3 sigma") %>%kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -209,7 +209,7 @@ for (a in niveles){
     outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil %>% kbl() %>%kable_styling()
+out_percentil %>% kable(caption = "Regla percentil") %>%kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -219,7 +219,7 @@ for (a in niveles){
     outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot %>% kbl() %>%kable_styling()
+out_boxplot %>% kable(caption = "Regla del boxplot") %>%kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -229,7 +229,7 @@ for (a in niveles){
     outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel %>% kbl() %>%kable_styling()
+out_hampel %>% kable(caption = "Regla del identificador de Hampel") %>%kable_styling()
 ```
 
 
@@ -238,14 +238,14 @@ Calculamos la correlacion y covarianza para ver la similitud de la produccion de
 
 ```{r Cov y Cor Valores}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,5:9], use="complete.obs")
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,5:9], use="complete.obs")
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+cov(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Covarianza Pearson') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Correlación Pearson') %>% kable_styling()
+
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman') %>% kable(caption = 'Covarianza Spearman') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')  %>% kable(caption = 'Correlación Spearman') %>% kable_styling()
 
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
@@ -295,7 +295,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ## Distrubución
 Aqui vemos como se distribuyen los datos, y podemos ver si encontramos muchos outliers, donde se encuentra la mediana y la forma en la que se distribuyen.
 
-```{r}
+```{r graficos violin y boxplot para cada momento del dia}
 library(gridExtra) #Libreria para poner titulos a los multiplots
 
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
@@ -304,8 +304,8 @@ gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.te
 multiplot(gd1, gd2, cols=2) 
 grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia (violin y boxplot)")
 ```
-Estos graficos son iguales que los anteriores pero en horizontal. Esto nos permite ver mejor los valores donde se acumulan la mayoría de valores y nos ofrece una mejor vision de la distribución.
-```{r}
+Estos graficos son iguales que los anteriores pero en horizontal. Esto nos permite ver mejor los valores donde se acumulan la mayoría de valores y nos ofrece una mejor visión de la distribución.
+```{r graficos histograma y densidad}
 library(gridExtra)
 gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
 gh2=ggplot(datos, aes(value,fill=noise))+geom_density(alpha=0.5)+facet_wrap(~noise, nrow=5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Densidad de frecuencia") +  ggtitle ("Gráfico de densidad de frecuencias \n en diferentes momentos del dia")
@@ -314,11 +314,11 @@ gh3=ggplot(datos, aes(value,fct_rev(noise),fill=noise))+geom_density_ridges(alph
 layout <- matrix(c(1,2,1,2,3,3),3,2,byrow=TRUE)
 multiplot(gh1, gh2,gh3, layout=layout)
 ```
-A partir de estos graficos es fácil visualizar que todos los tipos de ruidos siguen una distribución gaussiana más o menos sesgada donde cada uno está centrado en un valor diferente.
+A partir de estos gráficos es fácil visualizar que todos los tipos de ruidos siguen una distribución gaussiana más o menos sesgada donde cada uno está centrado en un valor diferente.
 El caso de sonido por la noche es el que más salta a la vista porque está centrado muy a la izquierda del resto de valores. Eso indica que, como cabe esperar, por la noche suele haber menos ruido que por el día. 
 
 Ahora vamos calle por calle viendo el la distribución del ruido.
-```{r}
+```{r graficos boxplot y violin para cada calle}
 gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
     scale_x_discrete(breaks=NULL) + labs(x = "Calles",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en las diferentes calles")
@@ -335,13 +335,13 @@ Podemos apreciar que no todas las calles están centradas en el mismo valor. Los
 Y una cosa muy sorprendente de los graficos de violin es ver como todos tienen una forma similar donde hay una parte donde se centran la mayoría de valores, y debajo hay otra acumulación más pequeña  pero que siempre estan separadas por una franja donde a penas hay valores.
 
 ```{r, out.width="70%", fig.align='center'}
-ggplot(datos, aes(value,fct_rev(Street),fill=Street))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia")
+ggplot(datos, aes(value,fct_rev(Street),fill=Street))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Calles")
 ```
 
 Con este grafico es más visible la montaña que aparece a la izquierda de casi todas las calles. La explicación más razonable que encontramos es que esa pequeña montaña sea el valor del ruido de noche.
 
 ```{r, out.width="70%", fig.align='center'}
-ggplot(datos %>% filter(noise=="night"), aes(value,fct_rev(Street),fill=Street))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Momento del dia")
+ggplot(datos %>% filter(noise=="night"), aes(value,fct_rev(Street),fill=Street))+geom_density_ridges(alpha=0.5)+theme(legend.position = "none") + labs(x = "Cantidad de sonido",y = "Calles")
 ```
 
 ## Evolucion
@@ -390,7 +390,7 @@ multiplot(pa1,pa2,pa3,pa4, layout=matrix(c(1,2,3,4),2,2))
 ```
 En la calle Doctor Serrano la explicación es obvia y es la celebración de la navidad. Sin embargo, en el resto de calles la explicación que podría darsele es que es el momento donde se inician las compras de regalos.
 
-Por último vamos a ver si el valor del ruido tiende a aumentar, desciender o se mantienen a lo largo del año.
+Por último vamos a ver si el valor del ruido tiende a aumentar, descender o se mantienen a lo largo del año.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
@@ -443,7 +443,7 @@ lv4=datos_estadisticos %>% ggplot(aes(long, min_val))+geom_point()+ theme(axis.t
 
 lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA), axis.text.x = element_text(angle = 90, hjust = 1))+labs(x="Longitud calles", y= "Cantidad de sonido") +  ggtitle ("Valor de sonido registrado según \n longitud de la calle")+scale_x_continuous(breaks=unique(datos$long))
 
-datos %>% group_by(Street) %>% summarise(Longitud_calle=mean(long))
+datos %>% group_by(Street) %>% summarise(Longitud_calle=mean(long)) %>% kable(col.names=c("Calle", "Longitud"), escape=FALSE) %>% kable_styling(full_width = F, position = "left")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lv1, lv2, lv3, lv4, lvtt, layout=layout)
@@ -495,42 +495,51 @@ Luego también hay que ver por calles porque el caso de Cadiz3 es el peor de tod
 A traves de los datos obtenidos en el analisis previo podemos plantear unas preguntas las cuales se van a poder responder con estos mismos datos.
 
 Las preguntas relacionadas con el año 2020 son las siguientes:
+
 - ¿Durante que parte del dia ha sido minimo y maximo el ruido?
+
 **Respuesta 1:**
 ```{r}
 #Si ordenamos la tabla segun el minimo, el que este en 1 posicion sera el que menos ruido tenga
-arrange(tabla_estadisticos,(minimo))
+arrange(tabla_estadisticos,(minimo)) %>% kable(caption = "Tabla estadísticos ordenada según el minimo ruido") %>% kable_styling() %>%
+  row_spec(1, background = "lightblue")
 
 #En cambio si ordenamos de forma descendente la del maximo sabremos en que momento ha sido el maximo ruido
-arrange(tabla_estadisticos,desc(maximo))
+arrange(tabla_estadisticos,desc(maximo)) %>% kable(caption = "Tabla estadísticos ordenada según el máximo ruido") %>% kable_styling() %>%
+  row_spec(1, background = "lightblue")
 ```
-El valor minimo ha sido de 41.3 y se ha producido durante la noche y el valor maximo ha sido de 78.5 y se produjo durante la mañana.
+El **valor mínimo** ha sido de 	**`r min(tabla_estadisticos$minimo)`** y se ha producido durante la noche (`r tabla_estadisticos$noise[which.min(tabla_estadisticos$minimo)]`) y el **valor máximo** ha sido de **`r max(tabla_estadisticos$maximo)`** y se produjo durante la mañana (`r tabla_estadisticos$noise[which.max(tabla_estadisticos$maximo)]`).
 
-- ¿Cual ha sido el mínimo y máximo de ruido registrado?
+- ¿Cuál ha sido el mínimo y máximo de ruido registrado?
+
 **Respuesta 2:**
-El ruido mas bajo registrado ha sido de 41.3 y el maximo de 78.5
+
+El ruido mas bajo registrado ha sido de **`r min(tabla_estadisticos$minimo)`** y el maximo de **`r max(tabla_estadisticos$maximo)`**
 
 
-- ¿Cuales son los momentos del dia que mas semejante es el ruido?
+- ¿Cuáles son los momentos del día que más semejante es el ruido?
+
 **Respuesta 3:**
 ```{r}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,5:9], use="complete.obs")
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,5:9], use="complete.obs")
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+cov(datos_wide[,5:9], use="complete.obs") %>% kable(caption = "Covarianza Pearson") %>% kable_styling() 
+
+cor(datos_wide[,5:9], use="complete.obs")  %>% kable(caption = "Correlación Pearson") %>% kable_styling() 
+
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')  %>% kable(caption = "Covarianza Spearman") %>% kable_styling() 
+
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman') %>% kable(caption = "Correlación Spearman") %>% kable_styling() 
 #La semejanza de los ruidos se estudia con la correlacion y la covarianza, en la correlacion cuando esta mas se acerque a 1, mas semejantes seran, es decir, cuannto mas suba uno mas lo hara la otra tambien y viceversa.
 #La correlacion es la causa efecto, es decir si una varia como varian sistematica mente los valores de la otra, cuanto mayor sea, mayor similitud de cambio tendran.
 ```
 En nuestro caso, en el año 2020, los que mas se parecen serian el ruido por la mañanas y la media de sonido pero si queremos centrarnos en 2 partes del dia serian la tarde con la noche, su correlacion es de 0.737 y el caso de Spearman es de 0.713, ademas en ambos casos su covarianza tambien es la mas alta con 10.20 para la Pearson y de 117734 para la Spearman.
 
-- ¿En que calle registro mas y menos ruido?
+- ¿En que calle registro más y menos ruido?
+
 **Respuesta 4:**
-Para responder esta pregunta queda bastante mas claro con una grafica:
+
+Para responder esta pregunta queda bastante más claro con una gráfica:
 ```{r}
 gdb=ggplot(datos, aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
@@ -544,45 +553,52 @@ gdv=ggplot(datos, aes(x = Street, y = value)) +
 
 multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 ```
-Se puede ver que el valor mas ato se registra en la calle cadiz3, aunuqe haya algun punto mas arriba en otras calles pero por regla general es en la calle Cadiz3 en cambio el sonido mas bajo es en GeneralPrim sin ninguna duda.
+Se puede ver que el valor más alto se registra en la calle cadiz3, aunque haya algún punto más arriba en otras calles pero por regla general es en la calle Cadiz3, en cambio el sonido más bajo es en GeneralPrim sin ninguna duda.
 
-- ¿En las calles con mas y menos ruido durante que momento del dia se han producido estos picos?
+- ¿En las calles con más y menos ruido durante que momento del día se han producido estos picos?
+
 **Respuesta5:**
-Aqui tambien queda bastante mas claro con una grafica:
+
+Aquí también queda bastante más claro con una gráfica:
 ```{r}
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
     theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
-Si nos centramos en la calle con mas ruido (Cadiz3), se ve que el ruido mas alto seria en el all, pero si queremos centrarnos en una parte de dia seria durante la mañana.
-En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido mas bajo se registro durante la noche.
+Si nos centramos en la calle con más ruido (Cadiz3), se ve que el ruido más alto seria en el all, pero si queremos centrarnos en una parte de dia sería durante la mañana.
+En la calle con menos ruido (GeneralPrim) queda muy muy claro que el sonido más bajo se registró durante la noche.
 
 
-- ¿En que epoca del año hay mayor produccion de ruido?
+- ¿En que época del año hay mayor producción de ruido?
+
 **Respuesta6:**
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
-En este grafico podemos ver que esta organizado por meses y por calles segun el ruido registrado, se puede ver que independientemente del mes por la noche es cando menos ruido hay pero especialmente en los primeros y ultimos meses del año debido a que anoche antes y en general a principios de año el ruido es menor.
-En cambio el ruido mas alto quitando del que es el total, la parte del dia con mas ruido generalmente es durante la mañana independientemente del mes del año aunque en los meses de mitad de año durante la tarde hay mas o menos la misma cantidad se sonido, esto sera debido a las vacaciones.
+En este gráfico podemos ver que esta organizado por meses y por calles según el ruido registrado, se puede ver que independientemente del mes por la noche es cuando menos ruido hay pero especialmente en los primeros y últimos meses del año debido a que anochece antes y en general a principios de año el ruido es menor.
+En cambio el ruido más alto quitando del que es el total, la parte del día con más ruido generalmente es durante la mañana independientemente del mes del año aunque en los meses de mitad de año durante la tarde hay más o menos la misma cantidad se sonido, esto será debido a las vacaciones.
 
 
 - ¿Tiene que ver algo la longitud de las calles con su sonido?
+
 **Respuesta7:**
-Vamos a verlo con una grafica:
+
+Vamos a verlo con una gráfica:
 ```{r}
 lvtt=ggplot(datos, aes(long, value, color=Street))+geom_jitter()+scale_y_continuous()+theme(legend.position = "bottom", legend.text = element_text (size = 4.5), legend.title = element_blank(), legend.key.size = unit(0.2, "cm"), legend.key=element_rect(color=NA))+labs(x="Longitud calles", y= "Cantidad de sonido") +  ggtitle ("Valor de sonido registrado según \n longitud de la calle")
 
 layout=matrix(c(1,3,2,4,5,5,5,5),2,4)
 multiplot(lvtt, layout=layout)
 ```
-Independientemente de la longitud de las calles todas suelen estar entre el mismo rango de sonido, lo que si que es cierto es que la calles que son de la misma longitud producen casi extamente el mismo sonido pero no es nada muy revelelados ya que como he dicho casi todas estan en el mismo rango.
+Independientemente de la longitud de las calles todas suelen estar entre el mismo rango de sonido, lo que si que es cierto es que la calles que son de la misma longitud producen casi extamente el mismo sonido pero no es nada muy revelelador ya que como he dicho casi todas estan en el mismo rango.
 
-- ¿Cual es la media del nivel del sonido?
+- ¿Cuál es la media del nivel del sonido?
+
 **Respuesta8:**
-Vamos a verlo con unas graficas:
+
+Vamos a verlo con unas gráficas:
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
 nr1=datos %>% ggplot(aes(level,..count..*100/sum(..count..), fill=level))+
@@ -596,12 +612,14 @@ nr3=datos %>% ggplot(aes(Street, fill=level))+
 layout=matrix(c(1,3,2,3),2,2, byrow=T)
 multiplot(nr1, nr3, layout=layout)
 ```
-Como se puede ver en la primera grafica lo que destaca es el sonido medio, ni muy alto ni muy bajo, pero si nos centramos a analizapor calles en Cadiz3 que era la que tenia un registro mas alto, su sonido esta entre medio y alto, habiendo tambien una gran cantidad de registro con sonido alto y al contario pasa en la calle GeneralPrim aunque la compracaion de media con bajo no es tan grande.
-Es decir hay mas sonido medio-alto que bajo.
+Como se puede ver en la primera gráfica lo que destaca es el sonido medio, ni muy alto ni muy bajo, pero si nos centramos a analizapor calles en Cadiz3 que era la que tenia un registro más alto, su sonido esta entre medio y alto, habiendo también una gran cantidad de registro con sonido alto y al contario pasa en la calle GeneralPrim aunque la comparacion de media con bajo no es tan grande.
+Es decir hay más sonido medio-alto que bajo.
 
-- ¿Cual es la media del nivel del sonido en las diferentes partes del dia?
+- ¿Cuál es la media del nivel del sonido en las diferentes partes del día?
+
 **Respuesta9:**
-Vamos a verlo con una graficas:
+
+Vamos a verlo con una gráficas:
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
 
@@ -613,10 +631,13 @@ nr2=datos %>% ggplot(aes(noise, fill=level))+
 layout=matrix(c(1,3,2,3),2,2, byrow=T)
 multiplot(nr2, layout=layout)
 ```
-Se puede ver que predomina el sonido medio en todas las partes del dia pero durante la mañana y la tarde el sonido alto tambien destaca y durante la noche como es obvio tambien destaca el sonido bajo
+Se puede ver que predomina el sonido medio en todas las partes del día pero durante la mañana y la tarde el sonido alto también destaca y durante la noche como es obvio tambien destaca el sonido bajo.
 
 ## Conclusiones 2020
-Con todas las tablas y con todos los graficos vistos podemos concluir que durante el año 2020 el sonido mas alto estuvo en la calle Cadiz3 con 78.5 y la mas baja GeneralPrim con 42.3 aunque esto son extremos, como ya hemos podido ver independientemente de la calle el sonido sule encontarse en un punto medio.
-Ademas tambien hemos analizado el sonido segun la parte del dia viendo que durante la noche el sonido el muscho mas bajo y durante la mañana es cuando suele producirse mas ruido
-Tambien hemos visto que en diciembre la cantidad de sonido que se produce es mas baja que la que se produce durante los meses anteriores ya que es cuando mas pronto anochece 
-Y or ultimo hemos visto que cuando el sonido aumenta en la mañana tambien lo suele hacer por al tarde esto sera debido a que pasa algo en la calle(alguna fuesta por ejemplo) entonces la produccion de ruido aumenta durante todo el dia pero por la noche aunque tambien aumenta porque asi lo dice la  correlacio y covarianza no lo hace tanto en comparacion con los otros.
+Con todas las tablas y con todos los gráficos vistos podemos concluir que durante el año 2020 el sonido más alto estuvo en la calle Cadiz3 con 78.5 y la mas baja GeneralPrim con 42.3 aunque esto son extremos, como ya hemos podido ver independientemente de la calle el sonido suele encontarse en un punto medio.
+
+Además también hemos analizado el sonido según la parte del día viendo que durante la noche el sonido el mucho más bajo y durante la mañana es cuando suele producirse más ruido.
+
+También hemos visto que en diciembre la cantidad de sonido que se produce es más baja que la que se produce durante los meses anteriores ya que es cuando más pronto anochece.
+
+Y por último hemos visto que cuando el sonido aumenta en la mañana también lo suele hacer por al tarde esto será debido a que pasa algo en la calle(alguna fiesta por ejemplo) entonces la producción de ruido aumenta durante todo el día pero por la noche aunque también aumenta porque asi lo dice la  correlación y covarianza no lo hace tanto en comparación con los otros.
