@@ -464,7 +464,7 @@ estadisticos = function(x){
 }
 ```
 
-```{r, tablas estadisticos}
+```{r, tablas estadisticos,  results='asis'}
 #Y ahora creamos un dataframe con estadisticos para cada calle
 #En cada linea apareceran los estadisticos de una variable
 #Utilizaremos listas para agrupar las tablas de estadisticos
@@ -482,8 +482,13 @@ for (e in calles){
   #print(matriz_estadisticos)
   lista_estadisticos[[length(lista_estadisticos) + 1]] = matriz_estadisticos
 }
-names(lista_estadisticos)=nombre_calles
-print(lista_estadisticos)
+
+for (i in 1:length(lista_estadisticos)){
+  print(kable(as.data.frame(lista_estadisticos[i]), caption = nombre_calles[i]) %>% kable_styling())
+}
+
+
+
 ```
 
 
@@ -554,7 +559,7 @@ for (h in datos[,2:6]){
 estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
-estadisticos_conjuntos
+estadisticos_conjuntos %>% kable() %>% kable_styling()
 ```
 
 ### Añadir longitud calles
