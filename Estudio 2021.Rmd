@@ -253,7 +253,7 @@ for (a in niveles){
     n_outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
+out_3sigma %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling(full_width = F, position = "left")
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -263,7 +263,7 @@ for (a in niveles){
     n_outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
+out_percentil %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling(full_width = F, position = "left")
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -273,7 +273,7 @@ for (a in niveles){
     n_outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
+out_boxplot %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling(full_width = F, position = "left")
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -283,7 +283,7 @@ for (a in niveles){
     n_outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
+out_hampel %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling(full_width = F, position = "left")
 ```
 
 Si observamos estos niveles podemos observar que, salvo en el caso de los outliers del percentil 5-95, que por definicion crea el mismo número de outliers tanto arriba como debajo, en el resto de tipos de outliers hay una diferencia enorme entre la cantidad de outliers por encima que por debajo.
@@ -577,7 +577,7 @@ Además, encontramos ocasiones donde el nivel sonoro de noche alcanza el nivel a
 
 Vamos a averiguar qué porcentaje corresponde a cada nivel.
 ```{r}
-datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)) %>% kable(caption = "Tabla porcentajes segun nivel de ruido") %>% kable_styling()
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)) %>% kable(caption = "Tabla porcentajes segun nivel de ruido") %>% kable_styling(full_width = F, position = "left")
 ```
 
 Encontramos que un porcentaje más bien pequeño de las veces el sonido ha sido muy alto. Pero lo ideal sería que no ocurriera nunca.
