@@ -402,9 +402,9 @@ También vamos a ver cuándo empezaron los registros, para ello vamos a ver la p
 primera_fecha = c()
 
 for (t in calles){
-  primera_fecha=c(primera_fecha,min(t$dateObserved))
+  primera_fecha=c(primera_fecha,as.character(min(t$dateObserved)))
 }
-inicio_calle = data.frame(names(calles), primera_fecha)
+inicio_calle = data.frame(names(calles), primera_fecha=ymd(primera_fecha))
 inicio_calle %>% kable() 
 ```
 
