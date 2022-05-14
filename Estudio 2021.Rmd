@@ -504,7 +504,7 @@ g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value,
   geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
 
 g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) + 
-  labs(title = 'Índice de ruido durante todo el día en 2020', x = 'Fecha',y = 'Valor del ruido')
+  labs(title = 'Índice de ruido durante todo el día en 2021', x = 'Fecha',y = 'Valor del ruido')
 
 animate(g_all2, fps = 8)
 ```
