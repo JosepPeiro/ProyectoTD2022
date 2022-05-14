@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra", "kableExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -116,13 +116,13 @@ datos %>%
             desv_tipica = sd(value),
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
-  ) %>% ungroup()
+  ) %>% ungroup() %>% kable(caption = "Tabla estadísticos") %>%kable_styling()
 ```
 
 ## Estudio outliers
 Igual que antes, vamos a hacer un estudio de outliers con cada uno de los métodos para reconocer outliers que hemos conocemos, la regla 3 sigma, el boxplot, el percentil 5-95 y la regla de Hampel.
 
-```{r, include=FALSE}
+```{r Funcion outliers, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
   sigma = sd(x)
@@ -170,7 +170,7 @@ for (a in niveles){
     outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kable(caption = "Regla 3 sigma") %>%kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -180,7 +180,7 @@ for (a in niveles){
     outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kable(caption = "Regla percentil") %>%kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -190,7 +190,7 @@ for (a in niveles){
     outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kable(caption = "Regla del boxplot") %>%kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -200,7 +200,7 @@ for (a in niveles){
     outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kable(caption = "Regla del identificador de Hampel") %>%kable_styling()
 ```
 A diferencia de lo que se podría esperar, en estos datos según el método de extraccion de outliers que se aplique aparecen más o menos outliers que en el archivo de 2021.
 El método 3 sigma sigue siendo el que menos outliers extrae y el del percentil el que más con una diferencia importante, pero los outliers de boxplot y de hampel identifican más de 100 datos como outliers para cada tipo de ruido. Ahora es fácil cuestionarse el porqué de tanto outlier.
@@ -251,7 +251,7 @@ for (a in niveles){
     n_outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kable(caption = "Valores por encima y por debajo") %>% kable_styling(full_width = F, position = "left")
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -261,7 +261,7 @@ for (a in niveles){
     n_outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kable(caption = "Valores por encima y por debajo") %>% kable_styling(full_width = F, position = "left")
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -271,7 +271,7 @@ for (a in niveles){
     n_outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kable(caption = "Valores por encima y por debajo") %>% kable_styling(full_width = F, position = "left")
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -281,31 +281,31 @@ for (a in niveles){
     n_outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kable(caption = "Valores por encima y por debajo") %>% kable_styling(full_width = F, position = "left")
 ```
 De nuevo, vemos que lo que impera son valores que están por encima de lo normal y no que estén por debajo.
 A diferencia de en el estudio de 2021, que también tenía muchos outliers, el problema en este año reside en que aún teniendo menor volumen de datos que el año pasado, el número de outliers extraidos con métodos que por lo general no suelen generar cantidades demasiado altas generan más de lo que cabría esperar.
 
 ## Estudio correlación y covarianza
-Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
+Calculamos la correlacion y covarianza para ver la similitud de la producción de sonido dependiendo del momento del día.
 
 ```{r}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,5:9], use="complete.obs")
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,5:9], use="complete.obs")
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+cov(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Covarianza Pearson') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Correlación Pearson') %>% kable_styling()
+
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman') %>% kable(caption = 'Covarianza Spearman') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')  %>% kable(caption = 'Correlación Spearman') %>% kable_styling()
 
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
 ```
-Los resultados este año son soprendentes porque la correlacion cada vez es más visible entre las distintas variables.
+Los resultados este año son soprendentes porque la correlación cada vez es más visible entre las distintas variables.
 En 2021 todavía había correlaciones de $0.55$. En este año, la correlación más pequeña que encontramos es entre el ruido por la mañana y el de por la noche, que es de $0.7$.
-Tal y como se observan los valores de correlacion cada vez se puede afirmar con menos incertidumbre que si un día empieza siendo ruidoso acabará siendo ruidoso y viceversa.
+Tal y como se observan los valores de correlación cada vez se puede afirmar con menos incertidumbre que si un día empieza siendo ruidoso acabará siendo ruidoso y viceversa.
 Conocer esto nos puede ayudar a saber cómo actuar o a pensar estrategias para prever que el ruido no moleste a los vecinos.
 
 # Graficos
@@ -459,7 +459,7 @@ g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value,
   geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
 
 g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) + 
-  labs(title = 'Índice de ruido durante todo el día en 2020', x = 'Fecha',y = 'Valor del ruido')
+  labs(title = 'Índice de ruido durante todo el día en 2022', x = 'Fecha',y = 'Valor del ruido')
 
 animate(g_all2, fps = 8)
 ```
@@ -529,11 +529,11 @@ multiplot(nr1, nr2, nr3, layout=layout)
 ```
 Aqui, como ya podíamos suponer, se vuelve a superar el límite y vuelven a aparecer valores de ruido muy altos.
 Esto podría suponer un problema, porque además tambien aparecen estos valores por la noche, lo cual sí puede ser una preocupación para el bienestar público.
-Vamos a calcular el procentaje de cada uno de los niveles de sonido dentro del conjunto entero de datos, pero también vamos a hacer lo mismo a sustrayendo los valores de marzo, para ver si el reultado cambia mucho.
+Vamos a calcular el procentaje de cada uno de los niveles de sonido dentro del conjunto entero de datos, pero también vamos a hacer lo mismo a sustrayendo los valores de marzo, para ver si el resultado cambia mucho.
 
 ```{r}
-datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))%>% ungroup()
-datos %>% filter(month(dateObserved)!=3)%>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos %>% filter(month(dateObserved)!=3))) %>% ungroup() 
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))%>% ungroup() %>% kable(caption = "Tabla porcentajes segun nivel de ruido") %>% kable_styling(full_width = F, position = "left")
+datos %>% filter(month(dateObserved)!=3)%>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos %>% filter(month(dateObserved)!=3))) %>% ungroup() %>% kable(caption = "Tabla porcentajes segun nivel de ruido sin contar Marzo") %>% kable_styling(full_width = F, position = "left")
 ```
 
 Vemos claramente que si quitamos los datos de marzo el número de veces que aparece ruido muy fuerte es prácticamente despreciable. Y la gran mayoría de datos pasar a ser de valor medio.
