@@ -290,7 +290,7 @@ Si observamos estos niveles podemos observar que, salvo en el caso de los outlie
 De aquí podemos sacar la conclusión de que en los datos aparecen muchos picos con valores altos por encima de lo normal. Si comparamos con los valores de 2020, pese a que el año anterior se registraran menos datos, la proporcion de outliers en 2021 es mucho mayor.
 
 ## Estudio correlación y covarianza
-Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependindon del momento del dia
+Calculamos la correlacion y covarianza para ver la similitud de la producción de sonido dependiendo del momento del día.
 
 ```{r}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
