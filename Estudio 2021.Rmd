@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra", "kableExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -84,8 +84,8 @@ package.check <- lapply(packages, FUN = function(x) {
 #search()
 ```
 # Trabajo 2021
-Este sera el Rmd donde trabajaremos con los datos de 2021.
-Durante todo este año se fueron recogiendo datos, y es el único completo año del que se tienen datos, y en este año dejó de haber confinamiento. Y fue el año donde empezó la vacunación a gran escala.
+Este será el Rmd donde trabajaremos con los datos de 2021.
+Durante todo este año se fueron recogiendo datos, y es el único año completo del que se tienen datos, y en este año dejó de haber confinamiento. Y fue el año donde empezó la vacunación a gran escala.
 Sin embargo, este año siguieron sin haber fallas y continuaban muchas de las restricciones que prohibían juntar a varias personas en el mismo sitio. Así que este año todavía no podían crearse grandes aglomeraciones de gente, veremos si esto ha influido en el ruido.
 El análisis que va a hacerse a estos datos va a ser paralelo al que hemos hecho con el año 2020.
 
@@ -115,7 +115,7 @@ datos %>%
             desv_tipica = sd(value),
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
-  ) %>% ungroup()
+  ) %>% ungroup() %>% kable(caption = "Tabla estadísticos") %>%kable_styling()
 ```
 
 ## Estudio outliers
@@ -172,7 +172,7 @@ for (a in niveles){
     outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kable(caption = "Regla 3 sigma") %>%kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -182,7 +182,7 @@ for (a in niveles){
     outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kable(caption = "Regla percentil") %>%kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -192,7 +192,7 @@ for (a in niveles){
     outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kable(caption = "Regla del boxplot") %>%kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -202,7 +202,7 @@ for (a in niveles){
     outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kable(caption = "Regla del identificador de Hampel") %>%kable_styling()
 ```
 Es muy destacable cómo según el tipo de outlier que apliquemos aparecen más o menos observaciones outliers. Si aplicamos el criterio del percentil 5-95 aparecen hasta $7.5$ veces más outliers que con el criterio 3 sigma.
 Si aplicamos los criterios hampel o boxplot aparecen una cantidad intermedia. Pero de cualquiera de las formas siguen apareciendo una cantidad bastante elevada de outliers.
@@ -253,7 +253,7 @@ for (a in niveles){
     n_outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -263,7 +263,7 @@ for (a in niveles){
     n_outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -273,7 +273,7 @@ for (a in niveles){
     n_outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -283,7 +283,7 @@ for (a in niveles){
     n_outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kable(caption = "Valores por encima y por debajo") %>%kable_styling()
 ```
 
 Si observamos estos niveles podemos observar que, salvo en el caso de los outliers del percentil 5-95, que por definicion crea el mismo número de outliers tanto arriba como debajo, en el resto de tipos de outliers hay una diferencia enorme entre la cantidad de outliers por encima que por debajo.
@@ -294,14 +294,14 @@ Calculamos la correlacion y covarianza para ver la similitud de la produccion de
 
 ```{r}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,5:9], use="complete.obs")
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,5:9], use="complete.obs")
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+cov(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Covarianza Pearson') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Correlación Pearson') %>% kable_styling()
+
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman') %>% kable(caption = 'Covarianza Spearman') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')  %>% kable(caption = 'Correlación Spearman') %>% kable_styling()
 
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
@@ -309,7 +309,7 @@ chart.Correlation(datos_wide[,5:9])
 Los resultados obtenidos este año son bastante similares a los obenidos el año 2020. Y aquí también se puede encontrar una relacion entre el valor del ruido a una hora del día y en el resto de horas.
 
 # Graficos
-```{r, include=FALSE}
+```{r Funcion Multiplot, include=FALSE}
 library(grid)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -351,7 +351,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ## Distrubución
 Vemos cómo se distribuyen los valores en cada momento del día. Y en este caso, vista la cantidad de outliers vamos a prestar atencion en estos y en qué variables se acumulan más o sobre qué calles. 
 
-```{r}
+```{r graficos violin y boxplot para cada momento del dia}
 library(gridExtra) #Libreria para poner titulos a los multiplots
 
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
@@ -363,11 +363,11 @@ grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el
 Salta a la vista los puntos que aparecen el los boxplots. Síntoma de que hay muchísimos outliers en los datos, independientemente del sonido que evaluemos.
 Eso nos lleva a preguntarnos muchas cosas, como ¿porqué aparecen tantos valores en este año tan altos? ¿En qué partes del año aparecen la mayoría? o ¿Son más comunes en calles cortas, largas, es indiferente? Y también, ¿Se acumulan los outliers en fechas específicas?
 Los outliers representan en este punto una parte a destacar del trabajo.
-Aparte de los outliers, estos graficos sorprender por otro detalle, y es que la forma de los violines es diferente en los distintos sonidos.
-Cabría esperar que la dirtribución por la noche fuera menor, y de hecho la distribucion se centra en un valor más pequeño. Pero los outliers alcanzan valores muy similares a los que se alcanzan por la mañana.
-Y luego, los valores de min y morning se centran mucho en valores concretos, mientras que los de nigth estan muchísimo más dispersos. También se centran en un valor, pero la dirtribución, restando outliers es muy simétrica.
+Aparte de los outliers, estos gráficos sorprenden por otro detalle, y es que la forma de los violines es diferente en los distintos sonidos.
+Cabría esperar que la distribución por la noche fuera menor, y de hecho la distribución se centra en un valor más pequeño. Pero los outliers alcanzan valores muy similares a los que se alcanzan por la mañana.
+Y luego, los valores de min y morning se centran mucho en valores concretos, mientras que los de nigth estan muchísimo más dispersos. También se centran en un valor, pero la distribución, restando outliers es muy simétrica.
 
-Ahora vamos a ver el mismo grafico que antes en horizontal.
+Ahora vamos a ver el mismo gráfico que antes en horizontal.
 ```{r}
 library(gridExtra)
 gh1=ggplot(datos, aes(value))+geom_histogram(binwidth=1)+facet_wrap(~noise, nrow=5) + labs(x = "Cantidad de sonido",y = "Contador de frecuencia") +  ggtitle ("Histograma de frecuencias en \n diferentes momentos del dia") #Veces que se repite una frecuencia 
@@ -486,7 +486,7 @@ Y por otra parte todos los ruidos subieron durante todo el año, especialmente e
 Y aquí podemos ver el grafico dividido por calles
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia")) +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 Si diferenciamos por calles vemos de manera más clara y se puede observar que en la mayoría de calles la curva de sonido por la noche vuelve a decrecer conforme acaba el año, vuelve el invierno y la noche empieza antes.
 
@@ -510,7 +510,7 @@ animate(g_all2, fps = 8)
 ```
 
 ## Relacion longitud calles
-Vamos a volver a mirar si con más datos encontramos la misma relacion que antes o ahora, acabado el estado de alarma cambia algun asunto
+Vamos a volver a mirar si con más datos encontramos la misma relación que antes o ahora, acabado el estado de alarma cambia algún asunto
 
 ```{r, message=FALSE, warning=FALSE}
 datos_estadisticos = datos %>% group_by(Street) %>% summarise(long, mean_val=mean(value), median_val=median(value), max_val=max(value), min_val=min(value)) %>% ungroup()
@@ -577,7 +577,7 @@ Además, encontramos ocasiones donde el nivel sonoro de noche alcanza el nivel a
 
 Vamos a averiguar qué porcentaje corresponde a cada nivel.
 ```{r}
-datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)) %>% kable(caption = "Tabla porcentajes segun nivel de ruido") %>% kable_styling()
 ```
 
 Encontramos que un porcentaje más bien pequeño de las veces el sonido ha sido muy alto. Pero lo ideal sería que no ocurriera nunca.
@@ -589,4 +589,4 @@ Por el análisis que hemos hecho, lo más probable es que los momentos donde se 
 -¿Porque hay datos con valor infinito?
 -¿Como afectó el confinamiento al ruido?
 -¿Que podemos decir de cada calle al ver sus datos estadísticos del ruido a lo largo de los meses y en cada franja horaria?
--¿En general, en las calles, donde podemos ver un mayor índoce de ruido?
+-¿En general, en las calles, donde podemos ver un mayor índice de ruido?
