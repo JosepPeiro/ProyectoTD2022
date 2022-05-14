@@ -405,7 +405,7 @@ for (t in calles){
   primera_fecha=c(primera_fecha,as.character(min(t$dateObserved)))
 }
 inicio_calle = data.frame(names(calles), primera_fecha=ymd(primera_fecha))
-inicio_calle %>% kable() 
+inicio_calle %>% kable(col.names=c("Calle", "Primera fecha"), escape=FALSE) %>% kable_styling(full_width = F, position = "left")
 ```
 
 Curiosamente, todos los dataframes empiezan a registrar datos el 17 de Septiembre de 2020 salvo el correspondiente a SalvadorAbril que empieza el 14 de Octubre.
