@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r libraries, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra", "kableExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -143,7 +143,7 @@ tabla_estadisticos <- datos %>%
             perc_75 = round(quantile(value, 0.75),2),
             maximo = max(value)
   ) %>% ungroup()
-tabla_estadisticos
+tabla_estadisticos %>% kbl() %>%kable_styling()
 ```
 
 **Con esta primera tabla ya tenemos un primer analisis de los datos donde se puede ver cual es el ruido maximo, minimo... durante las diferentes partes del día, en todo el dia...** 
@@ -199,7 +199,7 @@ for (a in niveles){
     outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kbl() %>%kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -209,7 +209,7 @@ for (a in niveles){
     outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kbl() %>%kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -219,7 +219,7 @@ for (a in niveles){
     outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kbl() %>%kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -229,7 +229,7 @@ for (a in niveles){
     outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kbl() %>%kable_styling()
 ```
 
 
@@ -293,7 +293,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 ## Distrubución
-Aqui vemos como se distribuyen los datos, y podemos ver si encontramos muchos otliers, donde se encuentra la mediana y la forma en la que se distribuyen.
+Aqui vemos como se distribuyen los datos, y podemos ver si encontramos muchos outliers, donde se encuentra la mediana y la forma en la que se distribuyen.
 
 ```{r}
 library(gridExtra) #Libreria para poner titulos a los multiplots
