@@ -43,7 +43,7 @@ pre {
 }
 </style>
 
-```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+```{r setup 2021, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
 library(knitr)
@@ -122,7 +122,7 @@ datos %>%
 Vamos a ver para cada método cuántos outliers aparecen. Haremos como antes, crearemos una tabla para cada tipo de sonido con el número de outliers y los límites.
 Cabe destacar que si en maxOut o minOut aparece el valor -Inf o Inf, significa que no hay outliers en el rango respectivo.
 
-```{r Funcion outliers, include=FALSE}
+```{r Funcion outliers 2021, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
   sigma = sd(x)
@@ -309,7 +309,7 @@ chart.Correlation(datos_wide[,5:9])
 Los resultados obtenidos este año son bastante similares a los obenidos el año 2020. Y aquí también se puede encontrar una relacion entre el valor del ruido a una hora del día y en el resto de horas.
 
 # Graficos
-```{r Funcion Multiplot, include=FALSE}
+```{r Funcion Multiplot 2021, include=FALSE}
 library(grid)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
@@ -351,7 +351,7 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ## Distrubución
 Vemos cómo se distribuyen los valores en cada momento del día. Y en este caso, vista la cantidad de outliers vamos a prestar atencion en estos y en qué variables se acumulan más o sobre qué calles. 
 
-```{r graficos violin y boxplot para cada momento del dia}
+```{r Graficos violin y boxplot para cada momento del dia 2021}
 library(gridExtra) #Libreria para poner titulos a los multiplots
 
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 

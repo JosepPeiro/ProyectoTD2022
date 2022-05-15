@@ -43,7 +43,7 @@ pre {
 }
 </style>
 
-```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+```{r setup 2022, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
 library(knitr)
@@ -122,7 +122,7 @@ datos %>%
 ## Estudio outliers
 Igual que antes, vamos a hacer un estudio de outliers con cada uno de los métodos para reconocer outliers que hemos conocemos, la regla 3 sigma, el boxplot, el percentil 5-95 y la regla de Hampel.
 
-```{r Funcion outliers, include=FALSE}
+```{r Funcion outliers 2022, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
   sigma = sd(x)
