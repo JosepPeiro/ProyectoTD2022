@@ -43,7 +43,7 @@ pre {
 }
 </style>
 
-```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+```{r setup2020, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
 library(knitr)
@@ -65,7 +65,7 @@ knit_hooks$set(inline = function(x) {
 #knit_hooks$set(plot = knitr:::hook_plot_html)
 ```
 
-```{r libraries, echo=F}
+```{r libraries 2020, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
 packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
@@ -90,11 +90,11 @@ Trabajando con varios archivos podemos analizar año por año los resultados y t
 
 ## Carga de datos
 Nos descargamos los datos desde el .Rdata que habiamos creado previamente.
-```{r Morrar Memoria, include=FALSE}
+```{r Morrar Memoria 2020, include=FALSE}
 rm(list=ls())
 ```
 
-```{r Carga}
+```{r Carga 2020}
 load("./dataframes/datos_2020.Rdata")
 datos = datos_2020 %>% select(-year)
 ```
@@ -132,7 +132,7 @@ ggplot(datos_media, aes(x, y))+
 ## Estudio estadistico
 Lo primero que hacemos es calcular los valores estadísticos como la media, mediana, percentiles 25 y 75, el maximo, minimo y la desviacion tipica pero solamente de los datos de este año al igual que habiamos hecho con todos los datos antes. Pero ahora solo utilizaremos los datos de 2020. Esto nos servirá para compararlos con los datos globales además de con los datos de otros años. 
 
-```{r Estadisticos}
+```{r Estadisticos 2020}
 tabla_estadisticos <- datos %>% 
   group_by(noise) %>% 
   summarise(minimo=min(value), 
@@ -151,7 +151,7 @@ tabla_estadisticos
 ## Estudio outliers
 En los outliers vamos a estudiar aquellos valores que por alguna razon estan fuera de los niveles tanto por ser demasiado grandes o demasiado pequeños y vamos a estudiarlos de 3 formas: 3sigma, percentil, boxplot y hampel.
 
-```{r Funcion Outliers, include=FALSE}
+```{r Funcion Outliers 2020, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
   sigma = sd(x)
@@ -188,7 +188,7 @@ outliers = function(x, method="3sigma"){
 }
 ```
 
-```{r Outliers}
+```{r Outliers 2020}
 niveles = levels(datos$noise)
 
 out_3sigma = data.frame()
@@ -236,7 +236,7 @@ out_hampel
 ## Estudio correlación y covarianza
 Calculamos la correlacion y covarianza para ver la similitud de la produccion de sonido dependiendo del momento del dia para ver si hay una relación que nos diga que si un día es más ruidoso en determinado momento el resto del día también ocurrirá
 
-```{r Cov y Cor Valores}
+```{r Cov y Cor Valores 2020}
 datos_wide = datos %>% select(-level) %>% pivot_wider(names_from=noise, values_from=value)
 cat('Covarianza Pearson\n')
 cov(datos_wide[,5:9], use="complete.obs")
@@ -253,7 +253,7 @@ chart.Correlation(datos_wide[,5:9])
 Con estos valores podemos afirmar que por lo general hay una relacion muy cercana entre los valores de un momento del día con el resto. En todos los casos se observa una correlacion superior al 50%, i en algunos casos se ve una correlacion incluso del 98%
 
 # Graficos
-```{r Funcion Multiplot, include=FALSE}
+```{r Funcion Multiplot 2020, include=FALSE}
 library(grid)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
