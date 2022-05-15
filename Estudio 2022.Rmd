@@ -507,7 +507,7 @@ cor(datos$long, datos$value,method = 'spearman')
 Sin embargo, pese a que los gráficos no sean reveladores, los valores numéricos nos advierten que la correlacion en 2022 es mayor que la de 2021 y 2020. Pero sigue siendo muy poco alentadora de que podamos encontrar una relacion absoluta y fiable.
 Reiteramos el problema de que una calle más larga no implica que sea más inmportante. Y que quizás los valores de longitud útiles no sean los que estamos tomando.
 
-## Clasificacion
+## Clasificación
 Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto según unos niveles estandars y oficiales.
 Luego se especifica esto segun cada calle y segun el momento del dia.
 
@@ -532,8 +532,8 @@ Esto podría suponer un problema, porque además tambien aparecen estos valores 
 Vamos a calcular el procentaje de cada uno de los niveles de sonido dentro del conjunto entero de datos, pero también vamos a hacer lo mismo a sustrayendo los valores de marzo, para ver si el resultado cambia mucho.
 
 ```{r}
-datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))%>% ungroup() %>% kable(caption = "Tabla porcentajes segun nivel de ruido") %>% kable_styling(full_width = F, position = "left")
-datos %>% filter(month(dateObserved)!=3)%>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos %>% filter(month(dateObserved)!=3))) %>% ungroup() %>% kable(caption = "Tabla porcentajes segun nivel de ruido sin contar Marzo") %>% kable_styling(full_width = F, position = "left")
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos))%>% ungroup() %>% kable(caption = "Tabla porcentajes según nivel de ruido") %>% kable_styling(full_width = F, position = "left")
+datos %>% filter(month(dateObserved)!=3)%>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos %>% filter(month(dateObserved)!=3))) %>% ungroup() %>% kable(caption = "Tabla porcentajes según nivel de ruido sin contar Marzo") %>% kable_styling(full_width = F, position = "left")
 ```
 
 Vemos claramente que si quitamos los datos de marzo el número de veces que aparece ruido muy fuerte es prácticamente despreciable. Y la gran mayoría de datos pasar a ser de valor medio.

@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r libraries, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra", "kableExtra")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -134,7 +134,7 @@ tabla_estadisticos=function(x){
   ) %>% ungroup()
   return(tabla_estadisticos)
 }
-tabla_estadisticos(datos)
+tabla_estadisticos(datos) %>% kable(caption = "Tabla estadísticos") %>%kable_styling()
 ```
 
 ## Estudio outliers
@@ -188,7 +188,7 @@ for (a in niveles){
     outliers()
   out_3sigma=rbind(out_3sigma, resultado)
 }
-out_3sigma
+out_3sigma %>% kable(caption = "Regla 3 sigma") %>% kable_styling()
 
 out_percentil = data.frame()
 for (a in niveles){
@@ -198,7 +198,7 @@ for (a in niveles){
     outliers(method="percentil")
   out_percentil=rbind(out_percentil, resultado)
 }
-out_percentil
+out_percentil %>% kable(caption = "Regla percentil") %>% kable_styling()
 
 out_boxplot = data.frame()
 for (a in niveles){
@@ -208,7 +208,7 @@ for (a in niveles){
     outliers(method="boxplot")
   out_boxplot=rbind(out_boxplot, resultado)
 }
-out_boxplot
+out_boxplot %>% kable(caption = "Regla del boxplot") %>% kable_styling()
 
 out_hampel = data.frame()
 for (a in niveles){
@@ -218,7 +218,7 @@ for (a in niveles){
     outliers(method="hampel")
   out_hampel=rbind(out_hampel, resultado)
 }
-out_hampel
+out_hampel %>% kable(caption = "Regla del identificador de Hampel") %>% kable_styling()
 ```
 Y como esperábamos, aparecen una cantidad enorme de outliers, debido en gran parte a que trabajamos también con una cantidad grande de valores. Cabe destacar que contamos con más de 34000 registros.
 
@@ -227,14 +227,14 @@ Tal y como hemos ido viendo, las variables están cada vez más correlacionadas 
 
 ```{r}
 datos_wide = datos %>% select(-level, -year) %>% pivot_wider(names_from=noise, values_from=value)
-cat('Covarianza Pearson\n')
-cov(datos_wide[,5:9], use="complete.obs")
-cat('\nCorrelación Pearson\n')
-cor(datos_wide[,5:9], use="complete.obs")
-cat('\nCovarianza Spearman\n')
-cov(datos_wide[,5:9], use="complete.obs",method = 'spearman')
-cat('\nCorrelación Spearman\n')
-cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')
+
+cov(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Covarianza Pearson') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs") %>% kable(caption = 'Correlación Pearson') %>% kable_styling()
+
+cov(datos_wide[,5:9], use="complete.obs",method = 'spearman') %>% kable(caption = 'Covarianza Spearman') %>% kable_styling()
+
+cor(datos_wide[,5:9], use="complete.obs",method = 'spearman')  %>% kable(caption = 'Correlación Spearman') %>% kable_styling()
 
 GGally::ggpairs(datos_wide[,5:9])
 chart.Correlation(datos_wide[,5:9])
@@ -282,14 +282,14 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ```
 
 ## Distrubución
-Antes de nada vamos a ver una serie de graficos de distribucion de los datos por completos. Para hacer una ligera idea de cómo están dispersados los datos
+Antes de nada vamos a ver una serie de gráficos de distribución de los datos por completos. Para hacer una ligera idea de cómo están dispersados los datos
 ```{r, out.width="70%", fig.align='center'}
 ggplot(datos, aes(value))+geom_histogram()+
   ggtitle("Distribucion ruido total")
 ```
 
 
-En los siguientes graficos a comprobar si los datos conjuntos son diferentes a separados, porque cabe destacar que cada año adquirian formas ligeramente diferentes. Aunque realmente no diferían demasiado.
+En los siguientes gráficos a comprobar si los datos conjuntos son diferentes a separados, porque cabe destacar que cada año adquirian formas ligeramente diferentes. Aunque realmente no diferían demasiado.
 
 ```{r}
 library(gridExtra) #Libreria para poner titulos a los multiplots
@@ -318,7 +318,7 @@ multiplot(gdb, gdv, layout=matrix(c(1,1,2,2,2,2),3,2, byrow=T))
 ```
 Cuando vemos los calles por calles una de las cosas en que nos podemos fijar es en la cantidad de outliers para cada boxplot que hacen que el resultado parezca muy sesgado.
 
-Vamos a probar a hacer un grafico boxplot prescindiendo de los outliers superiores y valores muy por encima de lo habitual para ver el resultado y vamos a hacer lo mismo quitando también valores por debajo
+Vamos a probar a hacer un gráfico boxplot prescindiendo de los outliers superiores y valores muy por encima de lo habitual para ver el resultado y vamos a hacer lo mismo quitando también valores por debajo
 ```{r, out.width="70%", fig.align='center'}
 ggplot(datos %>% filter(value<68), aes(x=Street, y=value, fill=Street)) + 
     geom_boxplot() + theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none")+
@@ -327,7 +327,7 @@ ggplot(datos %>% filter(value<68), aes(x=Street, y=value, fill=Street)) +
 Si hacemos esto ahora nos encontramos que aparecen muchos outliers por debajo, normal conociendo cómo la distribucion por la noche se centra en un punto mucho más abajo que el resto de ruidos.
 
 ## Evolucion
-Primero queremos hacer una representacion de mas que nada para saber sobre qué periodo de tiempo aparecen representados, porque nos hemos encontrado momentos en los que faltaban datos.
+Primero queremos hacer una representación para saber sobre qué periodo de tiempo aparecen representados, porque nos hemos encontrado momentos en los que faltaban datos.
 
 ```{r, representacion valor ruido para cada calle}
 datos_tidy %>% ggplot(aes(x = dateObserved, y = value)) + facet_wrap(Street~., ncol = 2) + geom_point(size = 0.2)+ggtitle("Periodos en los que se han recogido datos de cada calle")+ylab("")+xlab("Evolucion fechas")
@@ -338,15 +338,15 @@ Los periodos que habíamos mencionado antes de verano de 2021 aparecen aquí bie
 También conociamos que en Salvador Abril se empezaron a recoger datos más tarde, pero ahora nos sorprende ver cosas como que en las calles Carles Cervera o Cuba3 hubiese a finales de 2020 momentos en los que no se recogieran datos.
 
 Ahora, si miramos los datos sobre el tiempo por separado como hemos hecho antes no llegaremos a ninguna revelación que no conozcamos ya.
-Pero sí que nos interesa fundamentalmente ver si el ruido en los últimos 3 años ha aumentado o ha disminuido. Cabe destacar que segun el año veíamos tendencias diferentes para el ruido.
+Pero sí que nos interesa fundamentalmente ver si el ruido en los últimos 3 años ha aumentado o ha disminuido. Cabe destacar que según el año veíamos tendencias diferentes para el ruido.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 
-Lo que aparece en este grafico entra dentro de los esperable. Ya sabáimos que en los 2 ultimos años el ruido no ha parado de crecer, así que ¿este gráfico nos confirma que vamos hacia una ciudad cada vez con más ruido?
+Lo que aparece en este gráfico entra dentro de los esperable. Ya sabíamos que en los 2 últimos años el ruido no ha parado de crecer, así que ¿este gráfico nos confirma que vamos hacia una ciudad cada vez con más ruido?
 
-Vamos a dividir el grafico mostrado para ver más detenidamente los detalles
+Vamos a dividir el gráfico mostrado para ver más detenidamente los detalles
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
   geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día") + guides(color = guide_legend(title = "Momentos del dia"))
@@ -359,14 +359,14 @@ g_all <- ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value,
   geom_line() + labs(subtitle = "Date: {frame_along}") + guides(col = guide_legend(title = "Calles"))
 
 g_all2 <- g_all + geom_point() + transition_reveal(dateObserved) + 
-  labs(title = 'Índice de ruido durante todo el día en 2020', x = 'Fecha',y = 'Valor del ruido')
+  labs(title = 'Índice de ruido durante todo el día', x = 'Fecha',y = 'Valor del ruido')
 
 animate(g_all2, fps = 8)
 ```
 
-## Clasificacion
-Clasificado del sonido registrado segun como muy bajo, bajo, medio, alto y muy alto según unos niveles estandars y oficiales.
-Luego se especifica esto segun cada calle y segun el momemto del dia.
+## Clasificación
+Clasificación del sonido registrado según como muy bajo, bajo, medio, alto y muy alto según unos niveles estándars y oficiales.
+Luego se especifica esto según cada calle y según el momemto del día.
 
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
@@ -388,7 +388,7 @@ Como sabíamos, aparecen valores muy altos, pero la cantidad es muy pequeña. Y 
 Lo mejor que podemos hacer es calcular el porcentaje de valores de cada tipo para saber si de hecho debemos preocuparnos por los valores muy altos.
 
 ```{r}
-datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)*100)
+datos %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)*100) %>% kable(caption = "Tabla porcentajes según nivel de ruido") %>% kable_styling(full_width = F, position = "left")
 ```
 
 Aparentemente, los datos muy ruidosos no alcanzan ni al 1%. Por tanto, no parecen ser un problema al que debamos otorgarle demasiada relevancia.
@@ -397,7 +397,7 @@ Aparentemente, los datos muy ruidosos no alcanzan ni al 1%. Por tanto, no parece
 
 ## Estudio por dia de la semana
 También nos podemos hacer la pregunta si el ruido depende del día de la semana
-Para averiguarlo vamos a crear una nueva columna que diga qué dia de la semana és cada fecha y trabajaremos con esta nueva columna
+Para averiguarlo vamos a crear una nueva columna que diga qué día de la semana es cada fecha y trabajaremos con esta nueva columna
 
 ```{r}
 datos_semana = datos %>% mutate(dia_sem=wday(dateObserved, label=T, abbr = F))
@@ -437,7 +437,7 @@ layout=matrix(c(1,2,3,4,4,4,4,4,4),3,3)
 multiplot(bxse, vise, coose, base, layout=layout)
 ```
 De estos gráficos podemos sacar información muy interesante.
-A priori se puede observar que las distribuciones de los valores cada semana son prácticamente iguales. Sin embargo, si vemos el gráfico de violin encontramos una cosa muy destacable y es que de domingo a sábado, conforme avanza la semana la distribucion es más dispersa. El domingo todos los valores están centrados en un valor muy concreto, pero el violin del sábado tiene una forma más alargada.
+A priori se puede observar que las distribuciones de los valores cada semana son prácticamente iguales. Sin embargo, si vemos el gráfico de violin encontramos una cosa muy destacable y es que de domingo a sábado, conforme avanza la semana la distribución es más dispersa. El domingo todos los valores están centrados en un valor muy concreto, pero el violin del sábado tiene una forma más alargada.
 Y lo que más nos puede sorprender es cómo cambian la cantidad de valores altos y muy altos conforme avanza la semana desde el lunes al sábado. Si nos fijamos en la altura de las barras encontramos que la cantidad de valores altos y muy altos aumenta considerablemente de lunes a sábado, siendo el sábado más del doble que el lunes. Y luego el domingo vuelve a bajar de golpe.
 El el gráfico de coordenadas polares es muy visual este hecho.
 
@@ -468,23 +468,23 @@ Sabiendo que hay 'r nrow(ambiente)', vamos a eliminar aquellos que tengan más d
 columnas = which(sapply(ambiente, function(x){sum(is.na(x))})<300) %>% names()
 ambiente=ambiente %>% select(Fecha, dia_sem, columnas)
 ```
-De esta manera, el numero de variables es notablemente menor
+De esta manera, el número de variables es notablemente menor
 
 ### Relación ruido ambiente
 ```{r}
 datos %>% full_join(ambiente, by=c("dateObserved"="Fecha")) %>% select(-id, -Street, -level, -year, -noise, -dia_sem, -dateObserved, -long) %>% ggpairs()
 ```
 
-Los graficos que nos interesan son la primera columna y la primera fila.
-Una vez vistos estos datos, definitivamente encontramos que no hay ningún tipo de relacion entre la contaminacion acústica y la contaminación atmosférica.
+Los gráficos que nos interesan son la primera columna y la primera fila.
+Una vez vistos estos datos, definitivamente encontramos que no hay ningún tipo de relación entre la contaminación acústica y la contaminación atmosférica.
 
 ## Madrid
 ### Adaptar Madrid
 Ahora vamos a adaptar el dataframe que tenemos de Madrid.
-Vamos a utilizar este dataframe para compara los datos que tenemos de Ruzafa con los que obtenemos de Madrid. Esto nos va a servir para poder sacar conclusiones precisas, contextualizar y extraer conocimiento del ruido en Valencia.
+Vamos a utilizar este dataframe para comparar los datos que tenemos de Ruzafa con los que obtenemos de Madrid. Esto nos va a servir para poder sacar conclusiones precisas, contextualizar y extraer conocimiento del ruido en Valencia.
 
 Vamos a manejar el dataframe de Madrid para que sea más manejable.
-Vamos a ponerle el mismo nombre a las variables, vamos a crear la variable que sesga por valor segun se considere alto o bajo, vamos a ponerle a los tipos de mediciones los mismos nombres que les hemos puesto a los datos anteriores y vamos a agrupar dia, mes y año para que aparezcan en una sola variable fecha.
+Vamos a ponerle el mismo nombre a las variables, vamos a crear la variable que sesga por valor según se considere alto o bajo, vamos a ponerle a los tipos de mediciones los mismos nombres que les hemos puesto a los datos anteriores y vamos a agrupar día, mes y año para que aparezcan en una sola variable fecha.
 
 ```{r}
 Madrid=Madrid %>% 
@@ -511,13 +511,13 @@ A la hora de valorar los datos debemos tener en cuenta que en el dataframe de Ma
 Vamos a sacar los mismos  estadísticos que tenemos de Valencia con Madrid, para comparar resultados.
 
 ```{r}
-tabla_estadisticos(Madrid)
+tabla_estadisticos(Madrid) %>% kable(caption = "Tabla estadísticos") %>% kable_styling()
 ```
 
 Visualizando por encima las dos tablas de estadísticos podemos observar que la mayoría de valores en Madrid son inferiores a los de Valencia. Eso ya nos puede hacer presuponer conclusiones. Pero todavía es pronto para sacar resultados definitivos y viables.
 
 ### Discretizacion niveles Madrid
-Una columna del daaframe que queríamos utilizar era la que dividía el ruido en bajo medio o alto. Vamos a ver cómo aparecen los datos en Madrid y en Ruzafa.
+Una columna del dataframe que queríamos utilizar era la que dividía el ruido en bajo medio o alto. Vamos a ver cómo aparecen los datos en Madrid y en Ruzafa.
 
 ```{r}
 datos$level=factor(datos$level, levels=c("Very Low", "Low", "Medium", "Loud", "Very Loud"))
@@ -534,20 +534,20 @@ Otra cosa es ver como los Madrileños tienen una cantidad mínima de valores Ver
 
 Vamos a ver también los estadísticos sobre Madrid
 ```{r}
-Madrid %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)*100)
+Madrid %>% group_by(level) %>% summarise(num=n(), porcentaje=num/nrow(datos)*100) %>% kable(caption = "Tabla porcentajes según nivel de ruido") %>% kable_styling(full_width = F, position = "left")
 ```
-Sorprendente que la proporcion de Very Loud apenas llega al 0.023% de los datos
+Sorprendente que la proporción de Very Loud apenas llega al 0.023% de los datos
 
 
 ### Relacion Valencia Madrid
-Vamos a buscar la correlacion entre los datos de Valencia y los de Madrid y para ello vamos a unir los dataframes
+Vamos a buscar la correlación entre los datos de Valencia y los de Madrid y para ello vamos a unir los dataframes
 
 ```{r}
 datos %>% select(-Street, -id, -long, -year, -level) %>% filter(noise!="all") %>% full_join(Madrid, by=c("dateObserved", "noise"="noise"), suffix=c("_v", "_m")) %>% select(value_v, value_m) %>% ggpairs()
 ```
-De aquí concluimos que si un dia hay mucho ruido en Valencia no implica que lo tenga que hacer en Madrid ni viceversa, porque la correlacion entre ambos no se puede aceptar como suficiente.
+De aquí concluimos que si un día hay mucho ruido en Valencia no implica que lo tenga que hacer en Madrid ni viceversa, porque la correlación entre ambos no se puede aceptar como suficiente.
 
-### Conclusiones comparacione Madrid
+### Conclusiones comparaciones Madrid
 
-Comparanda los datos de Ruzafa con los de Madrid nos hemos dado cuenta de que difieren bastante ligeramente. Eso favorece la fiabilidad en nuestros datos y nos permite saber que los valores que adquieren en el Barrio no son muy diferentes a los que se adquieren en otras partes.
-Este estudio no tiene la intencion de hacer un estudio detallado de los datos en Madrid, pero con lo que hemos podido ver, en Madrid la media de ruido es un poco menor pero no lo suficiente como para valorarla como una ciudad modelo.
+Comparando los datos de Ruzafa con los de Madrid nos hemos dado cuenta de que difieren bastante ligeramente. Eso favorece la fiabilidad en nuestros datos y nos permite saber que los valores que adquieren en el Barrio no son muy diferentes a los que se adquieren en otras partes.
+Este estudio no tiene la intención de hacer un estudio detallado de los datos en Madrid, pero con lo que hemos podido ver, en Madrid la media de ruido es un poco menor pero no lo suficiente como para valorarla como una ciudad modelo.
