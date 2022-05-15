@@ -1,0 +1,48 @@
+---
+title: "Ruido en Ruzafa"
+author: "Gema Bravo, Josep Peiro, Candela Santandreu, Mireia Risueño & Javier Montaner"
+date: "01/04/2022"
+output: 
+  html_document:
+    toc: true 
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+
+<style>
+#TOC {
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px; 
+  border-color: #708091;
+}
+h1.title {
+  color: #F08080;
+  background-color: #F5F5F5;
+  font-family: Calibri;
+}
+h4.author{
+  color: #708090;
+  font-family: Calibri;
+}
+h4.date{
+  color: #708090;
+  font-family: Calibri;
+  font-size: 16px;
+  background-color: #F5F5F5;
+}
+body {
+  color: #708090;
+  font-family: Calibri;
+  background-color: #F5F5F5;
+}
+pre {
+  color: #708090;
+  background-color: #F8F8FF;
+}
+</style>
+
+```{r, child=c("Proyecto.Rmd", "Estudio 2020.Rmd", "Estudio 2021.Rmd", "Estudio 2022.Rmd", "Estudio Total.Rmd")}
+
+```
