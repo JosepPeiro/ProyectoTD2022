@@ -43,7 +43,7 @@ pre {
 }
 </style>
 
-```{r setup, cache = F, echo = F, message = F, warning = F, tidy = F}
+```{r setup Total, cache = F, echo = F, message = F, warning = F, tidy = F}
 
 # CONFIGURACIÓN GENERAL
 library(knitr)
@@ -65,7 +65,7 @@ knit_hooks$set(inline = function(x) {
 #knit_hooks$set(plot = knitr:::hook_plot_html)
 ```
 
-```{r libraries, echo=F}
+```{r libraries Total, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
 packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "PerformanceAnalytics", "grid", "ggridges", "forcats", "GGally", "jpeg", "patchwork", "gganimate", "png", "ggpubr","gridExtra", "kableExtra")
@@ -91,11 +91,11 @@ También vamos a hacer comparaciones con los datos de Madrid.
 ## Carga de datos
 Nos descargamos los datos desde el .Rdata que habiamos creado previamente que contiene los datos en forma tidy.
 
-```{r Morrar Memoria, include=FALSE}
+```{r Morrar Memoria Total, include=FALSE}
 rm(list=ls())
 ```
 
-```{r Carga}
+```{r Carga Total}
 load("./dataframes/datos.Rdata")
 datos = datos_tidy
 ```
@@ -140,7 +140,7 @@ tabla_estadisticos(datos) %>% kable(caption = "Tabla estadísticos") %>%kable_st
 ## Estudio outliers
 Y vamos a extraer de manera paralela los outliers con cada método. Antes nos ha sorprendido ver la enorme cantidad de outliers que aparecian, aquí como trabajaremos con todos los datos juntos es probable que aparezcan todavía más. 
 
-```{r Funcion Outliers, include=FALSE}
+```{r Funcion Outliers Total, include=FALSE}
 outliers = function(x, method="3sigma"){
   media = mean(x)
   sigma = sd(x)
@@ -177,7 +177,7 @@ outliers = function(x, method="3sigma"){
 }
 ```
 
-```{r Outliers}
+```{r Outliers Total}
 niveles = levels(datos$noise)
 
 out_3sigma = data.frame()
@@ -242,7 +242,7 @@ chart.Correlation(datos_wide[,5:9])
 Era el resultado esperable.
 
 # Graficos
-```{r Funcion Multiplot, include=FALSE}
+```{r Funcion Multiplot Total, include=FALSE}
 library(grid)
 
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
