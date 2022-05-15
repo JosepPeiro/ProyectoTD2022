@@ -68,7 +68,7 @@ knit_hooks$set(inline = function(x) {
 ```{r, echo=F}
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "stringr", "kableExtra")
+packages = c("readr","dplyr","lubridate", "tidyr","tibble", "ggplot2", "purrr", "stringr", "kableExtra", "car")
 
 #use this function to check if each package is on the local machine
 #if a package is installed, it will be loaded
@@ -561,6 +561,16 @@ colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media",
 rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
 estadisticos_conjuntos %>% kable() %>% kable_styling()
 ```
+
+## Distribucion variables
+Vamos a ver rapidamente si las variables siguen una distribucion gaussiana o no mediante qqPlot
+```{r, out.width=0.7}
+library(car)
+sapply(datos[2:6], car::qqPlot)
+```
+Lo primero que podemos visualizar de nuestros datos es que la distribucion no es gaussiana. Eso debemos tenerlo todo el tiempo en cuenta a la hora de llegar a conclusiones
+
+Nota: Al compilar no aparece el resultado, pero en Rmd sí.
 
 ### Añadir longitud calles
 Viendo que nos es posible hemos decidido añadir una nueva variable que puede influir en el analisis que hagamos de los datos. Esta es la longitud de las calles.
