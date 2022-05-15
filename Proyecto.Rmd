@@ -439,10 +439,15 @@ head(calles$Cadiz16) %>% kable() %>% kable_styling()
 ```
 
 Hemos puesto estos nombres en funcion de lo que representan:
+
   - LAeq representa el nivel sonoro continuo equivalente medido por minutos. Así que hemos querido representarlo con el nombre de noise_min queriendo decir el sonido por minuto.
+
   - LAeq_d representa el sonido por la mañana, de 7:00h a 19:00h, así que lo llamamos noise_morning.
+
   - LAeq_den representa el indice dia-tarde-noche, que se usa para establecer la molestia de ruido. Como esta variable hace referencia a todo el día la llamamos noise_all.
+
   - LAeq_e representa el ruido por la tarde de 19.00h a 23.00h. Así que la llamamos noise_afternoon.
+
   - LAeq_n representa el ruido por la noche de 23.00h a 7.00h, y por eso la llamamos noise_night 
 
 ### Estadisticos
