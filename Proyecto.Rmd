@@ -222,8 +222,8 @@ numero_filas=unlist(map(calles, nrow), use.names = F)
 numero_filas #Numero de filas de todos los dataframes
 ```
 
-Vemos en seguida que todos tienen el mismo numero de columnas, 11, suponemos que es porque son tantas como variables hemos analizado previamente.
-Sin embargo, vemos que cada dataframe tiene un numero diferente de columnas
+Vemos en seguida que todos tienen el mismo número de columnas, 11, suponemos que es porque son tantas como variables hemos analizado previamente.
+Sin embargo, vemos que cada dataframe tiene un número diferente de observaciones (filas)
 
 Y ahora vamos a comprobar activamente que todos los dataframes tienen las mismas variables viendo si los nombres de las columnas son todos iguales
 
@@ -360,10 +360,10 @@ filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130) %>% kable() %
 ```
 No encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno
 
-Tomaremos los infinitos como datos faltantes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es eliminarlos directamente de los dataframes.
+Tomaremos los infinitos como datos faltantes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es sustituirlos por la media.
 
 ```{r, eliminar infinitos}
-#Eliminamos los registros que valen infinito
+#Sustituimos los registros que valen infinito por la media
 Cadiz16$LAeq_e= replace(Cadiz16$LAeq_e, is.infinite(Cadiz16$LAeq_e), mean(Cadiz16 %>% filter(!is.infinite(LAeq_e)) %>% select(LAeq_e) %>% pull()))
 
 SalvadorAbril$LAeq_d=replace(SalvadorAbril$LAeq_d, is.infinite(SalvadorAbril$LAeq_d), mean(SalvadorAbril %>% filter(!LAeq_d==Inf) %>% select(LAeq_d) %>% pull()))
@@ -405,7 +405,8 @@ for (t in calles){
   primera_fecha=c(primera_fecha,as.character(min(t$dateObserved)))
 }
 inicio_calle = data.frame(names(calles), primera_fecha=ymd(primera_fecha))
-inicio_calle %>% kable(col.names=c("Calle", "Primera fecha"), escape=FALSE) %>% kable_styling(full_width = F, position = "left")
+inicio_calle %>% kable(col.names=c("Calle", "Primera fecha"), escape=FALSE) %>% kable_styling(full_width = F, position = "left") %>%
+  row_spec(9, background = "lightblue") %>% as_image(file = "./tablas/primera_fecha.html")
 ```
 
 Curiosamente, todos los dataframes empiezan a registrar datos el 17 de Septiembre de 2020 salvo el correspondiente a SalvadorAbril que empieza el 14 de Octubre.
