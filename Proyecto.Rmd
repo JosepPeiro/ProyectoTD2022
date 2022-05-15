@@ -405,7 +405,7 @@ for (t in calles){
   primera_fecha=c(primera_fecha,as.character(min(t$dateObserved)))
 }
 inicio_calle = data.frame(names(calles), primera_fecha=ymd(primera_fecha))
-inicio_calle %>% kable() 
+inicio_calle %>% kable(col.names=c("Calle", "Primera fecha"), escape=FALSE) %>% kable_styling(full_width = F, position = "left")
 ```
 
 Curiosamente, todos los dataframes empiezan a registrar datos el 17 de Septiembre de 2020 salvo el correspondiente a SalvadorAbril que empieza el 14 de Octubre.
@@ -464,7 +464,7 @@ estadisticos = function(x){
 }
 ```
 
-```{r, tablas estadisticos}
+```{r, tablas estadisticos,  results='asis'}
 #Y ahora creamos un dataframe con estadisticos para cada calle
 #En cada linea apareceran los estadisticos de una variable
 #Utilizaremos listas para agrupar las tablas de estadisticos
@@ -482,8 +482,13 @@ for (e in calles){
   #print(matriz_estadisticos)
   lista_estadisticos[[length(lista_estadisticos) + 1]] = matriz_estadisticos
 }
-names(lista_estadisticos)=nombre_calles
-print(lista_estadisticos)
+
+for (i in 1:length(lista_estadisticos)){
+  print(kable(as.data.frame(lista_estadisticos[i]), caption = nombre_calles[i]) %>% kable_styling())
+}
+
+
+
 ```
 
 
@@ -554,7 +559,7 @@ for (h in datos[,2:6]){
 estadisticos_conjuntos=estadisticos_conjuntos[2:6,]
 colnames(estadisticos_conjuntos)=c("minimo", "percentil_25", "mediana", "media", "desviacion_tipica", "percentil_75", "maximo")
 rownames(estadisticos_conjuntos)=colnames(datos[,2:6])
-estadisticos_conjuntos
+estadisticos_conjuntos %>% kable() %>% kable_styling()
 ```
 
 ### Añadir longitud calles
