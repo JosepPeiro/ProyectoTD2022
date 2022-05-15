@@ -358,9 +358,9 @@ Ahora que sabemos el _id de las observaciones con valor infinito vamos a ver si 
 filter(Cadiz16, Cadiz16[,1]>194 & Cadiz16[,1]<202) %>% kable() %>% kable_styling()
 filter(SalvadorAbril, SalvadorAbril[,1]>122&SalvadorAbril[,1]<130) %>% kable() %>% kable_styling()
 ```
-No encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno
-
-Tomaremos los infinitos como datos faltantes completamente aleatorios, y como son muy pocos datos erroneos, la mejor solucion es sustituirlos por la media.
+A priori, no encontramos ninguna anomalia aparente entre las distintas observaciones, de hecho, sabemos que los dias siguientes continuó habiendo registros sin cambio alguno.
+Sin embargo, si nos fijamos, encontramos que los dias de antes de que se encontrara el infinito en la calle Salvador Abril no hubo registros. Así que ese error puede deberse a ese detalle. Igual hubo problemas y los registros tuvieron que parar y el infinito era síntoma de ese parón.
+No lo podemos saber con los datos que tenemos, pero encontramos ese detalle. De todas formas, dada la incertidumbre con la que tratamos, tomaremos los datos faltantes como completamente aleatorios. Y como son muy pocos datos erroneos, la mejor solucion es sustituirlos por la media de su respectivo dataframe.
 
 ```{r, eliminar infinitos}
 #Sustituimos los registros que valen infinito por la media
