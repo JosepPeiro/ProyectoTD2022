@@ -400,7 +400,7 @@ Ahora veremos como se evoluciona el ruido en el tiempo. Habrá que darle especia
 
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
-  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, durante 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Este gráfico nos tranquiliza porque el ruido parece más estable. Ya no hace formas raras ni apenas se mueve sinoq ue se mantiene constante durante todo el año menos ne el mes de marzo, por la razón que ya hemos comentado y es obvia. Las fallas. 
 
@@ -408,15 +408,15 @@ A pesar de que los datos del grafico son muy visuales, vamos a partirlo en vario
 
 ```{r, echo=FALSE, fig.align='center', out.width="70%"}
 ggplot(datos %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n durante 2022") 
 ggplot(datos %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n durante 2022") 
 ggplot(datos %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n durante 2022") 
 ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n durante 2022") 
 ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n durante 2022") 
 ```
 Cosas destacables que encontramos es que la calle Cuba parece tener un comportamient irregular en enero pero luego se estabiliza como el resto de calles.
 ```{r}
@@ -432,7 +432,7 @@ De alguna manera es sorprendente que el ruido adquiera en 2022 una forma tan reg
 Ahora veamos si el ruido ha ido aumentando o disminuyendo con el paso del año o se ha mantenido contante.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))+
+  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n en 2022") + guides(color = guide_legend(title = "Momentos del dia"))+
     geom_vline(xintercept=date("2022-03-19"), linetype="longdash", color="red")
 ```
 Este grafico muestra 2 cosas destacables la primera es ver el salto que pega de repente cuando pasa del dia 19 de marzo al 20. Donde vuelve a los valores que mantenía a principios de año de golpe, sin la más mínima pendiente.
@@ -441,7 +441,7 @@ Y lo otro destacable es que, lamentablemente, todos los tipos de ruido tienen un
 Veamos los gráficos de las calles por separado para ver como es la curva en estos.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, en 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Aquí se muestra mejor cómo en fallas la tendencia sube considerabemente y luego vuelve a bajar, pero se mantiene por encima de donde estaba en febrero.
 
@@ -449,7 +449,7 @@ Aquí se muestra mejor cómo en fallas la tendencia sube considerabemente y lueg
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, durante 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Y con este gráfico es todavía más apreciable la subida de marzo. Pero en Cuba3 los valores extraños de enero hacen que la forma de su gráfica muestre un resultado un poco diferente.
 
@@ -562,9 +562,20 @@ Y a parte de valorar los valores altos. Los valores bajos cada vez son menos, y 
 Finalmente, esto vuelve abrir el dilema de si las fallas pueden ser algo nocivo para el medio ambiente y para el bienestar común o algo transitivo que no supone un problema real.
 
 ##Preguntas
--¿Ha incrementado el ruido en los últimos 3 años?
--¿Existe algún dato nulo?
--¿Tras ver los datos de este año, apreeciamos una recuperación muy grande del ruido?¿Se debe esto al fin del confinamiento?
--¿vemos similitudes en los niveles acústicos entre los meses anteriores y posteriores a la cuarentena?
--¿Que franja horaria acapara un mayor porcentaje del ruido?
--¿El ruido en la noche ha aumentado respeceto al año pasado?
+1.-¿Ha incrementado el ruido en los últimos 3 años?
+Cabe de decir, que el ruido no ha incrementado notoriamente, si no que adquiere en 2022 una forma tan regular y se mantiene con un valor tan parecido todo el tiempo menos en momentos claves como son las fallas.
+
+2.-¿Que podemos decir de la contaminación acústica?
+Podemos ver en los gráficos que  el ruido pega un salto enorme de repente cuando pasa del dia 19 de marzo al 20 (Fallas), época donde vemos niveles altisimos y elevadísimos de ruido. Podemos decir que conforme avanza el año cada vez aumenta más y más la contaminación acústica, que es lo contrario de lo que se debería pretender.
+
+3.-¿Tras ver los datos de este año, apreciamos una recuperación muy grande del ruido?¿Se debe esto al fin del confinamiento? 
+El ruido parece más estable, se mantiene constante durante todo el año menos en el mes de marzo, por la razón que ya hemos comentado y es obvia, que son las fallas, las cuales han sido celebradas con normalidad gracias al fin del confinamiento, han disminuido los casos por la vacunación d ela población , hay menos restricciones, por lo que se permiten situaciones las cuales acumulan mucha gente y ruido que antes no se podían. 
+
+4.-¿Que franja horaria acapara un mayor porcentaje del ruido?
+Como en la malloria de años las mañanas siguen acaparando el mayor ruido, pero, como también ocurre con 2021, los datos de noche se disperson más que el resto de variables, que están mucho más centrados en valores determinados.
+
+
+5.-¿En que calle observamos mayores índices de ruido?
+Así se puede apreciar que las calles que alcanzan valores más elevados son Sueca32 y Carles Cervera. General Prim es la que está centrada más abajo pero también es de las que alcanza valores más altos, al ser pequeña, se concentra el ruido y puede causar que aumente su percepcion .
+
+
