@@ -600,5 +600,5 @@ En los meses de verano hay un periodo en el que no hay datos en ninguna calle y 
 
 6.-¿En general, en las calles, donde podemos ver un mayor índoce de ruido?
 Podemos observar que a partir de los 200 metros, cuanto más grande se hace una calle,más ruido tiene.
-Pero, la calle más larga no es por necesidad la más ruidosa, hay calles menores, dodne se acumulan índices de población mayor, lo que hace que el ruido suene y retumbe más. El sensor que más ruido detecta es el de Cadiz 3 con una media de 64.9, y está en uno de los puntos más importantes de Valencia y donde más gente suele pasar cerca.
+Pero, la calle más larga no es por necesidad la más ruidosa, hay calles menores, dodne se acumulan índices de población mayor, lo que hace que el ruido suene y retumbe más. El sensor que más ruido detecta es el de Cadiz 3 con una media de 64.9, y está en uno de los puntos más importantes de Valencia y donde más gente suele pasar cerca.(CarlesCervera, CarlesCervera34, Sueca 34) grandes emisiones de ruido
 
