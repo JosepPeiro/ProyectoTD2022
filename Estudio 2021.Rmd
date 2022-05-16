@@ -410,7 +410,7 @@ Antes de ver con detalle los graficos debemos tener en cuenta una serie de suces
 
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
-  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia en 2021") + guides(color = guide_legend(title = "Momentos del dia"))+theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 Pese a encontrarnos en la misma tesitura de antes de no poder ver claramente la representacion de los datos, se nos muestran muchos detalles sorprendentes.
 Como que hay 2 periodos en los que no hay datos en ninguna calle y por eso aparecen lineas rectas; lo cual es realmente curioso, porque parece ser algo intencionado.
@@ -420,15 +420,15 @@ Como hemos hecho antes vamos a representar los datos en varios gráficos para es
 
 ```{r, echo=FALSE, fig.align='center', out.width="70%"}
 ggplot(datos %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=3)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n a lo largo de 4 meses") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=3)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n durante 2021") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ggplot(datos %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n a lo largo de 4 meses") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n a durante 2021") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ggplot(datos %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n a lo largo de 4 meses") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n a durante 2021") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n a lo largo de 4 meses") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n durante 2021") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n a lo largo de 4 meses") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_line() + facet_wrap(~Street, nrow=3) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n durante 2021") +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 Viendo los graficos detenidamente se pueden observar distintas cosas.
 
@@ -470,7 +470,7 @@ Y algo también visible en el grafico es como el sonido de noche aumenta con el 
 
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))+
+  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n en 2021") + guides(color = guide_legend(title = "Momentos del dia"))+
   geom_vline(xintercept=date("2021-06-21"), linetype="longdash", color="red")+
   geom_vline(xintercept=date("2021-08-22"), linetype="longdash", color="red")+
   geom_vline(xintercept=date("2021-03-02"), linetype="longdash", color="red")+
@@ -486,7 +486,7 @@ Y por otra parte todos los ruidos subieron durante todo el año, especialmente e
 Y aquí podemos ver el grafico dividido por calles
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia")) +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, en 2021") + guides(color = guide_legend(title = "Momentos del dia")) +theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
 Si diferenciamos por calles vemos de manera más clara y se puede observar que en la mayoría de calles la curva de sonido por la noche vuelve a decrecer conforme acaba el año, vuelve el invierno y la noche empieza antes.
 
@@ -494,7 +494,7 @@ Si diferenciamos por calles vemos de manera más clara y se puede observar que e
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"), axis.text.x = element_text(angle = 90))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+    theme(legend.key = element_rect(fill = "white"), axis.text.x = element_text(angle = 90))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, en 2021") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Y con este otro gráfico se nos muestra otra realidad y es que el ruido a mitad de año alcanza un máximo y luego vuelve a descender lentamente. Pero acaba el año muy por encima de como lo había empezado. 
 
