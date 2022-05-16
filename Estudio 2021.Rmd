@@ -546,8 +546,7 @@ cor(datos$long, datos$value)
 cov(datos$long, datos$value,method = 'spearman')
 cor(datos$long, datos$value,method = 'spearman') 
 ```
-Segun los calculos de correlacion, no se ve una relación especialmente clara entre la la longitud de las calles y sus valores, pero de igual manera, los gráficos muestran una cosa, y es que la media y mediana de las calles más pequeñas muestran el mismo valor que la de las más grandes, pero luego hay se puede observar a partir de los 200 metros como conforme más grande 
-es una calle, más ruido tiene.
+Segun los calculos de correlacion, no se ve una relación especialmente clara entre la la longitud de las calles y sus valores, pero de igual manera, los gráficos muestran una cosa, y es que la media y mediana de las calles más pequeñas muestran el mismo valor que la de las más grandes, pero luego hay se puede observar a partir de los 200 metros como conforme más grande es una calle, más ruido tiene.
 Podemos asumir que este resultado es debido a que quizás en las calles más pequeñas el ruido retumbe más en las paredes o quizás se pueda concentrar más densidad de población, mientras que en calles más grandes quizá sea necesaria más gente para que llegue a notarse el mismo sonido.
 O igual otra opción es que no haya una relación solida entre longitud de calle y cantidad de ruido. Pero volvemos a lo de antes, la calle más larga no es por necesidad la más importante. La calle más importante del barrio es Cadiz, y sensor que más ruido detecta es el de Cadiz 3 con una media de 64.9, y está en uno de los puntos más importantes de Valencia y donde más gente suele pasar cerca.
 
@@ -584,9 +583,21 @@ Encontramos que un porcentaje más bien pequeño de las veces el sonido ha sido 
 Por el análisis que hemos hecho, lo más probable es que los momentos donde se registraran los sonidos muy fuertes fuese a principios de septiembre cuando ocurrió la montaña en los datos.
 
 ## Preguntas
--¿Qué diferencias hay de ruido entre enero y julio?, ¿Qué épocas del año tienen mayor índice de ruido?
--¿En los meses de verano, se aprecia más ruido por el día o   por la noche, y en invierno?
--¿Porque hay datos con valor infinito?
--¿Como afectó el confinamiento al ruido?
--¿Que podemos decir de cada calle al ver sus datos estadísticos del ruido a lo largo de los meses y en cada franja horaria?
--¿En general, en las calles, donde podemos ver un mayor índice de ruido?
+1.-¿Qué diferencias hay de ruido entre julio y septiembre?, ¿Qué épocas del año tienen mayor índice de ruido?
+
+2.-¿Como evoluciona el ruido en la noche? 
+En en caso de la noche las las medianas de cada tipo de sonido estan centradas en valores más o menos parecidos.
+
+3.-¿Porque hay datos con valor infinito? 
+Podemos decir que en salvador abril hay valores que van a infinito causa de que antes ha habido una temporada sin ningún valor, por motivos desconocidos, y de la calle 16 no sabemos una causa exacta.
+
+4.-¿Como afectó el confinamiento al ruido?
+Este año siguieron sin haber fallas y continuaban muchas de las restricciones que prohibían juntar a varias personas en el mismo sitio. Así que este año todavía no podían crearse grandes aglomeraciones de gente, lo que vemos que ha influido en el ruido.
+
+5.-¿Que podemos decir de cada calle al ver sus datos estadísticos del ruido a lo largo de los meses a?
+En los meses de verano hay un periodo en el que no hay datos en ninguna calle y por eso aparecen lineas rectas en los graficos.Tras estos periodos podemos ver que inmediatamente aparece un momento donde todos los datos suben de golpe. Especialmente en la calle Carles Cervera en septiembre observamos un salto enorme, y en concreto el día 4 de septiembre y en Cadiz 3 es el único que sube mucho después de la primera vez que dejaron de encontrarse registros, las demás calles siguen estables.
+
+6.-¿En general, en las calles, donde podemos ver un mayor índoce de ruido?
+Podemos observar que a partir de los 200 metros, cuanto más grande se hace una calle,más ruido tiene.
+Pero, la calle más larga no es por necesidad la más ruidosa, hay calles menores, dodne se acumulan índices de población mayor, lo que hace que el ruido suene y retumbe más. El sensor que más ruido detecta es el de Cadiz 3 con una media de 64.9, y está en uno de los puntos más importantes de Valencia y donde más gente suele pasar cerca.
+
