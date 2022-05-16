@@ -584,6 +584,7 @@ Por el análisis que hemos hecho, lo más probable es que los momentos donde se 
 
 ## Preguntas
 1.-¿Qué diferencias hay de ruido entre julio y septiembre?, ¿Qué épocas del año tienen mayor índice de ruido?
+En el mes de julio tenemos un ruido más estable, en cambio en septiembre vemos claramente un pico.
 
 2.-¿Como evoluciona el ruido en la noche? 
 En en caso de la noche las las medianas de cada tipo de sonido estan centradas en valores más o menos parecidos.
