@@ -357,7 +357,7 @@ library(gridExtra) #Libreria para poner titulos a los multiplots
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 
-multiplot(gd1, gd2, cols=2) 
+# multiplot(gd1, gd2, cols=2) 
 grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia")
 ```
 Si nos fijamos en el el boxplot veremos que la cantidad de outliers es tan grande que no aprecian todo lo bien que se podría, y si nos fijamos en el gráfico de violin vemos que la línea que se alarga hacia arriba es más ancha que de costumbre, eso quiere decir que se acumulan varios valores en esa pequeña franja. Así que hay muchos outliers con valores muy parecidos y cercanos a los valores comunes.

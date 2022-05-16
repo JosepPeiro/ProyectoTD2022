@@ -357,7 +357,7 @@ library(gridExtra) #Libreria para poner titulos a los multiplots
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 
-multiplot(gd1, gd2, cols=2) 
+#multiplot(gd1, gd2, cols=2) 
 grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia")
 ```
 Salta a la vista los puntos que aparecen el los boxplots. Síntoma de que hay muchísimos outliers en los datos, independientemente del sonido que evaluemos.
@@ -435,7 +435,7 @@ Viendo los graficos detenidamente se pueden observar distintas cosas.
 En primer lugar, el salto que se pega automaticanemte a principios de septiembre es enorme, especialmente en la calle Carles Cervera, y en concreto el día 4 de septiembre.
 
 ```{r}
-ps1=ggplot(datos %>% filter(Street=="CarlesCervera34", noise=="morning"))+geom_line(aes(dateObserved, value))+geom_vline(xintercept = date("2021-09-04"), color="red")+labs(title="CarlesCervera34, morning")
+ps1=ggplot(datos %>% filter(Street=="CarlesCervera34", noise=="morning"))+geom_line(aes(dateObserved, value))+geom_vline(xintercept = date("2021-09-04"), color="red", linetype="longdash")+labs(title="CarlesCervera34, morning")
 ps2=ggplot(datos %>% filter(Street=="GeneralPrim", noise=="afternoon"))+geom_line(aes(dateObserved, value))+geom_vline(xintercept = date("2021-09-04"), color="red", linetype="longdash")+labs(title="GeneralPrim, afternoon")
 ps3=ggplot(datos %>% filter(Street=="Vivons", noise=="night"))+geom_line(aes(dateObserved, value))+geom_vline(xintercept = date("2021-09-04"), color="red", linetype="longdash")+labs(title="Vivons, night")
 ps4=ggplot(datos %>% filter(Street=="Sueca32", noise=="min"))+geom_line(aes(dateObserved, value))+geom_vline(xintercept = date("2021-09-04"), color="red", linetype="longdash")+labs(title="Sueca32, min")

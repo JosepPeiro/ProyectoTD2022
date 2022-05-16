@@ -284,10 +284,14 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 ## Distrubución
 Antes de nada vamos a ver una serie de gráficos de distribución de los datos por completos. Para hacer una ligera idea de cómo están dispersados los datos
 ```{r, out.width="70%", fig.align='center'}
-ggplot(datos, aes(value))+geom_histogram()+
-  ggtitle("Distribucion ruido total")
+ggplot(datos, aes(value))+geom_histogram(binwidth = 0.2)+
+  ggtitle("Distribucion ruido total")+xlab("Intervalos")+ylab("Cantidad de valores")+theme(
+    axis.ticks = element_blank(),
+    panel.grid.major.x=element_blank(),
+    panel.grid.minor.x=element_blank(),
+    axis.text.y = element_text(angle=90, hjust = 0.5)
+  )
 ```
-
 
 En los siguientes gráficos a comprobar si los datos conjuntos son diferentes a separados, porque cabe destacar que cada año adquirian formas ligeramente diferentes. Aunque realmente no diferían demasiado.
 
@@ -300,6 +304,7 @@ gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.te
 # multiplot(gd1, gd2, cols=2) 
 grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia")
 ```
+
 Estos resultados no nos sorprenden.
 Vamos a ver por calles
 

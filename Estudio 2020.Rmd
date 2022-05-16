@@ -301,7 +301,7 @@ library(gridExtra) #Libreria para poner titulos a los multiplots
 gd1 = ggplot(datos, aes(noise, value, fill=noise))+geom_violin()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 gd2 = ggplot(datos, aes(noise, value, color=noise))+geom_boxplot()+theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position="none") + labs(x = "Momento del dia",y = "Cantidad de sonido") 
 
-multiplot(gd1, gd2, cols=2) 
+#multiplot(gd1, gd2, cols=2)
 grid.arrange(gd1, gd2, ncol=2, top = "Comparación cantidad de sonido durante el dia (violin y boxplot)")
 ```
 Estos graficos son iguales que los anteriores pero en horizontal. Esto nos permite ver mejor los valores donde se acumulan la mayoría de valores y nos ofrece una mejor visión de la distribución.
