@@ -572,7 +572,7 @@ Podemos ver en los gráficos que  el ruido pega un salto enorme de repente cuand
 El ruido parece más estable, se mantiene constante durante todo el año menos en el mes de marzo, por la razón que ya hemos comentado y es obvia, que son las fallas, las cuales han sido celebradas con normalidad gracias al fin del confinamiento, han disminuido los casos por la vacunación d ela población , hay menos restricciones, por lo que se permiten situaciones las cuales acumulan mucha gente y ruido que antes no se podían. 
 
 4.-¿Que franja horaria acapara un mayor porcentaje del ruido?
-También, como ocurre con 2021, los datos de noche se disperson más que el resto de variables, que están mucho más centrados en valores determinados.
+Como en la malloria de años las mañanas siguen acaparando el mayor ruido, pero, como también ocurre con 2021, los datos de noche se disperson más que el resto de variables, que están mucho más centrados en valores determinados.
 
 
 5.-¿En que calle observamos mayores índices de ruido?
