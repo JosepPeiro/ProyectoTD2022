@@ -562,9 +562,20 @@ Y a parte de valorar los valores altos. Los valores bajos cada vez son menos, y 
 Finalmente, esto vuelve abrir el dilema de si las fallas pueden ser algo nocivo para el medio ambiente y para el bienestar común o algo transitivo que no supone un problema real.
 
 ##Preguntas
--¿Ha incrementado el ruido en los últimos 3 años?
--¿Existe algún dato nulo?
--¿Tras ver los datos de este año, apreeciamos una recuperación muy grande del ruido?¿Se debe esto al fin del confinamiento?
--¿vemos similitudes en los niveles acústicos entre los meses anteriores y posteriores a la cuarentena?
--¿Que franja horaria acapara un mayor porcentaje del ruido?
--¿El ruido en la noche ha aumentado respeceto al año pasado?
+1.-¿Ha incrementado el ruido en los últimos 3 años?
+Cabe de decir, que el ruido no ha incrementado notoriamente, si no que adquiere en 2022 una forma tan regular y se mantiene con un valor tan parecido todo el tiempo menos en momentos claves como son las fallas.
+
+2.-¿Que podemos decir de la contaminación acústica?
+Podemos ver en los gráficos que  el ruido pega un salto enorme de repente cuando pasa del dia 19 de marzo al 20 (Fallas), época donde vemos niveles altisimos y elevadísimos de ruido. Podemos decir que conforme avanza el año cada vez aumenta más y más la contaminación acústica, que es lo contrario de lo que se debería pretender.
+
+3.-¿Tras ver los datos de este año, apreciamos una recuperación muy grande del ruido?¿Se debe esto al fin del confinamiento? 
+El ruido parece más estable, se mantiene constante durante todo el año menos en el mes de marzo, por la razón que ya hemos comentado y es obvia, que son las fallas, las cuales han sido celebradas con normalidad gracias al fin del confinamiento, han disminuido los casos por la vacunación d ela población , hay menos restricciones, por lo que se permiten situaciones las cuales acumulan mucha gente y ruido que antes no se podían. 
+
+4.-¿Que franja horaria acapara un mayor porcentaje del ruido?
+También, como ocurre con 2021, los datos de noche se disperson más que el resto de variables, que están mucho más centrados en valores determinados.
+
+
+5.-¿En que calle observamos mayores índices de ruido?
+Así se puede apreciar que las calles que alcanzan valores más elevados son Sueca32 y Carles Cervera. General Prim es la que está centrada más abajo pero también es de las que alcanza valores más altos, al ser pequeña, se concentra el ruido y puede causar que aumente su percepcion .
+
+
