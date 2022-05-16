@@ -400,7 +400,7 @@ Ahora veremos como se evoluciona el ruido en el tiempo. Habrá que darle especia
 
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color=noise, alpha=noise)) +
-  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del dia, durante 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Este gráfico nos tranquiliza porque el ruido parece más estable. Ya no hace formas raras ni apenas se mueve sinoq ue se mantiene constante durante todo el año menos ne el mes de marzo, por la razón que ya hemos comentado y es obvia. Las fallas. 
 
@@ -408,15 +408,15 @@ A pesar de que los datos del grafico son muy visuales, vamos a partirlo en vario
 
 ```{r, echo=FALSE, fig.align='center', out.width="70%"}
 ggplot(datos %>% filter(noise=="morning"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4)  + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la mañana,\n durante 2022") 
 ggplot(datos %>% filter(noise=="afternoon"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la tarde,\n durante 2022") 
 ggplot(datos %>% filter(noise=="night"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, por la noche,\n durante 2022") 
 ggplot(datos %>% filter(noise=="all"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, en total ,\n durante 2022") 
 ggplot(datos %>% filter(noise=="min"), aes(x = dateObserved, y = value)) +
-  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n a lo largo de 4 meses") 
+  geom_line() + facet_wrap(~Street, nrow=4) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles, el minimo,\n durante 2022") 
 ```
 Cosas destacables que encontramos es que la calle Cuba parece tener un comportamient irregular en enero pero luego se estabiliza como el resto de calles.
 ```{r}
@@ -432,7 +432,7 @@ De alguna manera es sorprendente que el ruido adquiera en 2022 una forma tan reg
 Ahora veamos si el ruido ha ido aumentando o disminuyendo con el paso del año o se ha mantenido contante.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))+
+  geom_point(size=0.5, shape=10, alpha=0.25)+geom_smooth(method="lm") + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes momentos del dia, \n en 2022") + guides(color = guide_legend(title = "Momentos del dia"))+
     geom_vline(xintercept=date("2022-03-19"), linetype="longdash", color="red")
 ```
 Este grafico muestra 2 cosas destacables la primera es ver el salto que pega de repente cuando pasa del dia 19 de marzo al 20. Donde vuelve a los valores que mantenía a principios de año de golpe, sin la más mínima pendiente.
@@ -441,7 +441,7 @@ Y lo otro destacable es que, lamentablemente, todos los tipos de ruido tienen un
 Veamos los gráficos de las calles por separado para ver como es la curva en estos.
 ```{r}
 ggplot(datos, aes(x = dateObserved, y = value, color = noise)) +
-  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+  geom_point(size=0.5, shape=10)+geom_smooth()+facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, en 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Aquí se muestra mejor cómo en fallas la tendencia sube considerabemente y luego vuelve a bajar, pero se mantiene por encima de donde estaba en febrero.
 
@@ -449,7 +449,7 @@ Aquí se muestra mejor cómo en fallas la tendencia sube considerabemente y lueg
 ggplot(data = datos, aes(x = dateObserved, y = value, color = noise)) +  
     guides(colour = guide_legend(override.aes = list(size=10))) +
     geom_smooth(alpha = 0.2, size = 0.5, span = 4, se=FALSE) + 
-    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, a lo largo de 4 meses") + guides(color = guide_legend(title = "Momentos del dia"))
+    theme(legend.key = element_rect(fill = "white"))+ facet_wrap(~Street) + labs(x = "Meses",y = "Cantidad de sonido") +  ggtitle ("Comparación cantidad de sonido en diferentes calles y momentos \n del día, durante 2022") + guides(color = guide_legend(title = "Momentos del dia"))
 ```
 Y con este gráfico es todavía más apreciable la subida de marzo. Pero en Cuba3 los valores extraños de enero hacen que la forma de su gráfica muestre un resultado un poco diferente.
 
